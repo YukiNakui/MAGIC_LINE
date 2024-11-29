@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include"CDTimer.h"
 
 class PlayerCamera :
     public GameObject
@@ -11,6 +12,7 @@ public:
 	void Draw() override;
 	void Release() override;
 private:
-	XMVECTOR lookTarget_;
+	XMFLOAT3 lookTarget_;
+	CDTimer* cdTimer_;
 };
 
