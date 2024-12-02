@@ -4,7 +4,7 @@
 #include"Engine/Input.h"
 
 PlayerCamera::PlayerCamera(GameObject* parent)
-	:GameObject(parent, "PlayerCamera"), lookTarget_{0,0,0}
+	:GameObject(parent, "PlayerCamera"), lookTarget_{0,0,0},cdTimer_(nullptr)
 {
 }
 
@@ -39,10 +39,10 @@ void PlayerCamera::Update()
 		}
 	}
 	if (Input::IsKey(DIK_LEFT)) {
-		transform_.rotate_.y -= XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime() / 1000;
+		transform_.rotate_.y += XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime() / 1000;
 	}
 	if (Input::IsKey(DIK_RIGHT)) {
-		transform_.rotate_.y += XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime() / 1000;
+		transform_.rotate_.y -= XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime() / 1000;
 	}
 
 	Player* pPlayer = GetParent()->FindGameObject<Player>();
@@ -50,9 +50,8 @@ void PlayerCamera::Update()
 	XMVECTOR playerPosition = XMLoadFloat3(&pPos);
 	float rotY = pPlayer->GetRotate().y;//プレイヤーのY回転
 
-	//カメラ操作の時の中心座標を求める 今回は首の位置が中心
-	XMVECTOR headPos = { 0,1,0 };
-	XMVECTOR center = playerPosition + headPos;//首の高さ
+	//カメラ操作の時の中心座標を求める
+	XMVECTOR center = playerPosition;
 	XMVECTOR defaultCamPos = { 0,10,-15 };
 	XMVECTOR defaultTargetPos = { 0,0,15 };
 	XMVECTOR cameraPosition;

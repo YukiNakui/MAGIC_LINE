@@ -1,17 +1,18 @@
 #pragma once
 #include "Engine/GameObject.h"
-#include"CDTimer.h"
-class Player :
+class Stage :
     public GameObject
 {
 	int hModel_;
 public:
-	Player(GameObject* parent);
+	Stage(GameObject* parent);
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 	void Release() override;
 private:
-	CDTimer* cdTimer_;
+	int stageLength_;//ステージの立幅
+	int stageWidth_;//ステージの横幅
+	int stageHeight_;//ステージの高さ
 };
 

@@ -2,6 +2,7 @@
 //#include"Engine/Model.h"
 #include "Player.h"
 #include"PlayerCamera.h"
+#include"Stage.h"
 
 //コンストラクタ
 TestScene::TestScene(GameObject * parent)
@@ -12,6 +13,7 @@ TestScene::TestScene(GameObject * parent)
 //初期化
 void TestScene::Initialize()
 {
+	Instantiate<Stage>(this);
 	Instantiate<Player>(this);
 	Instantiate<PlayerCamera>(this);
 }
