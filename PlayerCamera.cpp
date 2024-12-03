@@ -18,8 +18,8 @@ void PlayerCamera::Initialize()
 	XMVECTOR firstCamPos = { 0,10,-15 };
 	XMVECTOR fistTargetPos = { 0,0,15 };
 	XMVECTOR cameraPosition = XMVector3TransformCoord(firstCamPos, XMMatrixRotationY(rotY)) + playerPosition;
-	XMStoreFloat3(&transform_.position_, cameraPosition);
 	XMVECTOR targetPosition = XMVector3TransformCoord(fistTargetPos, XMMatrixRotationY(rotY)) + playerPosition;
+	XMStoreFloat3(&transform_.position_, cameraPosition);
 	XMStoreFloat3(&lookTarget_, targetPosition);
 	transform_.rotate_ = { 0,0,0 };
 }

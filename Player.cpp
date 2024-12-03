@@ -47,7 +47,7 @@ void Player::Update()
 		inputDirection = XMVector3Normalize(inputDirection);
 	}
 	if (moveValue > 0.0f) {
-		XMVECTOR move = inputDirection * cdTimer_->GetDeltaTime()/100 * moveValue;
+		XMVECTOR move = inputDirection * cdTimer_->GetDeltaTime()/100 * moveValue; //動くスピードによってプレイヤーがカメラの中心からずれてしまう
 		//XMVECTOR addX = XMVector3TransformCoord(move, XMMatrixRotationX(camRot.x));
 		XMVECTOR addY = XMVector3TransformCoord(move, XMMatrixRotationY(camRot.y));
 		//XMVECTOR addZ = XMVector3TransformCoord(move, XMMatrixRotationZ(camRot.z));
