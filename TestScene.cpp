@@ -1,7 +1,7 @@
 #include "TestScene.h"
 //#include"Engine/Model.h"
 #include "Player.h"
-#include"PlayerCamera.h"
+//#include"PlayerCamera.h"
 #include"Stage.h"
 
 //コンストラクタ
@@ -15,7 +15,7 @@ void TestScene::Initialize()
 {
 	Instantiate<Stage>(this);
 	Instantiate<Player>(this);
-	Instantiate<PlayerCamera>(this);
+	//Instantiate<PlayerCamera>(this);
 }
 
 //更新

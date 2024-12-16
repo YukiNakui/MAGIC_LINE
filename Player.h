@@ -13,5 +13,6 @@ public:
 	void Release() override;
 private:
 	CDTimer* cdTimer_;
+	XMFLOAT3 lookTarget_;
 };
 

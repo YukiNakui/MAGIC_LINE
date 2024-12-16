@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include"CDTimer.h"
+#include"Player.h"
 
 class PlayerCamera :
     public GameObject
@@ -14,5 +15,6 @@ public:
 private:
 	XMFLOAT3 lookTarget_;
 	CDTimer* cdTimer_;
+	Player* pPlayer_;
 };
 

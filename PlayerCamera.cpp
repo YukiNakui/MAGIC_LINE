@@ -11,16 +11,7 @@ PlayerCamera::PlayerCamera(GameObject* parent)
 void PlayerCamera::Initialize()
 {
 	cdTimer_ = Instantiate<CDTimer>(this);
-	Player* pPlayer = GetParent()->FindGameObject<Player>();
-	XMFLOAT3 pPos = pPlayer->GetPosition();//プレイヤーの位置
-	XMVECTOR playerPosition = XMLoadFloat3(&pPos);
-	float rotY = pPlayer->GetRotate().y;//プレイヤーのY回転
-	XMVECTOR firstCamPos = { 0,10,-15 };
-	XMVECTOR fistTargetPos = { 0,0,15 };
-	XMVECTOR cameraPosition = XMVector3TransformCoord(firstCamPos, XMMatrixRotationY(rotY)) + playerPosition;
-	XMVECTOR targetPosition = XMVector3TransformCoord(fistTargetPos, XMMatrixRotationY(rotY)) + playerPosition;
-	XMStoreFloat3(&transform_.position_, cameraPosition);
-	XMStoreFloat3(&lookTarget_, targetPosition);
+	pPlayer_ = GetParent()->FindGameObject<Player>();
 	transform_.rotate_ = { 0,0,0 };
 }
 
@@ -40,15 +31,15 @@ void PlayerCamera::Update()
 	}
 	if (Input::IsKey(DIK_LEFT)) {
 		transform_.rotate_.y += XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime() / 1000;
+		pPlayer_->SetRotateY(-90.0f);
 	}
 	if (Input::IsKey(DIK_RIGHT)) {
 		transform_.rotate_.y -= XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime() / 1000;
+		pPlayer_->SetRotateY(90.0f);
 	}
 
-	Player* pPlayer = GetParent()->FindGameObject<Player>();
-	XMFLOAT3 pPos = pPlayer->GetPosition();//プレイヤーの位置
+	XMFLOAT3 pPos = pPlayer_->GetPosition();//プレイヤーの位置
 	XMVECTOR playerPosition = XMLoadFloat3(&pPos);
-	float rotY = pPlayer->GetRotate().y;//プレイヤーのY回転
 
 	//カメラ操作の時の中心座標を求める
 	XMVECTOR center = playerPosition;
