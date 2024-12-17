@@ -3,7 +3,7 @@
 
 const int STAGE_LENGTH = 20;
 const int STAGE_WIDTH = 20;
-const int STAGE_HEIGHT = 5;
+const int STAGE_HEIGHT = 1;
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent,"Stage"),hModel_(-1),stageLength_(STAGE_LENGTH),stageWidth_(STAGE_WIDTH),stageHeight_(STAGE_HEIGHT)

@@ -14,5 +14,6 @@ public:
 private:
 	CDTimer* cdTimer_;
 	XMFLOAT3 lookTarget_;
+	XMVECTOR front_;
 };
 
