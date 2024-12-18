@@ -26,6 +26,6 @@ public:
     void StopTimer();//タイマーをストップします
     void SetInitTime(double cdTime) { TIMER_INIT_TIME_ = cdTime; ResetTimer(); }
     double GetTime() { return(CountDownTimer_); }
-    DWORD GetDeltaTime() { return(deltaTime_); }
+    double GetDeltaTime() { return(deltaTime_ / 1000.0); }
 };
 

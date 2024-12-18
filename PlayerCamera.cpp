@@ -18,24 +18,22 @@ void PlayerCamera::Initialize()
 void PlayerCamera::Update()
 {
 	if (Input::IsKey(DIK_UP)) {
-		transform_.rotate_.x += XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime()/1000;
+		transform_.rotate_.x += XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime();
 		if (transform_.rotate_.x >= XMConvertToRadians(70.0f)) {
 			transform_.rotate_.x = XMConvertToRadians(70.0f);
 		}
 	}
 	if (Input::IsKey(DIK_DOWN)) {
-		transform_.rotate_.x -= XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime()/1000;
+		transform_.rotate_.x -= XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime();
 		if (transform_.rotate_.x <= XMConvertToRadians(-60.0f)) {
 			transform_.rotate_.x = XMConvertToRadians(-60.0f);
 		}
 	}
 	if (Input::IsKey(DIK_LEFT)) {
-		transform_.rotate_.y += XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime() / 1000;
-		pPlayer_->SetRotateY(-90.0f);
+		transform_.rotate_.y += XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime();
 	}
 	if (Input::IsKey(DIK_RIGHT)) {
-		transform_.rotate_.y -= XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime() / 1000;
-		pPlayer_->SetRotateY(90.0f);
+		transform_.rotate_.y -= XMConvertToRadians(90.0f) * (float)cdTimer_->GetDeltaTime();
 	}
 
 	XMFLOAT3 pPos = pPlayer_->GetPosition();//プレイヤーの位置
