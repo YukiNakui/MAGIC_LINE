@@ -18,8 +18,8 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	XMMATRIX rotX = XMMatrixIdentity();//行列の1 単位行列
-	XMMATRIX rotY = XMMatrixIdentity();//行列の1 単位行列
+	XMMATRIX rotX = XMMatrixIdentity();
+	XMMATRIX rotY = XMMatrixIdentity();
 	XMVECTOR move{ 0,0,0,0 };
 	XMVECTOR rotVec{ 0,0,0,0 };
 	float dir = 1.0f;
@@ -39,16 +39,20 @@ void Player::Update()
 		transform_.rotate_.y += 30.0f * deltaTime;
 	}
 
-	//回転行列を求める
+
 	rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
 	rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
-	//ベクトルの回転結果を求める
+
 	rotVec = XMVector3TransformCoord(front_, rotX * rotY);
-	move = 0.3f * rotVec;
-	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));//XMVECTORに合わせる
-	pos = pos + dir * move;//pos = pos + speed * front_ 実際に位置を移動させる
+	move = 10.0f * rotVec;
+	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
+	pos += dir * move * deltaTime;
 	XMStoreFloat3(&(transform_.position_), pos);
 
+	XMVECTOR vTarget{ 0,0,15,0 };
+	vTarget = XMVector3TransformCoord(vTarget, rotX * rotY);
+	XMFLOAT3 targetPos;
+	XMStoreFloat3(&targetPos, pos + vTarget);
 	Camera::SetTarget(transform_.position_);
 	XMVECTOR vEye{ 0,10,-15,0 };
 	vEye = XMVector3TransformCoord(vEye, rotX * rotY);

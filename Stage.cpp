@@ -12,9 +12,10 @@ Stage::Stage(GameObject* parent)
 
 void Stage::Initialize()
 {
-	hModel_ = Model::Load("Model/BoxDefault.fbx");
+	/*hModel_ = Model::Load("Model/BoxDefault.fbx");
 	assert(hModel_ >= 0);
-	transform_.scale_ = { 5.0,5.0,5.0 };
+	transform_.scale_ = { 5.0,5.0,5.0 };*/
+	pStageBox_ = Instantiate<StageBox>(this);
 }
 
 void Stage::Update()
@@ -29,8 +30,9 @@ void Stage::Draw()
 				transform_.position_.x = w * 5;
 				transform_.position_.y = h * 5;
 				transform_.position_.z = l * 5;
-				Model::SetTransform(hModel_, transform_);
-				Model::Draw(hModel_);
+				/*Model::SetTransform(hModel_, transform_);
+				Model::Draw(hModel_);*/
+				pStageBox_->SetPosition(transform_.position_);
 			}
 		}
 	}

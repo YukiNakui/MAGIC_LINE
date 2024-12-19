@@ -154,6 +154,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="StageBox.cpp" />
     <ClCompile Include="TestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="StageBox.h" />
     <ClInclude Include="TestScene.h" />
   </ItemGroup>
   <ItemGroup>
