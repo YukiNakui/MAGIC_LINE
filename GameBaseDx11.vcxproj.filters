@@ -100,6 +100,8 @@
     <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="CDTimer.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="StageBox.cpp" />
+    <ClCompile Include="Capsule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -176,6 +178,8 @@
     <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="CDTimer.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="StageBox.h" />
+    <ClInclude Include="Capsule.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

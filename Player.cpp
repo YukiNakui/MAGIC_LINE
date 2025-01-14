@@ -5,7 +5,8 @@
 #include"Engine/Camera.h"
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0}
+	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
+	 capsuleCDTimer_(0.0f),totalMoveValue_(0.0f),pCapsule_(nullptr)
 {
 }
 
@@ -24,12 +25,10 @@ void Player::Update()
 	XMVECTOR rotVec{ 0,0,0,0 };
 	float dir = 1.0f;
 	float deltaTime = cdTimer_->GetDeltaTime();
-	if (Input::IsKey(DIK_UP))
-	{
+	if (Input::IsKey(DIK_UP)){
 		transform_.rotate_.x += 30.0f * deltaTime;
 	}
-	if (Input::IsKey(DIK_DOWN))
-	{
+	if (Input::IsKey(DIK_DOWN)){
 		transform_.rotate_.x -= 30.0f * deltaTime;
 	}
 	if (Input::IsKey(DIK_LEFT)) {
@@ -39,15 +38,24 @@ void Player::Update()
 		transform_.rotate_.y += 30.0f * deltaTime;
 	}
 
-
-	rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
-	rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
-
-	rotVec = XMVector3TransformCoord(front_, rotX * rotY);
-	move = 10.0f * rotVec;
 	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
-	pos += dir * move * deltaTime;
-	XMStoreFloat3(&(transform_.position_), pos);
+
+	if (totalMoveValue_ <= 1000.0f) {
+		rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
+		rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+		rotVec = XMVector3TransformCoord(front_, rotX * rotY);
+		move = 10.0f * rotVec;
+		//XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
+		XMVECTOR addMove = dir * move * deltaTime;
+		pos += addMove;
+		totalMoveValue_ += XMVectorGetX(XMVector3Length(addMove));
+		if () {
+			//プレイヤーが一定距離or一定時間経過するとカプセルがプレイヤーの位置に出現
+			pCapsule_ = Instantiate<Capsule>(this);
+			pCapsule_->SetPosition(transform_.position_);
+		}
+		XMStoreFloat3(&(transform_.position_), pos);
+	}
 
 	XMVECTOR vTarget{ 0,0,15,0 };
 	vTarget = XMVector3TransformCoord(vTarget, rotX * rotY);
