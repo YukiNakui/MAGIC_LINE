@@ -6,15 +6,20 @@
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
-	 capsuleCDTimer_(0.0f),totalMoveValue_(0.0f),pCapsule_(nullptr)
+	 capsuleCDTimer_(0.0f),totalMoveValue_(0.0f),pCapsule_(nullptr),pText_(nullptr)
 {
 }
 
 void Player::Initialize()
 {
-	cdTimer_ = Instantiate<CDTimer>(this);
 	hModel_ = Model::Load("Model/Player.fbx");
 	assert(hModel_ >= 0);
+	transform_.position_ = { 0.0f,5.0f,0.0f };
+	cdTimer_ = Instantiate<CDTimer>(this);
+	cdTimer_->SetInitTime(0.1f);
+
+	pText_ = new Text;
+	pText_ ->Initialize();
 }
 
 void Player::Update()
@@ -38,23 +43,27 @@ void Player::Update()
 		transform_.rotate_.y += 30.0f * deltaTime;
 	}
 
+	rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
+	rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+	rotVec = XMVector3TransformCoord(front_, rotX * rotY);
+	move = 10.0f * rotVec;
 	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
+	XMVECTOR addMove = dir * move * deltaTime;
+	pos += addMove;
+	XMStoreFloat3(&(transform_.position_), pos);
 
-	if (totalMoveValue_ <= 1000.0f) {
-		rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
-		rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
-		rotVec = XMVector3TransformCoord(front_, rotX * rotY);
-		move = 10.0f * rotVec;
-		//XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
-		XMVECTOR addMove = dir * move * deltaTime;
-		pos += addMove;
+	if (Input::IsKey(DIK_SPACE)) {
 		totalMoveValue_ += XMVectorGetX(XMVector3Length(addMove));
-		if () {
-			//プレイヤーが一定距離or一定時間経過するとカプセルがプレイヤーの位置に出現
-			pCapsule_ = Instantiate<Capsule>(this);
-			pCapsule_->SetPosition(transform_.position_);
+
+		if (totalMoveValue_ <= 100.0f) {
+			if (cdTimer_->IsTimeOver()) {
+				//プレイヤーが一定距離or一定時間経過するとカプセルがプレイヤーの位置に出現
+				pCapsule_ = Instantiate<Capsule>(this->GetParent());
+				pCapsule_->SetPosition(transform_.position_);
+				pCapsule_->SetRotate(transform_.rotate_);
+				cdTimer_->ResetTimer();
+			}
 		}
-		XMStoreFloat3(&(transform_.position_), pos);
 	}
 
 	XMVECTOR vTarget{ 0,0,15,0 };
@@ -73,8 +82,13 @@ void Player::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
+
+	pText_->Draw(30, 30, totalMoveValue_);
 }
 
 void Player::Release()
 {
+	cdTimer_->Release();
+	pCapsule_->Release();
+	pText_ ->Release();
 }
