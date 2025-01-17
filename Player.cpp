@@ -88,7 +88,5 @@ void Player::Draw()
 
 void Player::Release()
 {
-	cdTimer_->Release();
-	pCapsule_->Release();
 	pText_ ->Release();
 }

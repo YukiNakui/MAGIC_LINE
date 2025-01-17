@@ -102,6 +102,10 @@
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageBox.cpp" />
     <ClCompile Include="Capsule.cpp" />
+    <ClCompile Include="Engine\CapsuleCollider.cpp">
+      <Filter>01Engine\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Ball.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -180,6 +184,10 @@
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageBox.h" />
     <ClInclude Include="Capsule.h" />
+    <ClInclude Include="Engine\CapsuleCollider.h">
+      <Filter>01Engine\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Ball.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

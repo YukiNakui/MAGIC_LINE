@@ -7,13 +7,15 @@ using namespace DirectX;
 class GameObject;
 class BoxCollider;
 class SphereCollider;
+class CapsuleCollider;
 
 
 //あたり判定のタイプ
 enum ColliderType
 {
 	COLLIDER_BOX,		//箱型
-	COLLIDER_CIRCLE		//球体
+	COLLIDER_CIRCLE,	//球体
+	COLLIDER_CUPSULE
 };
 
 //-----------------------------------------------------------
@@ -24,7 +26,7 @@ class Collider
 	//それぞれのクラスのprivateメンバにアクセスできるようにする
 	friend class BoxCollider;
 	friend class SphereCollider;
-
+	friend class CapsuleCollider;
 protected:
 	GameObject*		pGameObject_;	//この判定をつけたゲームオブジェクト
 	ColliderType	type_;			//種類

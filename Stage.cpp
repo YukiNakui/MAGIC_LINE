@@ -7,7 +7,7 @@ const int STAGE_HEIGHT = 1;  //ステージのy方向最大
 const int STAGE_LENGTH = 20; //ステージのz方向最大
 
 Stage::Stage(GameObject* parent)
-	:GameObject(parent,"Stage"),hModel_(-1)
+	:GameObject(parent,"Stage"),hModel_(-1),pStageBox_(nullptr)
 {
 }
 
@@ -32,6 +32,8 @@ void Stage::Draw()
 				transform_.position_.z = l * 5;
 				Model::SetTransform(hModel_, transform_);
 				Model::Draw(hModel_);
+				//pStageBox_ = Instantiate<StageBox>(this->GetParent());
+				//pStageBox_->SetPosition(transform_.position_);
 			}
 		}
 	}

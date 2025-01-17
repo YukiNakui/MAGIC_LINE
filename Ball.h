@@ -1,18 +1,15 @@
 #pragma once
 #include "Engine/GameObject.h"
-#include"StageBox.h"
 
-class Stage :
+class Ball :
     public GameObject
 {
 	int hModel_;
 public:
-	Stage(GameObject* parent);
+	Ball(GameObject* parent);
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 	void Release() override;
-private:
-	StageBox* pStageBox_;
 };
 
