@@ -3,6 +3,7 @@
 #include"Engine/Input.h"
 //#include"PlayerCamera.h"
 #include"Engine/Camera.h"
+#include<algorithm>
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
@@ -26,16 +27,19 @@ void Player::Update()
 {
 	XMMATRIX rotX = XMMatrixIdentity();
 	XMMATRIX rotY = XMMatrixIdentity();
-	XMVECTOR move{ 0,0,0,0 };
-	XMVECTOR rotVec{ 0,0,0,0 };
+	XMVECTOR move{ 0, 0, 0, 0 };
+	XMVECTOR rotVec{ 0, 0, 0, 0 };
 	float dir = 1.0f;
 	float deltaTime = cdTimer_->GetDeltaTime();
-	if (Input::IsKey(DIK_UP)){
+
+	if (Input::IsKey(DIK_UP)) {
 		transform_.rotate_.x += 30.0f * deltaTime;
 	}
-	if (Input::IsKey(DIK_DOWN)){
+	if (Input::IsKey(DIK_DOWN)) {
 		transform_.rotate_.x -= 30.0f * deltaTime;
 	}
+	transform_.rotate_.x = std::clamp(transform_.rotate_.x, -45.0f, 45.0f);
+
 	if (Input::IsKey(DIK_LEFT)) {
 		transform_.rotate_.y -= 30.0f * deltaTime;
 	}
@@ -52,12 +56,22 @@ void Player::Update()
 	pos += addMove;
 	XMStoreFloat3(&(transform_.position_), pos);
 
+	XMVECTOR vTarget{ 0, 0, 15, 0 };
+	vTarget = XMVector3TransformCoord(vTarget, rotY);
+	XMFLOAT3 targetPos;
+	XMStoreFloat3(&targetPos, pos + vTarget);
+	Camera::SetTarget(transform_.position_);
+	XMVECTOR vEye{ 0, 10, -15, 0 };
+	vEye = XMVector3TransformCoord(vEye, rotY);
+	XMFLOAT3 camPos;
+	XMStoreFloat3(&camPos, pos + vEye);
+	Camera::SetPosition(camPos);
+
 	if (Input::IsKey(DIK_SPACE)) {
 		totalMoveValue_ += XMVectorGetX(XMVector3Length(addMove));
 
 		if (totalMoveValue_ <= 100.0f) {
 			if (cdTimer_->IsTimeOver()) {
-				//プレイヤーが一定距離or一定時間経過するとカプセルがプレイヤーの位置に出現
 				pCapsule_ = Instantiate<Capsule>(this->GetParent());
 				pCapsule_->SetPosition(transform_.position_);
 				pCapsule_->SetRotate(transform_.rotate_);
@@ -65,17 +79,6 @@ void Player::Update()
 			}
 		}
 	}
-
-	XMVECTOR vTarget{ 0,0,15,0 };
-	vTarget = XMVector3TransformCoord(vTarget, rotX * rotY);
-	XMFLOAT3 targetPos;
-	XMStoreFloat3(&targetPos, pos + vTarget);
-	Camera::SetTarget(transform_.position_);
-	XMVECTOR vEye{ 0,10,-15,0 };
-	vEye = XMVector3TransformCoord(vEye, rotX * rotY);
-	XMFLOAT3 camPos;
-	XMStoreFloat3(&camPos, pos + vEye);
-	Camera::SetPosition(camPos);
 }
 
 void Player::Draw()
