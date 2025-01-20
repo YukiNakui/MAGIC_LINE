@@ -1,5 +1,6 @@
 #include "BoxCollider.h"
 #include "SphereCollider.h"
+#include"CapsuleCollider.h"
 #include "Model.h"
 
 
@@ -26,6 +27,9 @@ bool BoxCollider::IsHit(Collider* target)
 {
 	if (target->type_ == COLLIDER_BOX)
 		return IsHitBoxVsBox((BoxCollider*)target, this);
-	else
+	else if (target->type_ == COLLIDER_CIRCLE)
 		return IsHitBoxVsCircle(this, (SphereCollider*)target);
+	else if (target->type_ == COLLIDER_CAPSULE)
+		return IsHitCapsuleVsBox((CapsuleCollider*)target, this);
+	return false;
 }

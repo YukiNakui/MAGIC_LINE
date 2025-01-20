@@ -15,7 +15,7 @@ enum ColliderType
 {
 	COLLIDER_BOX,		//箱型
 	COLLIDER_CIRCLE,	//球体
-	COLLIDER_CUPSULE
+	COLLIDER_CAPSULE    //カプセル
 };
 
 //-----------------------------------------------------------
@@ -63,6 +63,16 @@ public:
 	//引数：circleB	２つ目の球体判定
 	//戻値：接触していればtrue
 	bool IsHitCircleVsCircle(SphereCollider* circleA, SphereCollider* circleB);
+
+	bool IsHitCapsuleVsCircle(CapsuleCollider* capsule, SphereCollider* sphere);
+
+	bool IsHitCapsuleVsBox(CapsuleCollider* capsule, BoxCollider* box);
+
+	float SegmentToSegmentDistance(XMVECTOR p1, XMVECTOR q1, XMVECTOR p2, XMVECTOR q2);
+
+	bool IsHitCapsuleVsCapsule(CapsuleCollider* capsuleA, CapsuleCollider* capsuleB);
+
+	bool IsPointInsideBox(XMFLOAT3 point, XMFLOAT3 boxMin, XMFLOAT3 boxMax);
 
 	//テスト表示用の枠を描画
 	//引数：position	オブジェクトの位置

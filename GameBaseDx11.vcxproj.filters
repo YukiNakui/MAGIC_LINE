@@ -96,7 +96,6 @@
       <Filter>01Engine\ResourceManager</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="CDTimer.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageBox.cpp" />
@@ -179,7 +178,6 @@
       <Filter>01Engine\ResourceManager</Filter>
     </ClInclude>
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="CDTimer.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageBox.h" />

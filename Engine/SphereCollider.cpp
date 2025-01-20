@@ -25,6 +25,9 @@ bool SphereCollider::IsHit(Collider* target)
 {
 	if (target->type_ == COLLIDER_BOX)
 		return IsHitBoxVsCircle((BoxCollider*)target, this);
-	else
+	else if (target->type_ == COLLIDER_CIRCLE)
 		return IsHitCircleVsCircle((SphereCollider*)target, this);
+	else if (target->type_ == COLLIDER_CAPSULE)
+		return IsHitCapsuleVsCircle((CapsuleCollider*)target, this);
+	return false;
 }

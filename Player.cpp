@@ -1,13 +1,14 @@
 #include "Player.h"
 #include"Engine/Model.h"
 #include"Engine/Input.h"
-//#include"PlayerCamera.h"
 #include"Engine/Camera.h"
+#include"Engine/SphereCollider.h"
 #include<algorithm>
+#include "Engine/SceneManager.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
-	 capsuleCDTimer_(0.0f),totalMoveValue_(0.0f),pCapsule_(nullptr),pText_(nullptr)
+	 totalMoveValue_(0.0f),pCapsule_(nullptr),pText_(nullptr)
 {
 }
 
@@ -15,9 +16,12 @@ void Player::Initialize()
 {
 	hModel_ = Model::Load("Model/Player.fbx");
 	assert(hModel_ >= 0);
-	transform_.position_ = { 0.0f,5.0f,0.0f };
+	transform_.position_ = { 0.0f,10.0f,-30.0f };
 	cdTimer_ = Instantiate<CDTimer>(this);
 	cdTimer_->SetInitTime(0.1f);
+
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.5f);
+	AddCollider(collision);
 
 	pText_ = new Text;
 	pText_ ->Initialize();
@@ -91,5 +95,10 @@ void Player::Draw()
 
 void Player::Release()
 {
-	pText_ ->Release();
+}
+
+void Player::OnCollision(GameObject* pTarget)
+{
+	/*SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+	pSceneManager->ChangeScene(SCENE_ID_TITLE);*/
 }

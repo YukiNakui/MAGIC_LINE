@@ -7,9 +7,9 @@ class CDTimer :
     public GameObject
 {
 private:
-    double CountDownTimer_;  //現在の残り時間
-    double TIMER_INIT_TIME_; //初期時間
-    bool isTimerRun_;//タイマーが動いているかどうか？
+    double CountDownTimer_;
+    double TIMER_INIT_TIME_;
+    bool isTimerRun_;
     DWORD oldTime_;
     DWORD deltaTime_;
 public:
@@ -20,10 +20,10 @@ public:
     void Draw() override;
     void Release() override;
 public:
-    bool IsTimeOver();//タイマーは０になりましたか？ＹＥＳ？ＮＯ？
-    void ResetTimer();//タイマーを初期時間に戻す
-    void StartTimer();//タイマーをスタートします
-    void StopTimer();//タイマーをストップします
+    bool IsTimeOver();
+    void ResetTimer();
+    void StartTimer();
+    void StopTimer();
     void SetInitTime(double cdTime) { TIMER_INIT_TIME_ = cdTime; ResetTimer(); }
     double GetTime() { return(CountDownTimer_); }
     double GetDeltaTime() { return(deltaTime_ / 1000.0); }
