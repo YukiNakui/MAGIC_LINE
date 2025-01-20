@@ -2,9 +2,10 @@
 #include"Engine/Model.h"
 #include"Engine/SphereCollider.h"
 #include"Engine/SceneManager.h"
+#include"Engine/Input.h"
 
 Ball::Ball(GameObject* parent)
-	:GameObject(parent, "Ball"), hModel_(-1), cdTimer_(nullptr), speed_(0,0,0)
+	:GameObject(parent, "Ball"), hModel_(-1), cdTimer_(nullptr), speed_(0,0,0),canMove_(false)
 {
 }
 
@@ -22,14 +23,16 @@ void Ball::Initialize()
 
 void Ball::Update()
 {
-	float deltaTime = cdTimer_->GetDeltaTime();
-	const float gravity = -9.8f;   // 重力加速度
+	if (Input::IsKeyDown(DIK_RETURN))
+		canMove_ = true;
+	if (canMove_) {
+		float deltaTime = cdTimer_->GetDeltaTime();
+		const float gravity = -9.8f;
 
-	// 重力による速度変化
-	speed_.y += gravity * deltaTime;
+		speed_.y += gravity * deltaTime;
 
-	// 速度による位置変化
-	transform_.position_.y += speed_.y * deltaTime;
+		transform_.position_.y += speed_.y * deltaTime;
+	}
 }
 
 void Ball::Draw()
@@ -45,6 +48,10 @@ void Ball::Release()
 void Ball::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Stage") {
+		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+		pSceneManager->ChangeScene(SCENE_ID_TITLE);
+	}
+	else if (pTarget->GetObjectName() == "Capsule") {
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_TITLE);
 	}

@@ -65,7 +65,7 @@ void Player::Update()
 	XMFLOAT3 targetPos;
 	XMStoreFloat3(&targetPos, pos + vTarget);
 	Camera::SetTarget(transform_.position_);
-	XMVECTOR vEye{ 0, 10, -15, 0 };
+	XMVECTOR vEye{ 0, 10, -20, 0 };
 	vEye = XMVector3TransformCoord(vEye, rotY);
 	XMFLOAT3 camPos;
 	XMStoreFloat3(&camPos, pos + vEye);
@@ -99,6 +99,4 @@ void Player::Release()
 
 void Player::OnCollision(GameObject* pTarget)
 {
-	/*SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-	pSceneManager->ChangeScene(SCENE_ID_TITLE);*/
 }

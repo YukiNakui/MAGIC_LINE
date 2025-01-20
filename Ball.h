@@ -16,5 +16,6 @@ public:
 private:
 	CDTimer* cdTimer_;
 	XMFLOAT3 speed_;
+	bool canMove_;
 };
 
