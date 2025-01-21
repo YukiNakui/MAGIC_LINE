@@ -90,7 +90,7 @@ void Player::Draw()
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
 
-	pText_->Draw(30, 30, totalMoveValue_);
+	pText_->Draw(30, 30, 100 - totalMoveValue_);
 }
 
 void Player::Release()

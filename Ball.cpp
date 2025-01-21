@@ -49,10 +49,10 @@ void Ball::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Stage") {
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-		pSceneManager->ChangeScene(SCENE_ID_TITLE);
+		pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
 	}
 	else if (pTarget->GetObjectName() == "Capsule") {
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-		pSceneManager->ChangeScene(SCENE_ID_TITLE);
+		pSceneManager->ChangeScene(SCENE_ID_CLEAR);
 	}
 }
