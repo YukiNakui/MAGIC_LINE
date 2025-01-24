@@ -3,6 +3,7 @@
 #include"Engine/SphereCollider.h"
 #include"Engine/SceneManager.h"
 #include"Engine/Input.h"
+#include"Capsule.h"
 
 Ball::Ball(GameObject* parent)
 	:GameObject(parent, "Ball"), hModel_(-1), cdTimer_(nullptr), speed_(0,0,0),canMove_(false)
@@ -28,10 +29,22 @@ void Ball::Update()
 	if (canMove_) {
 		float deltaTime = cdTimer_->GetDeltaTime();
 		const float gravity = -9.8f;
-
 		speed_.y += gravity * deltaTime;
-
 		transform_.position_.y += speed_.y * deltaTime;
+	}
+
+	Capsule* pCapsule = (Capsule*)FindObject("Capsule");    //カプセルオブジェクトを探す
+	int hCapsuleModel = 0;
+	if (pCapsule != nullptr)
+		hCapsuleModel = pCapsule->GetModelHandle();    //モデル番号を取得
+
+	RayCastData data;
+	data.start = transform_.position_;   //レイの発射位置
+	data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
+	Model::RayCast(hCapsuleModel, &data); //レイを発射
+
+	if (data.dist < 1.0f) {
+		
 	}
 }
 
@@ -51,8 +64,8 @@ void Ball::OnCollision(GameObject* pTarget)
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
 	}
-	else if (pTarget->GetObjectName() == "Capsule") {
+	/*else if (pTarget->GetObjectName() == "Capsule") {
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_CLEAR);
-	}
+	}*/
 }

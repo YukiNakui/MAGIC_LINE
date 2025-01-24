@@ -10,7 +10,7 @@ TitleScene::TitleScene(GameObject* parent)
 
 void TitleScene::Initialize()
 {
-	hPict_ = Image::Load("Title.png");
+	hPict_ = Image::Load("TITLE.png");
 	assert(hPict_ >= 0);
 }
 

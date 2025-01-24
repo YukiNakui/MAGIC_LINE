@@ -10,12 +10,16 @@ ClearScene::ClearScene(GameObject* parent)
 
 void ClearScene::Initialize()
 {
-	hPict_ = Image::Load("Clear.png");
+	hPict_ = Image::Load("CLEAR.png");
 	assert(hPict_ >= 0);
 }
 
 void ClearScene::Update()
 {
+	if (Input::IsKeyDown(DIK_RETURN)) {
+		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+		pSceneManager->ChangeScene(SCENE_ID_TITLE);
+	}
 }
 
 void ClearScene::Draw()

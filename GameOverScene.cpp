@@ -10,12 +10,16 @@ GameOverScene::GameOverScene(GameObject* parent)
 
 void GameOverScene::Initialize()
 {
-	hPict_ = Image::Load("GameOver.png");
+	hPict_ = Image::Load("GAMEOVER.png");
 	assert(hPict_ >= 0);
 }
 
 void GameOverScene::Update()
 {
+	if (Input::IsKeyDown(DIK_RETURN)) {
+		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+		pSceneManager->ChangeScene(SCENE_ID_TITLE);
+	}
 }
 
 void GameOverScene::Draw()

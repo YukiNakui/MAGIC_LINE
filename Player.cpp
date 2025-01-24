@@ -5,6 +5,7 @@
 #include"Engine/SphereCollider.h"
 #include<algorithm>
 #include "Engine/SceneManager.h"
+#include"Stage.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
@@ -16,7 +17,7 @@ void Player::Initialize()
 {
 	hModel_ = Model::Load("Model/Player.fbx");
 	assert(hModel_ >= 0);
-	transform_.position_ = { 0.0f,10.0f,-30.0f };
+	transform_.position_ = { 0.0f,5.0f,-30.0f };
 	cdTimer_ = Instantiate<CDTimer>(this);
 	cdTimer_->SetInitTime(0.1f);
 
@@ -37,18 +38,18 @@ void Player::Update()
 	float deltaTime = cdTimer_->GetDeltaTime();
 
 	if (Input::IsKey(DIK_UP)) {
-		transform_.rotate_.x += 30.0f * deltaTime;
+		transform_.rotate_.x += 60.0f * deltaTime;
 	}
 	if (Input::IsKey(DIK_DOWN)) {
-		transform_.rotate_.x -= 30.0f * deltaTime;
+		transform_.rotate_.x -= 60.0f * deltaTime;
 	}
 	transform_.rotate_.x = std::clamp(transform_.rotate_.x, -45.0f, 45.0f);
 
 	if (Input::IsKey(DIK_LEFT)) {
-		transform_.rotate_.y -= 30.0f * deltaTime;
+		transform_.rotate_.y -= 60.0f * deltaTime;
 	}
 	if (Input::IsKey(DIK_RIGHT)) {
-		transform_.rotate_.y += 30.0f * deltaTime;
+		transform_.rotate_.y += 60.0f * deltaTime;
 	}
 
 	rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
@@ -82,6 +83,18 @@ void Player::Update()
 				cdTimer_->ResetTimer();
 			}
 		}
+	}
+
+	Stage* pStage = (Stage*)FindObject("Stage");    //ステージオブジェクトを探す
+	int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
+
+	RayCastData data;
+	data.start = transform_.position_;   //レイの発射位置
+	data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
+	Model::RayCast(hGroundModel, &data); //レイを発射
+	
+	if (data.dist < 1.0f) {
+		transform_.position_.y += 1.0f - data.dist;
 	}
 }
 
