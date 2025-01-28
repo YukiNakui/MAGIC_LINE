@@ -4,6 +4,7 @@
 #include"Engine/SceneManager.h"
 #include"Engine/Input.h"
 #include"Capsule.h"
+#include<list>
 
 Ball::Ball(GameObject* parent)
 	:GameObject(parent, "Ball"), hModel_(-1), cdTimer_(nullptr), speed_(0,0,0),canMove_(false)
@@ -33,18 +34,23 @@ void Ball::Update()
 		transform_.position_.y += speed_.y * deltaTime;
 	}
 
-	Capsule* pCapsule = (Capsule*)FindObject("Capsule");    //カプセルオブジェクトを探す
+	std::list<Capsule*> pCapsules = GetParent()->FindGameObjects<Capsule>();    //カプセルオブジェクトを探す
 	int hCapsuleModel = 0;
-	if (pCapsule != nullptr)
-		hCapsuleModel = pCapsule->GetModelHandle();    //モデル番号を取得
+	//if (pCapsule != nullptr)
+	//	hCapsuleModel = pCapsule->GetModelHandle();    //モデル番号を取得
 
 	RayCastData data;
 	data.start = transform_.position_;   //レイの発射位置
 	data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
-	Model::RayCast(hCapsuleModel, &data); //レイを発射
+	//Model::RayCast(hCapsuleModel, &data); //レイを発射
 
-	if (data.dist < 1.0f) {
-		
+	for (Capsule* pCapsule : pCapsules) {
+		hCapsuleModel = pCapsule->GetModelHandle();
+		Model::RayCast(hCapsuleModel, &data); //レイを発射
+		if (data.dist < 10.0f) {
+			speed_.y = 0.0f;
+			canMove_ = false;
+		}
 	}
 }
 
