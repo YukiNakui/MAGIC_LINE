@@ -21,7 +21,8 @@ private:
 	XMFLOAT3 lookTarget_;
 	XMVECTOR front_;
 
-	float totalMoveValue_;
+	float maxLineValue_;
+	float currentLineValue_;//Œ»İˆø‚¢‚½ü‚Ì—Ê
 	Capsule* pCapsule_;
 
 	Text* pText_;

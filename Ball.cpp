@@ -34,23 +34,19 @@ void Ball::Update()
 		transform_.position_.y += speed_.y * deltaTime;
 	}
 
-	std::list<Capsule*> pCapsules = GetParent()->FindGameObjects<Capsule>();    //カプセルオブジェクトを探す
-	int hCapsuleModel = 0;
-	//if (pCapsule != nullptr)
-	//	hCapsuleModel = pCapsule->GetModelHandle();    //モデル番号を取得
+	Capsule* pCapsule = (Capsule*)FindObject("Capsule");    //ステージオブジェクトを探す
+	int hCapusleModel = 0;
+	if (pCapsule != nullptr)
+		hCapusleModel = pCapsule->GetModelHandle();    //モデル番号を取得
 
 	RayCastData data;
 	data.start = transform_.position_;   //レイの発射位置
 	data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
-	//Model::RayCast(hCapsuleModel, &data); //レイを発射
+	Model::RayCast(hCapusleModel, &data); //レイを発射
 
-	for (Capsule* pCapsule : pCapsules) {
-		hCapsuleModel = pCapsule->GetModelHandle();
-		Model::RayCast(hCapsuleModel, &data); //レイを発射
-		if (data.dist < 10.0f) {
-			speed_.y = 0.0f;
-			canMove_ = false;
-		}
+	if (data.dist < 100.0f) {
+		speed_.y = 0.0f;
+		canMove_ = false;
 	}
 }
 
@@ -70,8 +66,8 @@ void Ball::OnCollision(GameObject* pTarget)
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
 	}
-	/*else if (pTarget->GetObjectName() == "Capsule") {
-		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-		pSceneManager->ChangeScene(SCENE_ID_CLEAR);
-	}*/
+	else if (pTarget->GetObjectName() == "Capsule") {
+		/*SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+		pSceneManager->ChangeScene(SCENE_ID_CLEAR);*/
+	}
 }

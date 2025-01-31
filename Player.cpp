@@ -6,10 +6,11 @@
 #include<algorithm>
 #include "Engine/SceneManager.h"
 #include"Stage.h"
+#include"Meter.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
-	 totalMoveValue_(0.0f),pCapsule_(nullptr),pText_(nullptr)
+	 maxLineValue_(100.0f),currentLineValue_(100.0f),pCapsule_(nullptr),pText_(nullptr)
 {
 }
 
@@ -61,6 +62,7 @@ void Player::Update()
 	pos += addMove;
 	XMStoreFloat3(&(transform_.position_), pos);
 
+	//カメラ移動処理
 	XMVECTOR vTarget{ 0, 0, 15, 0 };
 	vTarget = XMVector3TransformCoord(vTarget, rotY);
 	XMFLOAT3 targetPos;
@@ -73,9 +75,8 @@ void Player::Update()
 	Camera::SetPosition(camPos);
 
 	if (Input::IsKey(DIK_SPACE)) {
-		totalMoveValue_ += XMVectorGetX(XMVector3Length(addMove));
-
-		if (totalMoveValue_ <= 100.0f) {
+		if (currentLineValue_ <= maxLineValue_) {
+			currentLineValue_ -= XMVectorGetX(XMVector3Length(addMove));
 			if (cdTimer_->IsTimeOver()) {
 				pCapsule_ = Instantiate<Capsule>(this->GetParent());
 				pCapsule_->SetPosition(transform_.position_);
@@ -84,6 +85,9 @@ void Player::Update()
 			}
 		}
 	}
+
+	Meter* pMeter_ = (Meter*)FindObject("Meter");
+	pMeter_->SetMeterVal(maxLineValue_, currentLineValue_);
 
 	Stage* pStage = (Stage*)FindObject("Stage");    //ステージオブジェクトを探す
 	int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
@@ -103,7 +107,7 @@ void Player::Draw()
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
 
-	pText_->Draw(30, 30, 100 - totalMoveValue_);
+	pText_->Draw(30, 30, maxLineValue_ - currentLineValue_);
 }
 
 void Player::Release()
