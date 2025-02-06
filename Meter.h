@@ -5,9 +5,9 @@ class Meter :
     public GameObject
 {
 	int hMeterPict_;
-	Transform MeterTrans_;
+	Transform meterTrans_;
 	int hMeterFramePict_;
-	Transform MeterFrameTrans_;
+	Transform meterFrameTrans_;
 public:
 	Meter(GameObject* parent);
 	void Initialize() override;
@@ -23,7 +23,7 @@ public:
 private:
 	float meterMaxVal_;//メーターの最大値
 	float meterCurrentVal_;//現在の値
-	float currentMeterScaleRate_;//メーターの大きさの割合
-	float previousMeterScaleRate_;//以前のメーターの大きさの割合
+	float meterScaleRate_;//メーターの大きさの割合
+	float meterDefalutScaleY_;//メーターのY方向のデフォルトの大きさ
 };
 

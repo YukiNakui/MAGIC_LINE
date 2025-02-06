@@ -10,7 +10,7 @@
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
-	 maxLineValue_(100.0f),currentLineValue_(100.0f),pCapsule_(nullptr),pText_(nullptr)
+	 maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pText_(nullptr)
 {
 }
 
@@ -76,7 +76,7 @@ void Player::Update()
 
 	if (Input::IsKey(DIK_SPACE)) {
 		if (currentLineValue_ <= maxLineValue_) {
-			currentLineValue_ -= XMVectorGetX(XMVector3Length(addMove));
+			currentLineValue_ += XMVectorGetX(XMVector3Length(addMove));
 			if (cdTimer_->IsTimeOver()) {
 				pCapsule_ = Instantiate<Capsule>(this->GetParent());
 				pCapsule_->SetPosition(transform_.position_);

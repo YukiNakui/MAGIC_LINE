@@ -3,7 +3,7 @@
 
 Meter::Meter(GameObject* parent)
 	:GameObject(parent,"Meter"), hMeterPict_(-1), hMeterFramePict_(-1),
-	meterMaxVal_(0), meterCurrentVal_(0),currentMeterScaleRate_(100), previousMeterScaleRate_(100)
+	meterMaxVal_(0), meterCurrentVal_(0),meterScaleRate_(100)
 {
 }
 
@@ -11,29 +11,27 @@ void Meter::Initialize()
 {
 	hMeterPict_ = Image::Load("Meter.png");
 	assert(hMeterPict_ >= 0);
-	MeterTrans_.position_ = { 0.901f,0.504f,0.0f };
-	MeterTrans_.scale_ = { 0.3f,0.61f,0.3f };
+	meterTrans_.position_ = { 0.899f,-0.498f,0.0f };
+	meterTrans_.scale_ = { 0.3f,0.6f,0.3f };
+	meterTrans_.rotate_ = { 0.0f,0.0f,180.0f };
+	meterDefalutScaleY_ = meterTrans_.scale_.y;
 	hMeterFramePict_ = Image::Load("MeterFrame.png");
 	assert(hMeterFramePict_ >= 0);
-	MeterFrameTrans_.position_ = { 0.9f,0.0f,0.0f };
-	MeterFrameTrans_.scale_ = { 0.1f,0.2f,0.1f };
+	meterFrameTrans_.position_ = { 0.9f,0.0f,0.0f };
+	meterFrameTrans_.scale_ = { 0.1f,0.2f,0.1f };
 }
 
 void Meter::Update()
 {
-	currentMeterScaleRate_ = (float)meterCurrentVal_ / (float)meterMaxVal_;
-
-	if (previousMeterScaleRate_ != currentMeterScaleRate_) {
-		MeterTrans_.scale_.y *= currentMeterScaleRate_;
-		previousMeterScaleRate_ = currentMeterScaleRate_;
-	}
+	meterScaleRate_ = 1 - (float)meterCurrentVal_ / (float)meterMaxVal_;
+	meterTrans_.scale_.y = meterDefalutScaleY_ * meterScaleRate_;
 }
 
 void Meter::Draw()
 {
-	Image::SetTransform(hMeterFramePict_, MeterFrameTrans_);
+	Image::SetTransform(hMeterFramePict_, meterFrameTrans_);
 	Image::Draw(hMeterFramePict_);
-	Image::SetTransform(hMeterPict_, MeterTrans_);
+	Image::SetTransform(hMeterPict_, meterTrans_);
 	Image::Draw(hMeterPict_);
 }
 
