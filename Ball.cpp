@@ -34,35 +34,14 @@ void Ball::Update()
 		transform_.position_.y += speed_.y * deltaTime;
 	}
 
-	RayCastData data;
-	data.start = transform_.position_;   //レイの発射位置
-	data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
+	//std::list <Capsule*> pCapsules = GetParent()->FindGameObjects<Capsule>("Capsule");//これで複数オブジェクトを取得できてるっぽい
+	///*if (pCapsules.size() >= 50) {//これでボールが落ちるから取得できてるはず
+	//	canMove_ = true;
+	//}*/
+	//for (auto& pCapsule : pCapsules) {
+	//	if (pCapsule != nullptr) {
 
-	std::list <Capsule*> pCapsules = GetParent()->FindGameObjects<Capsule>("Capsule");//これで複数オブジェクトを取得できてるっぽい
-	for (auto& pCapsule : pCapsules) {
-		int hCapusleModel = 0;
-		if (pCapsule != nullptr) {
-			hCapusleModel = pCapsule->GetModelHandle();    //モデル番号を取得
-			Model::RayCast(hCapusleModel, &data); //レイを発射
-			if (data.dist < 100.0f) {
-					speed_.y = 0.0f;
-					canMove_ = false;
-				}
-		}
-	}
-	//Capsule* pCapsule = (Capsule*)FindObject("Capsule");    //ステージオブジェクトを探す
-	//int hCapusleModel = 0;
-	//if (pCapsule != nullptr) {
-	//	hCapusleModel = pCapsule->GetModelHandle();    //モデル番号を取得
-	//}
-	//RayCastData data;
-	//data.start = transform_.position_;   //レイの発射位置
-	//data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
-	//Model::RayCast(hCapusleModel, &data); //レイを発射
-
-	//if (data.dist < 100.0f) {
-	//	speed_.y = 0.0f;
-	//	canMove_ = false;
+	//	}
 	//}
 }
 
@@ -85,5 +64,7 @@ void Ball::OnCollision(GameObject* pTarget)
 	else if (pTarget->GetObjectName() == "Capsule") {
 		/*SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_CLEAR);*/
+		Capsule capsule = pTarget;
+		float capsuleRad = capsule.GetRadius();
 	}
 }

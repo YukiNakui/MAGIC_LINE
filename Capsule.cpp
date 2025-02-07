@@ -3,7 +3,7 @@
 #include"Engine/CapsuleCollider.h"
 
 Capsule::Capsule(GameObject* parent)
-	:GameObject(parent,"Capsule"),hModel_(-1)
+	:GameObject(parent,"Capsule"),hModel_(-1),radius_(1.0f),start_({0,0,1}),end_({0,0,-1})
 {
 }
 
