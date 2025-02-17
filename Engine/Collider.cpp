@@ -23,10 +23,8 @@ Collider::~Collider()
 //戻値：接触していればtrue
 bool Collider::IsHitBoxVsBox(BoxCollider* boxA, BoxCollider* boxB)
 {
-
 	XMFLOAT3 boxPosA = Transform::Float3Add(boxA->pGameObject_->GetWorldPosition(), boxA->center_);
 	XMFLOAT3 boxPosB = Transform::Float3Add(boxB->pGameObject_->GetWorldPosition(), boxB->center_);
-
 
 	if ((boxPosA.x + boxA->size_.x / 2) > (boxPosB.x - boxB->size_.x / 2) &&
 		(boxPosA.x - boxA->size_.x / 2) < (boxPosB.x + boxB->size_.x / 2) &&
@@ -41,15 +39,13 @@ bool Collider::IsHitBoxVsBox(BoxCollider* boxA, BoxCollider* boxB)
 }
 
 //箱型と球体の衝突判定
-//引数：box	箱型判定
-//引数：sphere	２つ目の箱型判定
+//引数：box	    箱型判定
+//引数：sphere	球体判定
 //戻値：接触していればtrue
 bool Collider::IsHitBoxVsCircle(BoxCollider* box, SphereCollider* sphere)
 {
 	XMFLOAT3 circlePos = Transform::Float3Add(sphere->pGameObject_->GetWorldPosition(), sphere->center_);
 	XMFLOAT3 boxPos = Transform::Float3Add(box->pGameObject_->GetWorldPosition(), box->center_);
-
-
 
 	if (circlePos.x > boxPos.x - box->size_.x - sphere->size_.x &&
 		circlePos.x < boxPos.x + box->size_.x + sphere->size_.x &&
@@ -86,7 +82,10 @@ bool Collider::IsHitCircleVsCircle(SphereCollider* circleA, SphereCollider* circ
 	return false;
 }
 
-// カプセルとスフィアの当たり判定
+//カプセルと球体の衝突判定
+//引数：capsule　カプセル判定
+//引数：Sphere　 球体判定
+//戻値：接触していればtrue
 bool Collider::IsHitCapsuleVsCircle(CapsuleCollider* capsule, SphereCollider* sphere)
 {
 	XMFLOAT3 capsuleStart = Transform::Float3Add(capsule->pGameObject_->GetWorldPosition(), capsule->start_);
@@ -107,7 +106,10 @@ bool Collider::IsHitCapsuleVsCircle(CapsuleCollider* capsule, SphereCollider* sp
 	return distance <= (capsule->radius_ + sphere->size_.x);
 }
 
-// カプセルとボックスの当たり判定
+//カプセルと箱型の衝突判定
+//引数：capsule　カプセル判定
+//引数：box　    球体判定
+//戻値：接触していればtrue
 bool Collider::IsHitCapsuleVsBox(CapsuleCollider* capsule, BoxCollider* box)
 {
 	XMFLOAT3 capsuleStart = Transform::Float3Add(capsule->pGameObject_->GetWorldPosition(), capsule->start_);
@@ -214,7 +216,10 @@ float Collider::SegmentToSegmentDistance(XMVECTOR p1, XMVECTOR q1, XMVECTOR p2, 
 	return XMVectorGetX(XMVector3Length(c1 - c2));
 }
 
-// カプセル同士の当たり判定
+//カプセル同士の衝突判定
+//引数：cupsuleA	１つ目のカプセル判定
+//引数：cupsuleB	２つ目のカプセル判定
+//戻値：接触していればtrue
 bool Collider::IsHitCapsuleVsCapsule(CapsuleCollider* capsuleA, CapsuleCollider* capsuleB)
 {
 	XMFLOAT3 startA = Transform::Float3Add(capsuleA->pGameObject_->GetWorldPosition(), capsuleA->start_);

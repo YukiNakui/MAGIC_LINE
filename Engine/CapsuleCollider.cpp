@@ -13,7 +13,7 @@ CapsuleCollider::CapsuleCollider(XMFLOAT3 start, XMFLOAT3 end, float radius)
 
     // デバッグ時にカプセルの判定枠を表示
 #ifdef _DEBUG
-    //hDebugModel_ = Model::Load("DebugCollision/capsuleCollider.fbx");
+    hDebugModel_ = Model::Load("DebugCollision/CapsuleCollider.fbx");
 #endif
 }
 
