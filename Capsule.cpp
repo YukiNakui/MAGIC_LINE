@@ -11,7 +11,7 @@ void Capsule::Initialize()
 {
 	hModel_ = Model::Load("Model/capsule.fbx");
 	assert(hModel_ >= 0);
-	CapsuleCollider* collision = new CapsuleCollider(XMFLOAT3{0,0,1}, XMFLOAT3{0,0,-1}, 1.0f);
+	CapsuleCollider* collision = new CapsuleCollider(XMFLOAT3{ 0,0,0 }, XMFLOAT3{ 0,0,1 }, XMFLOAT3{ 0,0,-1 }, 1.0f);
 	AddCollider(collision);
 }
 

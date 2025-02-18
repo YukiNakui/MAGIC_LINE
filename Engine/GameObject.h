@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "SphereCollider.h"
 #include "BoxCollider.h"
+#include "CapsuleCollider.h"
 #include "Transform.h"
 
 
