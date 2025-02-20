@@ -15,7 +15,10 @@ public:
 	void OnCollision(GameObject* pTarget) override;
 private:
 	CDTimer* cdTimer_;
-	XMFLOAT3 speed_;
+	XMVECTOR ballVelocity_;//ボールの速度
+	XMVECTOR ballPos_;//現在のボールの位置
+	XMVECTOR prevBallPos_;//前のボールの位置
+	float gravity_;//重力
 	bool canMove_;
 };
 
