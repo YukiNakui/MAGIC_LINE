@@ -77,19 +77,41 @@ void Ball::Update()
 
                 // 一定の距離以下で衝突判定を行う（ここでの衝突判定距離は5.0fに設定）
                 if (distLength <= 5.0f) {
-                    // 接触点からカプセルの中心へ向かう法線ベクトルを計算
-                    XMVECTOR normal = XMVectorSubtract(closestPointOnCapsule, ballPos_);
+                    //std::cout << "Collision detected! Distance: " << distLength << std::endl;
+
+                    // **カプセルの中心軸を取得**
+                    XMVECTOR capsuleAxis = XMVectorSubtract(capsuleEndPos, capsuleStartPos);
+                    capsuleAxis = XMVector3Normalize(capsuleAxis); // 正規化
+
+                    // **ボールとカプセルの最短点を結ぶベクトルを計算**
+                    XMVECTOR ballToContact = XMVectorSubtract(ballPos_, closestPointOnCapsule);
+
+                    // **ボールの接触点の法線を計算（カプセル軸に対して垂直なベクトル）**
+                    XMVECTOR normal = XMVectorSubtract(ballToContact, XMVectorScale(capsuleAxis, XMVector3Dot(ballToContact, capsuleAxis).m128_f32[0]));
                     normal = XMVector3Normalize(normal); // 法線を正規化
 
-                    // 反射ベクトルを計算
-                    float reflectVec = XMVector3Dot(ballVelocity_, normal).m128_f32[0];
-                    XMVECTOR reflectedVelocity = XMVectorSubtract(ballVelocity_, XMVectorScale(normal, 2 * reflectVec));
-                    // 反発係数を適用（例: 0.9）
-                    float e = 0.9f;
-                    reflectedVelocity = DirectX::XMVectorScale(reflectedVelocity, e);
+                    // **ボールをカプセルの表面に押し戻す**
+                    float penetrationDepth = 5.0f - distLength;
+                    ballPos_ = XMVectorAdd(ballPos_, XMVectorScale(normal, penetrationDepth + 0.1f));
+                    // +0.1f で「完全にカプセルの外」に出す
 
-                    // 新しいボールの速度を反映（進行方向ベクトルを更新）
+                    // **反射ベクトルを計算**
+                    float e = 0.9f; // 反発係数
+                    XMVECTOR reflectedVelocity = XMVector3Reflect(ballVelocity_, normal);
+                    reflectedVelocity = XMVectorScale(reflectedVelocity, e);
+
+                    // **最低速度を設定（速度が小さすぎると止まってしまう）**
+                    float minSpeed = 1.0f;
+                    if (XMVectorGetX(XMVector3Length(reflectedVelocity)) < minSpeed) {
+                        reflectedVelocity = XMVectorScale(normal, minSpeed);
+                    }
+
+                    // **新しいボールの速度を適用**
                     ballVelocity_ = reflectedVelocity;
+
+                    // **位置の更新**
+                    XMStoreFloat3(&transform_.position_, ballPos_);
+                    prevBallPos_ = ballPos_; // **新しい位置を保存**
                 }
             }
         }
