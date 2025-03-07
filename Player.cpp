@@ -53,6 +53,7 @@ void Player::Update()
 		transform_.rotate_.y += 60.0f * deltaTime;
 	}
 
+	//ƒvƒŒƒCƒ„[ˆÚ“®ˆ—
 	rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
 	rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
 	rotVec = XMVector3TransformCoord(front_, rotX * rotY);

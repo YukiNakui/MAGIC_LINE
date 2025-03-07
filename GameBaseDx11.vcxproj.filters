@@ -109,6 +109,7 @@
     <ClCompile Include="ClearScene.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="Meter.cpp" />
+    <ClCompile Include="StageFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -194,6 +195,7 @@
     <ClInclude Include="ClearScene.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="Meter.h" />
+    <ClInclude Include="StageFrame.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
