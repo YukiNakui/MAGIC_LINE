@@ -21,5 +21,9 @@ private:
 	XMVECTOR ballVelocity_;//ボールの速度
 	float gravity_;//重力
 	bool canMove_;
+
+	float lowSpeedTime_;                //低速状態の経過時間
+	float lowSpeedThreshold_;     //低速と判定する速度
+	float timeBeforeSceneChange_; //低速状態が続いたら切り替えまでの時間
 };
 

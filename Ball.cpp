@@ -22,6 +22,9 @@ void Ball::Initialize()
 	prevBallPos_ = ballPos_;
 	transform_.scale_ = { 5.0f,5.0f,5.0f };
 
+    lowSpeedThreshold_ = 10.0f;
+    timeBeforeSceneChange_ = 3.0f;
+
 	cdTimer_ = Instantiate<CDTimer>(this);
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 5.0f);
@@ -108,6 +111,20 @@ void Ball::Update()
 
                     // **新しいボールの速度を適用**
                     ballVelocity_ = reflectedVelocity;
+
+                    float ballSpeed = XMVectorGetX(XMVector3Length(ballVelocity_));
+
+                    // **低速状態をカウント**
+                    if (ballSpeed < lowSpeedThreshold_) {
+                        lowSpeedTime_ += deltaTime;
+                        if (lowSpeedTime_ >= timeBeforeSceneChange_) {
+                            SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+                            pSceneManager->ChangeScene(SCENE_ID_CLEAR); // **シーン切り替え**
+                        }
+                    }
+                    else {
+                        lowSpeedTime_ = 0.0f; // **速度が閾値を超えたらリセット**
+                    }
 
                     // **位置の更新**
                     XMStoreFloat3(&transform_.position_, ballPos_);

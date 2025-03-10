@@ -3,6 +3,7 @@
 #include"CDTimer.h"
 #include"Capsule.h"
 #include"Engine/Text.h"
+#include"CountStart.h"
 
 class Player :
     public GameObject
@@ -25,6 +26,8 @@ private:
 	float currentLineValue_;//Œ»İˆø‚¢‚½ü‚Ì—Ê
 	Capsule* pCapsule_;
 
+	CountStart* pCountStart_;
+	bool canMove_;
 	Text* pText_;
 };
 

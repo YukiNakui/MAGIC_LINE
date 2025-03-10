@@ -131,6 +131,7 @@
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="CDTimer.cpp" />
     <ClCompile Include="ClearScene.cpp" />
+    <ClCompile Include="CountStart.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageBox.cpp" />
     <ClCompile Include="StageFrame.cpp" />
+    <ClCompile Include="ThemeDisplay.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +171,7 @@
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="CDTimer.h" />
     <ClInclude Include="ClearScene.h" />
+    <ClInclude Include="CountStart.h" />
     <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageBox.h" />
     <ClInclude Include="StageFrame.h" />
+    <ClInclude Include="ThemeDisplay.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>

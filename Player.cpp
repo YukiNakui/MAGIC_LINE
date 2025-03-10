@@ -10,7 +10,7 @@
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
-	 maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pText_(nullptr)
+	 maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pText_(nullptr),pCountStart_(nullptr)
 {
 }
 
@@ -25,43 +25,66 @@ void Player::Initialize()
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.5f);
 	AddCollider(collision);
 
+	//pCountStart_ = (CountStart*)FindObject("CountStart");
+	canMove_ = false;
+
 	pText_ = new Text;
 	pText_ ->Initialize();
 }
 
 void Player::Update()
 {
+	if (pCountStart_ == nullptr) {
+		pCountStart_ = (CountStart*)FindObject("CountStart");
+		//return; // **まだカウント開始前なら動かない**
+	}
+
+	if (!canMove_)
+	{
+		if (pCountStart_ != nullptr && !pCountStart_->IsStartVisible())
+		{
+			canMove_ = true;  // **START が消えたら移動開始**
+		}
+		//else
+		//{
+		//	return; // **まだ動かない**
+		//}
+	}
+
+	
 	XMMATRIX rotX = XMMatrixIdentity();
 	XMMATRIX rotY = XMMatrixIdentity();
 	XMVECTOR move{ 0, 0, 0, 0 };
 	XMVECTOR rotVec{ 0, 0, 0, 0 };
 	float dir = 1.0f;
 	float deltaTime = cdTimer_->GetDeltaTime();
+	if (canMove_) {
+		if (Input::IsKey(DIK_UP)) {
+			transform_.rotate_.x += 60.0f * deltaTime;
+		}
+		if (Input::IsKey(DIK_DOWN)) {
+			transform_.rotate_.x -= 60.0f * deltaTime;
+		}
+		transform_.rotate_.x = std::clamp(transform_.rotate_.x, -45.0f, 45.0f);
 
-	if (Input::IsKey(DIK_UP)) {
-		transform_.rotate_.x += 60.0f * deltaTime;
-	}
-	if (Input::IsKey(DIK_DOWN)) {
-		transform_.rotate_.x -= 60.0f * deltaTime;
-	}
-	transform_.rotate_.x = std::clamp(transform_.rotate_.x, -45.0f, 45.0f);
+		if (Input::IsKey(DIK_LEFT)) {
+			transform_.rotate_.y -= 60.0f * deltaTime;
+		}
+		if (Input::IsKey(DIK_RIGHT)) {
+			transform_.rotate_.y += 60.0f * deltaTime;
+		}
 
-	if (Input::IsKey(DIK_LEFT)) {
-		transform_.rotate_.y -= 60.0f * deltaTime;
+		//プレイヤー移動処理
+		rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
+		rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+		rotVec = XMVector3TransformCoord(front_, rotX * rotY);
+		move = 10.0f * rotVec;
 	}
-	if (Input::IsKey(DIK_RIGHT)) {
-		transform_.rotate_.y += 60.0f * deltaTime;
-	}
-
-	//プレイヤー移動処理
-	rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
-	rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
-	rotVec = XMVector3TransformCoord(front_, rotX * rotY);
-	move = 10.0f * rotVec;
 	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
 	XMVECTOR addMove = dir * move * deltaTime;
 	pos += addMove;
 	XMStoreFloat3(&(transform_.position_), pos);
+
 
 	//カメラ移動処理
 	XMVECTOR vTarget{ 0, 0, 15, 0 };
@@ -108,7 +131,7 @@ void Player::Draw()
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
 
-	pText_->Draw(30, 30, maxLineValue_ - currentLineValue_);
+	//pText_->Draw(30, 30, maxLineValue_ - currentLineValue_);
 }
 
 void Player::Release()

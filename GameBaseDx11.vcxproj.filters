@@ -110,6 +110,8 @@
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="Meter.cpp" />
     <ClCompile Include="StageFrame.cpp" />
+    <ClCompile Include="ThemeDisplay.cpp" />
+    <ClCompile Include="CountStart.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -196,6 +198,8 @@
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="Meter.h" />
     <ClInclude Include="StageFrame.h" />
+    <ClInclude Include="ThemeDisplay.h" />
+    <ClInclude Include="CountStart.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
