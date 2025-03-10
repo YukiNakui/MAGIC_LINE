@@ -22,54 +22,52 @@ void ThemeDisplay::Initialize()
     cdTimer_ = Instantiate<CDTimer>(this);
     cdTimer_->SetInitTime(3.0f);
 
-    // 初期位置
-    transform_.position_ = { 0.0f, 0.0f, 0 };  // 画面中央
+    //初期位置
+    transform_.position_ = { 0.0f, 0.0f, 0 };  //画面中央
 
-    // 目標位置を左上に設定
-    targetTrans_.position_ = { -0.7f, 0.9f, 0 };  // 左上の座標
+    //目標位置を左上に設定
+    targetTrans_.position_ = { -0.7f, 0.9f, 0 };  //左上の座標
 }
 
 void ThemeDisplay::Update()
 {
     deltaTime_ = cdTimer_->GetDeltaTime();
-    elapsedTime_ += deltaTime_;  // 累積時間を加算
+    elapsedTime_ += deltaTime_;  //累積時間を加算
 
     if (hasMoved_)
         return;
 
-    // 一定時間経過したら移動を開始
+    //一定時間経過したら移動を開始
     if (!isMoving_ && elapsedTime_ >= displayDuration_) {
         isMoving_ = true;
-        elapsedTime_ = displayDuration_;  // 時間を正確に設定
+        elapsedTime_ = displayDuration_;
     }
 
     if (isMoving_)
     {
         float t = (elapsedTime_ - displayDuration_) / transitionDuration_;
-        t = std::clamp(t, 0.0f, 1.0f); // tを0.0～1.0に制限
+        t = std::clamp(t, 0.0f, 1.0f);
 
-        // t を cos 関数で変換
-        float smoothT = 1.0f - cos(t * XM_PI * 0.5f);  // cos 関数を使った加速・減速
+        float smoothT = 1.0f - cos(t * XM_PI * 0.5f);
 
-        // 位置の補間
+        //位置補間
         transform_.position_.x = smoothT * targetTrans_.position_.x;
         transform_.position_.y = smoothT * targetTrans_.position_.y;
 
-        // スケールの補間 (0.3 以下にならないようにする)
+        //スケールの補間
         float scale = (1 - smoothT) * 1.0f + smoothT * targetScale_;
         scale = max(scale, 0.3f);
         transform_.scale_ = { scale, scale, scale };
 
-        // t が 1.0 に達したら最終位置を固定
+        //最終位置を固定
         if (t >= 1.0f) {
             transform_.position_ = targetTrans_.position_;
             transform_.scale_ = { targetScale_, targetScale_, targetScale_ };
-            isMoving_ = false; // これ以上更新しない
+            isMoving_ = false;
             hasMoved_ = true;
 
             if (pCountStart_ == nullptr) {
                 pCountStart_ = Instantiate<CountStart>(this);
-                //countStart_->Initialize();
             }
         }
     }

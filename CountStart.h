@@ -20,14 +20,14 @@ public:
 private:
     CDTimer* cdTimer_;
     float deltaTime_;
-    int currentCount_;   // 3 → 2 → 1 → START のインデックス
-    float elapsedTime_;  // 経過時間
-    bool isCounting_;    // カウントダウン中か
-    bool finished_;      // カウントダウンが終わったか
+    int currentCount_; 
+    float elapsedTime_;  //経過時間
+    bool isCounting_;    //カウントダウン中か
+    bool finished_;      //カウントダウンが終わったか
 
-    float scale_;        // 現在のスケール
-    const float maxScale_ = 3.0f; // 開始時のスケール（画面いっぱい）
-    const float minScale_ = 1.0f; // 通常サイズ
+    float scale_;        //現在のスケール
+    const float maxScale_ = 3.0f; //開始時のスケール
+    const float minScale_ = 1.0f; //通常サイズ
 
     float startElapsedTime_;
     bool isStartVisible_;

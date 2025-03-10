@@ -25,7 +25,6 @@ void Player::Initialize()
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.5f);
 	AddCollider(collision);
 
-	//pCountStart_ = (CountStart*)FindObject("CountStart");
 	canMove_ = false;
 
 	pText_ = new Text;
@@ -36,19 +35,14 @@ void Player::Update()
 {
 	if (pCountStart_ == nullptr) {
 		pCountStart_ = (CountStart*)FindObject("CountStart");
-		//return; // **まだカウント開始前なら動かない**
 	}
 
 	if (!canMove_)
 	{
 		if (pCountStart_ != nullptr && !pCountStart_->IsStartVisible())
 		{
-			canMove_ = true;  // **START が消えたら移動開始**
+			canMove_ = true;  //STARTが消えたら移動開始
 		}
-		//else
-		//{
-		//	return; // **まだ動かない**
-		//}
 	}
 
 	

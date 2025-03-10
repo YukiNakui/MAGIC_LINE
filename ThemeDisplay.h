@@ -22,7 +22,7 @@ private:
     float displayDuration_;
     float transitionDuration_;
     bool isMoving_;
-    bool hasMoved_; // 一度だけ移動するためのフラグ
+    bool hasMoved_; //一度だけ移動するためのフラグ
     Transform targetTrans_;
     float targetScale_;
 

@@ -30,7 +30,7 @@ void CountStart::Initialize()
 	elapsedTime_ = 0.0f;
 	isCounting_ = true;
 	finished_ = false;
-	scale_ = maxScale_; // **最初は大きく**
+	scale_ = maxScale_;
 }
 
 void CountStart::Update()
@@ -38,35 +38,35 @@ void CountStart::Update()
     deltaTime_ = cdTimer_->GetDeltaTime();
     elapsedTime_ += deltaTime_;
 
-    if (!isCounting_ && !finished_) return; // **カウント終了後もUpdateを継続**
+    if (!isCounting_ && !finished_) return; //カウント終了後もUpdateを継続
 
-    // **1秒ごとにカウントダウン**
+    //1秒ごとにカウントダウン
     if (elapsedTime_ >= 1.0f && currentCount_ >= 0)
     {
         elapsedTime_ = 0.0f;
-        currentCount_--; // **カウントダウン**
+        currentCount_--;
 
-        if (currentCount_ < 0) // **「START」を表示**
+        if (currentCount_ < 0)
         {
             finished_ = true;
-            startElapsedTime_ = 0.0f; // 「START」の表示時間リセット
+            startElapsedTime_ = 0.0f; //「START」の表示時間リセット
         }
 
         scale_ = maxScale_;
         cdTimer_->ResetTimer();
     }
 
-    // **「START」の表示時間をカウント**
+    //「START」の表示時間カウント
     if (finished_)
     {
         startElapsedTime_ += deltaTime_;
 
         if (startElapsedTime_ >= 0.5f)
         {
-            isStartVisible_ = false;  // **0.5秒後に非表示**
+            isStartVisible_ = false;
         }
     }
-    else // **カウント中のみスケール補間を適用**
+    else //カウント中のみスケール補間を適用
     {
         float t = std::clamp(elapsedTime_, 0.0f, 1.0f);
         float smoothT = 0.5f * (1.0f - cos(t * XM_PI));
@@ -81,7 +81,7 @@ void CountStart::Draw()
         Image::SetTransform(hPictCount_[currentCount_ - 1], transform_);
         Image::Draw(hPictCount_[currentCount_ - 1]);
     }
-    else if (isStartVisible_)  // **0.5秒後に非表示**
+    else if (isStartVisible_)
     {
         Image::SetTransform(hPictStart_, transform_);
         Image::Draw(hPictStart_);
