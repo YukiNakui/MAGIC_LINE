@@ -9,8 +9,8 @@
 #include"Meter.h"
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr), lookTarget_{ 0,0,0 },front_{0,0,1,0},
-	 maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pText_(nullptr),pCountStart_(nullptr)
+	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr),cupsuleTimer_(nullptr),capsuleSpawnInterval_(0.1f),
+	 lookTarget_{ 0,0,0 },front_{0,0,1,0},maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr)
 {
 }
 
@@ -22,13 +22,13 @@ void Player::Initialize()
 	cdTimer_ = Instantiate<CDTimer>(this);
 	cdTimer_->SetInitTime(0.1f);
 
+	cupsuleTimer_ = Instantiate<CDTimer>(this);
+	cupsuleTimer_->SetInitTime(capsuleSpawnInterval_);
+
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.5f);
 	AddCollider(collision);
 
 	canMove_ = false;
-
-	pText_ = new Text;
-	pText_ ->Initialize();
 }
 
 void Player::Update()
@@ -77,29 +77,36 @@ void Player::Update()
 	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
 	XMVECTOR addMove = dir * move * deltaTime;
 	pos += addMove;
-	XMStoreFloat3(&(transform_.position_), pos);
+	XMStoreFloat3(&transform_.position_, pos);
 
 
 	//カメラ移動処理
 	XMVECTOR vTarget{ 0, 0, 15, 0 };
 	vTarget = XMVector3TransformCoord(vTarget, rotY);
 	XMFLOAT3 targetPos;
-	XMStoreFloat3(&targetPos, pos + vTarget);
+	XMStoreFloat3(&targetPos, XMVectorAdd(pos, vTarget));
 	Camera::SetTarget(transform_.position_);
 	XMVECTOR vEye{ 0, 10, -20, 0 };
 	vEye = XMVector3TransformCoord(vEye, rotY);
 	XMFLOAT3 camPos;
-	XMStoreFloat3(&camPos, pos + vEye);
+	XMStoreFloat3(&camPos, XMVectorAdd(pos, vEye));
 	Camera::SetPosition(camPos);
+
+	 //**カプセルリセット処理**
+    if (Input::IsKeyDown(DIK_LSHIFT) || Input::IsKeyDown(DIK_RSHIFT)) { // シフトキーでカプセルをリセット
+        ClearCapsules();
+    }
 
 	if (Input::IsKey(DIK_SPACE)) {
 		if (currentLineValue_ <= maxLineValue_) {
 			currentLineValue_ += XMVectorGetX(XMVector3Length(addMove));
-			if (cdTimer_->IsTimeOver()) {
-				pCapsule_ = Instantiate<Capsule>(this->GetParent());
+			if (cupsuleTimer_->IsTimeOver()) {
+				//pCapsule_ = Instantiate<Capsule>(this->GetParent());
+				pCapsule_ = GetCapsuleFromPool();
+				
 				pCapsule_->SetPosition(transform_.position_);
 				pCapsule_->SetRotate(transform_.rotate_);
-				cdTimer_->ResetTimer();
+				cupsuleTimer_->ResetTimer();
 			}
 		}
 	}
@@ -124,14 +131,63 @@ void Player::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
-
-	//pText_->Draw(30, 30, maxLineValue_ - currentLineValue_);
 }
 
 void Player::Release()
 {
+	// **出現中のカプセルを削除**
+	for (auto& capsule : capsuleList_) {
+		if (capsule && capsule->IsActive()) { // **カプセルが存在していてアクティブな場合のみ削除**
+			capsule->KillMe();
+		}
+	}
+	capsuleList_.clear(); // **カプセルリストをクリア**
+
+	// **プール内のカプセルも削除**
+	for (auto& capsule : capsulePool_) {
+		if (capsule) { // **ポインタが有効かチェック**
+			capsule->KillMe();
+		}
+	}
+	capsulePool_.clear(); // **プールのクリア**
 }
 
 void Player::OnCollision(GameObject* pTarget)
 {
+}
+
+Capsule* Player::GetCapsuleFromPool()
+{
+	for (auto& capsule : capsulePool_) {
+		if (!capsule->IsActive()) {  // 非アクティブなカプセルを探す
+			capsule->SetActive(true); // 再利用時にアクティブ化
+			capsule->SetPosition(transform_.position_);
+			capsule->SetRotate(transform_.rotate_);
+
+			capsuleList_.push_back(capsule); // **カプセルリストに追加**
+			return capsule;
+		}
+	}
+
+	// 使えるカプセルがなければ新規作成
+	Capsule* newCapsule = Instantiate<Capsule>(this->GetParent());
+	newCapsule->SetActive(true);  // 新規作成時にアクティブ化
+	newCapsule->SetPosition(transform_.position_);
+	newCapsule->SetRotate(transform_.rotate_);
+
+	capsulePool_.push_back(newCapsule);
+	capsuleList_.push_back(newCapsule);  // **カプセルリストに追加**
+	return newCapsule;
+}
+
+void Player::ClearCapsules()
+{
+	for (auto& capsule : capsuleList_) {
+		capsule->SetActive(false);  // **非アクティブ化**
+		capsule->SetPosition({ 0, -1000, 0 });  // 画面外へ移動
+		capsulePool_.push_back(capsule);  // プールに戻す
+	}
+	capsuleList_.clear();  // 画面上のカプセルリストをクリア
+
+	currentLineValue_ = 0.0f;  // カウントリセット
 }

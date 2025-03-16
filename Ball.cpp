@@ -22,8 +22,8 @@ void Ball::Initialize()
 	prevBallPos_ = ballPos_;
 	transform_.scale_ = { 5.0f,5.0f,5.0f };
 
-    lowSpeedThreshold_ = 10.0f;
-    timeBeforeSceneChange_ = 3.0f;
+    lowSpeedThreshold_ = 50.0f;
+    timeBeforeSceneChange_ = 1.5f;
 
 	cdTimer_ = Instantiate<CDTimer>(this);
 
@@ -96,7 +96,7 @@ void Ball::Update()
                     ballPos_ = XMVectorAdd(ballPos_, XMVectorScale(normal, penetrationDepth + 0.1f));
 
                     //îΩéÀÉxÉNÉgÉãÇåvéZ
-                    float e = 0.9f; //îΩî≠åWêî
+                    float e = 0.4f; //îΩî≠åWêî
                     XMVECTOR reflectedVelocity = XMVector3Reflect(ballVelocity_, normal);
                     reflectedVelocity = XMVectorScale(reflectedVelocity, e);
 

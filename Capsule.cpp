@@ -1,9 +1,8 @@
 #include "Capsule.h"
 #include"Engine/Model.h"
-#include"Engine/CapsuleCollider.h"
 
 Capsule::Capsule(GameObject* parent)
-	:GameObject(parent,"Capsule"),hModel_(-1),radius_(1.0f),start_({0,0,1}),end_({0,0,-1})
+	:GameObject(parent,"Capsule"),hModel_(-1),radius_(1.0f),start_({0,0,1}),end_({0,0,-1}),isActive_(false)
 {
 }
 
@@ -11,8 +10,6 @@ void Capsule::Initialize()
 {
 	hModel_ = Model::Load("Model/capsule.fbx");
 	assert(hModel_ >= 0);
-	CapsuleCollider* collision = new CapsuleCollider(XMFLOAT3{ 0,0,0 }, XMFLOAT3{ 0,0,1 }, XMFLOAT3{ 0,0,-1 }, 1.0f);
-	AddCollider(collision);
 }
 
 void Capsule::Update()
@@ -45,6 +42,8 @@ void Capsule::Update()
 
 void Capsule::Draw()
 {
+	if (!IsActive()) return; // 非アクティブなら描画しない
+
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
 }

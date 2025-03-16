@@ -22,7 +22,7 @@
 #pragma comment(lib,"Winmm.lib")
 
 //定数宣言
-const char* WIN_CLASS_NAME = "SampleGame";	//ウィンドウクラス名
+const char* WIN_CLASS_NAME = "MAGIC LINE";	//ウィンドウクラス名
 
 
 //プロトタイプ宣言

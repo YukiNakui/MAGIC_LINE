@@ -81,5 +81,4 @@ void ThemeDisplay::Draw()
 
 void ThemeDisplay::Release()
 {
-	
 }
