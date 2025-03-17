@@ -22,7 +22,7 @@ void Ball::Initialize()
 	prevBallPos_ = ballPos_;
 	transform_.scale_ = { 5.0f,5.0f,5.0f };
 
-    lowSpeedThreshold_ = 50.0f;
+    lowSpeedThreshold_ = 80.0f;
     timeBeforeSceneChange_ = 1.5f;
 
 	cdTimer_ = Instantiate<CDTimer>(this);

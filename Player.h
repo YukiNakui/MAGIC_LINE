@@ -36,6 +36,9 @@ private:
 	CountStart* pCountStart_;
 	bool canMove_;
 
+	XMFLOAT3 maxPos_;
+	XMFLOAT3 minPos_;
+
 private:
 	Capsule* GetCapsuleFromPool();
 	void ClearCapsules();

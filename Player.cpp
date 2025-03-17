@@ -8,10 +8,12 @@
 #include"Stage.h"
 #include"Meter.h"
 #include"Engine/Audio.h"
+#include"Ball.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),hModel_(-1), hLineSound_(-1), hLineDeleteSound_(-1), hBGM_(-1), cdTimer_(nullptr),cupsuleTimer_(nullptr),capsuleSpawnInterval_(0.1f),
-	 lookTarget_{ 0,0,0 },front_{0,0,1,0},maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr)
+	 lookTarget_{ 0,0,0 },front_{0,0,1,0},maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr),
+	maxPos_(45.0f,30.0f,45.0f), minPos_(-45.0f, -60.0f, -45.0f)
 {
 }
 
@@ -27,7 +29,7 @@ void Player::Initialize()
 	hBGM_ = Audio::Load("Sound/PlayBGM.wav",true);
 	assert(hBGM_ >= 0);
 
-	transform_.position_ = { 0.0f,5.0f,-30.0f };
+	transform_.position_ = { 0.0f,10.0f,-30.0f };
 	cdTimer_ = Instantiate<CDTimer>(this);
 	cdTimer_->SetInitTime(0.1f);
 
@@ -87,8 +89,37 @@ void Player::Update()
 	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
 	XMVECTOR addMove = dir * move * deltaTime;
 	pos += addMove;
-	XMStoreFloat3(&transform_.position_, pos);
 
+
+	//ボールとの距離チェック
+	Ball* pBall = (Ball*)FindObject("Ball");
+	if (pBall != nullptr)
+	{
+		XMFLOAT3 ballFloatPos = pBall->GetPosition();
+		XMVECTOR ballPos = XMLoadFloat3(&ballFloatPos);
+		XMVECTOR diff = pos - ballPos;
+		float distance = XMVectorGetX(XMVector3Length(diff));
+
+		float minDistance = 7.5f; //ボールとプレイヤーの最小距離（プレイヤーのコライダー半径 + ボールの半径)
+
+		if (distance < minDistance)
+		{
+			//ボールの表面に押し戻す
+			XMVECTOR pushBack = XMVector3Normalize(diff) * (minDistance - distance);
+			pos += pushBack;
+		}
+	}
+
+
+	// **移動制限処理**
+	XMFLOAT3 newPosition;
+	XMStoreFloat3(&newPosition, pos);
+
+	newPosition.x = std::clamp(newPosition.x, minPos_.x, maxPos_.x);
+	newPosition.y = std::clamp(newPosition.y, minPos_.y, maxPos_.y);
+	newPosition.z = std::clamp(newPosition.z, minPos_.z, maxPos_.z);
+	// **移動を適用**
+	transform_.position_ = newPosition;
 
 	//カメラ移動処理
 	XMVECTOR vTarget{ 0, 0, 15, 0 };
@@ -136,6 +167,7 @@ void Player::Update()
 	data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
 	Model::RayCast(hGroundModel, &data); //レイを発射
 	
+	//地面をすり抜けないようにする
 	if (data.dist < 1.0f) {
 		transform_.position_.y += 1.0f - data.dist;
 	}
