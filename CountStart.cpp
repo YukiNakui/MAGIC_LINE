@@ -2,9 +2,10 @@
 #include"Engine/Image.h"
 #include<algorithm>
 #include<cmath>
+#include"Engine/Audio.h"
 
 CountStart::CountStart(GameObject* parent)
-    :GameObject(parent, "CountStart"), hPictCount_{}, hPictStart_(-1),cdTimer_(nullptr),
+    :GameObject(parent, "CountStart"), hPictCount_{}, hPictStart_(-1), hCountSound_(-1), hStartSound_(-1), cdTimer_(nullptr),
 	deltaTime_(0.0f),currentCount_(0), elapsedTime_(0.0f), isCounting_(false), finished_(false), scale_(maxScale_),
     startElapsedTime_(0.0f),isStartVisible_(true)
 {
@@ -23,6 +24,11 @@ void CountStart::Initialize()
 	hPictStart_ = Image::Load("start.png");
 	assert(hPictStart_ >= 0);
 
+    hCountSound_ = Audio::Load("Sound/CountSound.wav");
+    assert(hCountSound_ >= 0);
+    hStartSound_ = Audio::Load("Sound/StartSound.wav");
+    assert(hStartSound_ >= 0);
+
     cdTimer_ = Instantiate<CDTimer>(this);
     cdTimer_->SetInitTime(1.0f);
 
@@ -31,6 +37,8 @@ void CountStart::Initialize()
 	isCounting_ = true;
 	finished_ = false;
 	scale_ = maxScale_;
+
+    Audio::Play(hCountSound_);
 }
 
 void CountStart::Update()
@@ -46,10 +54,14 @@ void CountStart::Update()
         elapsedTime_ = 0.0f;
         currentCount_--;
 
-        if (currentCount_ < 0)
+        if (currentCount_ <= 0)
         {
             finished_ = true;
             startElapsedTime_ = 0.0f; //「START」の表示時間リセット
+            Audio::Play(hStartSound_);
+        }
+        else {
+            Audio::Play(hCountSound_);
         }
 
         scale_ = maxScale_;

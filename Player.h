@@ -9,6 +9,9 @@ class Player :
     public GameObject
 {
 	int hModel_;
+	int hLineSound_;
+	int hLineDeleteSound_;
+	int hBGM_;
 public:
 	Player(GameObject* parent);
 	void Initialize() override;

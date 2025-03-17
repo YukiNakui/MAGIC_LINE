@@ -7,9 +7,10 @@
 #include "Engine/SceneManager.h"
 #include"Stage.h"
 #include"Meter.h"
+#include"Engine/Audio.h"
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"),hModel_(-1),cdTimer_(nullptr),cupsuleTimer_(nullptr),capsuleSpawnInterval_(0.1f),
+	:GameObject(parent,"Player"),hModel_(-1), hLineSound_(-1), hLineDeleteSound_(-1), hBGM_(-1), cdTimer_(nullptr),cupsuleTimer_(nullptr),capsuleSpawnInterval_(0.1f),
 	 lookTarget_{ 0,0,0 },front_{0,0,1,0},maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr)
 {
 }
@@ -18,6 +19,14 @@ void Player::Initialize()
 {
 	hModel_ = Model::Load("Model/Player.fbx");
 	assert(hModel_ >= 0);
+
+	hLineSound_ = Audio::Load("Sound/LineSound.wav");
+	assert(hLineSound_ >= 0);
+	hLineDeleteSound_ = Audio::Load("Sound/LineDeleteSound.wav");
+	assert(hLineDeleteSound_ >= 0);
+	hBGM_ = Audio::Load("Sound/PlayBGM.wav",true);
+	assert(hBGM_ >= 0);
+
 	transform_.position_ = { 0.0f,5.0f,-30.0f };
 	cdTimer_ = Instantiate<CDTimer>(this);
 	cdTimer_->SetInitTime(0.1f);
@@ -42,6 +51,7 @@ void Player::Update()
 		if (pCountStart_ != nullptr && !pCountStart_->IsStartVisible())
 		{
 			canMove_ = true;  //STARTが消えたら移動開始
+			Audio::Play(hBGM_);
 		}
 	}
 
@@ -92,21 +102,25 @@ void Player::Update()
 	XMStoreFloat3(&camPos, XMVectorAdd(pos, vEye));
 	Camera::SetPosition(camPos);
 
-	 //**カプセルリセット処理**
-    if (Input::IsKeyDown(DIK_LSHIFT) || Input::IsKeyDown(DIK_RSHIFT)) { // シフトキーでカプセルをリセット
-        ClearCapsules();
-    }
+	if (canMove_) {
+		//**カプセルリセット処理**
+		if (Input::IsKeyDown(DIK_LSHIFT) || Input::IsKeyDown(DIK_RSHIFT)) { // シフトキーでカプセルをリセット
+			ClearCapsules();
+			Audio::Play(hLineDeleteSound_);
+		}
 
-	if (Input::IsKey(DIK_SPACE)) {
-		if (currentLineValue_ <= maxLineValue_) {
-			currentLineValue_ += XMVectorGetX(XMVector3Length(addMove));
-			if (cupsuleTimer_->IsTimeOver()) {
-				//pCapsule_ = Instantiate<Capsule>(this->GetParent());
-				pCapsule_ = GetCapsuleFromPool();
-				
-				pCapsule_->SetPosition(transform_.position_);
-				pCapsule_->SetRotate(transform_.rotate_);
-				cupsuleTimer_->ResetTimer();
+		if (Input::IsKey(DIK_SPACE)) {
+			if (currentLineValue_ <= maxLineValue_) {
+				currentLineValue_ += XMVectorGetX(XMVector3Length(addMove));
+				if (cupsuleTimer_->IsTimeOver()) {
+					pCapsule_ = GetCapsuleFromPool();
+
+					pCapsule_->SetPosition(transform_.position_);
+					pCapsule_->SetRotate(transform_.rotate_);
+					cupsuleTimer_->ResetTimer();
+
+					Audio::Play(hLineSound_);
+				}
 			}
 		}
 	}

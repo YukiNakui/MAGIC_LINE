@@ -7,6 +7,8 @@ class CountStart :
 {
     int hPictCount_[3];
     int hPictStart_;
+    int hCountSound_;
+    int hStartSound_;
 public:
     CountStart(GameObject* parent);
     ~CountStart();

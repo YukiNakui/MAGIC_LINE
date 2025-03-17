@@ -2,9 +2,10 @@
 #include"Engine/Image.h"
 #include"Engine/Input.h"
 #include"Engine/SceneManager.h"
+#include"Engine/Audio.h"
 
 ClearScene::ClearScene(GameObject* parent)
-	:GameObject(parent,"ClearScene"),hPict_(-1)
+	:GameObject(parent,"ClearScene"),hPict_(-1), hBGM_(-1)
 {
 }
 
@@ -12,6 +13,10 @@ void ClearScene::Initialize()
 {
 	hPict_ = Image::Load("CLEAR.png");
 	assert(hPict_ >= 0);
+	hBGM_ = Audio::Load("Sound/ClearBGM.wav", true);
+	assert(hBGM_ >= 0);
+
+	Audio::Play(hBGM_);
 }
 
 void ClearScene::Update()
