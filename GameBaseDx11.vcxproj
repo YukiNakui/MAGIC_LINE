@@ -160,6 +160,7 @@
     <ClCompile Include="Meter.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="PlayUI.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageBox.cpp" />
     <ClCompile Include="StageFrame.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Meter.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="PlayUI.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageBox.h" />
     <ClInclude Include="StageFrame.h" />

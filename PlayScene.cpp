@@ -6,6 +6,7 @@
 #include"StageFrame.h"
 #include"ThemeDisplay.h"
 #include"CountStart.h"
+#include"PlayUI.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)
@@ -20,6 +21,7 @@ void PlayScene::Initialize()
 	Instantiate<Meter>(this);
 	//Instantiate<StageFrame>(this);
 	Instantiate<ThemeDisplay>(this);
+	Instantiate<PlayUI>(this);
 }
 
 void PlayScene::Update()

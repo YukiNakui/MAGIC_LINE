@@ -92,32 +92,32 @@ void Player::Update()
 
 
 	//ボールとの距離チェック
-	Ball* pBall = (Ball*)FindObject("Ball");
-	if (pBall != nullptr)
-	{
-		XMFLOAT3 ballFloatPos = pBall->GetPosition();
-		XMVECTOR ballPos = XMLoadFloat3(&ballFloatPos);
-		XMVECTOR diff = pos - ballPos;
-		float distance = XMVectorGetX(XMVector3Length(diff));
+	//Ball* pBall = (Ball*)FindObject("Ball");
+	//if (pBall != nullptr)
+	//{
+	//	XMFLOAT3 ballFloatPos = pBall->GetPosition();
+	//	XMVECTOR ballPos = XMLoadFloat3(&ballFloatPos);
+	//	XMVECTOR diff = pos - ballPos;
+	//	float distance = XMVectorGetX(XMVector3Length(diff));
 
-		float minDistance = 7.5f; //ボールとプレイヤーの最小距離（プレイヤーのコライダー半径 + ボールの半径)
+	//	float minDistance = 7.5f; //ボールとプレイヤーの最小距離（プレイヤーのコライダー半径 + ボールの半径)
 
-		if (distance < minDistance)
-		{
-			//ボールの表面に押し戻す
-			XMVECTOR pushBack = XMVector3Normalize(diff) * (minDistance - distance);
-			pos += pushBack;
-		}
-	}
+	//	if (distance < minDistance)
+	//	{
+	//		//ボールの表面に押し戻す
+	//		XMVECTOR pushBack = XMVector3Normalize(diff) * (minDistance - distance);
+	//		pos += pushBack;
+	//	}
+	//}
 
 
 	// **移動制限処理**
 	XMFLOAT3 newPosition;
 	XMStoreFloat3(&newPosition, pos);
 
-	newPosition.x = std::clamp(newPosition.x, minPos_.x, maxPos_.x);
-	newPosition.y = std::clamp(newPosition.y, minPos_.y, maxPos_.y);
-	newPosition.z = std::clamp(newPosition.z, minPos_.z, maxPos_.z);
+	//newPosition.x = std::clamp(newPosition.x, minPos_.x, maxPos_.x);
+	//newPosition.y = std::clamp(newPosition.y, minPos_.y, maxPos_.y);
+	//newPosition.z = std::clamp(newPosition.z, minPos_.z, maxPos_.z);
 	// **移動を適用**
 	transform_.position_ = newPosition;
 
@@ -153,6 +153,11 @@ void Player::Update()
 					Audio::Play(hLineSound_);
 				}
 			}
+		}
+
+		if (Input::IsKey(DIK_RETURN)) {
+			Ball* pBall = (Ball*)FindObject("Ball");
+			pBall->BallMoveStart();
 		}
 	}
 

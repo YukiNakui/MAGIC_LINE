@@ -13,6 +13,7 @@ public:
 	void Draw() override;
 	void Release() override;
 	void OnCollision(GameObject* pTarget) override;
+	void BallMoveStart() { canMove_ = true; }
 private:
 	CDTimer* cdTimer_;
 	XMVECTOR moveVec_;//ボールの進行方向ベクトル

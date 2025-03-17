@@ -112,6 +112,7 @@
     <ClCompile Include="StageFrame.cpp" />
     <ClCompile Include="ThemeDisplay.cpp" />
     <ClCompile Include="CountStart.cpp" />
+    <ClCompile Include="PlayUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -200,6 +201,7 @@
     <ClInclude Include="StageFrame.h" />
     <ClInclude Include="ThemeDisplay.h" />
     <ClInclude Include="CountStart.h" />
+    <ClInclude Include="PlayUI.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
