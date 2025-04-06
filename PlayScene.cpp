@@ -27,7 +27,7 @@ void PlayScene::Initialize()
 	Instantiate<PlayUI>(this);
 	Instantiate<Compass>(this);
 	//Instantiate<Arrow>(this);
-	//Instantiate<HeightMeter>(this);
+	Instantiate<HeightMeter>(this);
 }
 
 void PlayScene::Update()

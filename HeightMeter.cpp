@@ -13,10 +13,10 @@ void HeightMeter::Initialize()
 	hTrianglePict_ = Image::Load("Triangle.png");
 	assert(hTrianglePict_ >= 0);
 
-	/*meterUITrs_.SetPosition(0, 0);
-	meterUITrs_.SetScale(1.0f, 1.0f);
-	triangleUITrs_.SetPosition(0, 0);
-	triangleUITrs_.SetScale(1.0f, 1.0f);*/
+	meterUITrs_.position_ = { 0.9f,0.0f,0.0f };
+	meterUITrs_.scale_ = { 0.4f,0.6f,0.6f };
+	triangleUITrs_.position_ = { 0.75f,0.0f,0.0f };
+	triangleUITrs_.scale_ = { 0.4f,0.4f,0.4f };
 }
 
 void HeightMeter::Update()

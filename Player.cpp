@@ -122,12 +122,12 @@ void Player::Update()
 	transform_.position_ = newPosition;
 
 	//ÉJÉÅÉâà⁄ìÆèàóù
-	XMVECTOR vTarget{ 0, 0, 15, 0 };
+	XMVECTOR vTarget{ 0, 0, 25, 0 };
 	vTarget = XMVector3TransformCoord(vTarget, rotY);
 	XMFLOAT3 targetPos;
 	XMStoreFloat3(&targetPos, XMVectorAdd(pos, vTarget));
-	Camera::SetTarget(transform_.position_);
-	XMVECTOR vEye{ 0, 10, -20, 0 };
+	Camera::SetTarget(targetPos);
+	XMVECTOR vEye{ 0, 20, -30, 0 };
 	vEye = XMVector3TransformCoord(vEye, rotY);
 	XMFLOAT3 camPos;
 	XMStoreFloat3(&camPos, XMVectorAdd(pos, vEye));
