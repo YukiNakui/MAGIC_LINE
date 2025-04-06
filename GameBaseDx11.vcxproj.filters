@@ -113,6 +113,9 @@
     <ClCompile Include="ThemeDisplay.cpp" />
     <ClCompile Include="CountStart.cpp" />
     <ClCompile Include="PlayUI.cpp" />
+    <ClCompile Include="HeightMeter.cpp" />
+    <ClCompile Include="Compass.cpp" />
+    <ClCompile Include="Arrow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -202,6 +205,9 @@
     <ClInclude Include="ThemeDisplay.h" />
     <ClInclude Include="CountStart.h" />
     <ClInclude Include="PlayUI.h" />
+    <ClInclude Include="HeightMeter.h" />
+    <ClInclude Include="Compass.h" />
+    <ClInclude Include="Arrow.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

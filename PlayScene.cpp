@@ -7,6 +7,9 @@
 #include"ThemeDisplay.h"
 #include"CountStart.h"
 #include"PlayUI.h"
+#include"Compass.h"
+#include"Arrow.h"
+#include"HeightMeter.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)
@@ -22,6 +25,9 @@ void PlayScene::Initialize()
 	//Instantiate<StageFrame>(this);
 	Instantiate<ThemeDisplay>(this);
 	Instantiate<PlayUI>(this);
+	Instantiate<Compass>(this);
+	//Instantiate<Arrow>(this);
+	//Instantiate<HeightMeter>(this);
 }
 
 void PlayScene::Update()
