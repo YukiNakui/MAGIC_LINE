@@ -11,9 +11,10 @@
 #include"Ball.h"
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"),hModel_(-1), hLineSound_(-1), hLineDeleteSound_(-1), hBGM_(-1), cdTimer_(nullptr),cupsuleTimer_(nullptr),capsuleSpawnInterval_(0.1f),
-	 lookTarget_{ 0,0,0 },front_{0,0,1,0},maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr),
-	maxPos_(45.0f,30.0f,45.0f), minPos_(-45.0f, -60.0f, -45.0f)
+	:GameObject(parent,"Player"),hModel_(-1), hLineSound_(-1), hLineDeleteSound_(-1), hBGM_(-1),
+	cdTimer_(nullptr),cupsuleTimer_(nullptr),capsuleSpawnInterval_(0.1f),lookTarget_{ 0,0,0 },front_{0,0,1,0},
+	maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr),
+	maxPos_(45.0f,50.0f,45.0f), minPos_(-45.0f, 0.0f, -45.0f),isPlayerHitting_(false)
 {
 }
 
@@ -29,7 +30,7 @@ void Player::Initialize()
 	hBGM_ = Audio::Load("Sound/PlayBGM.wav",true);
 	assert(hBGM_ >= 0);
 
-	transform_.position_ = { 0.0f,10.0f,-30.0f };
+	transform_.position_ = { 0.0f,40.0f,-30.0f };
 	cdTimer_ = Instantiate<CDTimer>(this);
 	cdTimer_->SetInitTime(0.1f);
 
@@ -57,7 +58,8 @@ void Player::Update()
 		}
 	}
 
-	
+	isPlayerHitting_ = false;
+
 	XMMATRIX rotX = XMMatrixIdentity();
 	XMMATRIX rotY = XMMatrixIdentity();
 	XMVECTOR move{ 0, 0, 0, 0 };
@@ -92,34 +94,58 @@ void Player::Update()
 
 
 	//ボールとの距離チェック
-	//Ball* pBall = (Ball*)FindObject("Ball");
-	//if (pBall != nullptr)
-	//{
-	//	XMFLOAT3 ballFloatPos = pBall->GetPosition();
-	//	XMVECTOR ballPos = XMLoadFloat3(&ballFloatPos);
-	//	XMVECTOR diff = pos - ballPos;
-	//	float distance = XMVectorGetX(XMVector3Length(diff));
+	Ball* pBall = (Ball*)FindObject("Ball");
+	if (pBall != nullptr)
+	{
+		XMFLOAT3 ballFloatPos = pBall->GetPosition();
+		XMVECTOR ballPos = XMLoadFloat3(&ballFloatPos);
+		XMVECTOR diff = pos - ballPos;
+		float distance = XMVectorGetX(XMVector3Length(diff));
 
-	//	float minDistance = 7.5f; //ボールとプレイヤーの最小距離（プレイヤーのコライダー半径 + ボールの半径)
+		float minDistance = 7.5f; //ボールとプレイヤーの最小距離（プレイヤーのコライダー半径 + ボールの半径)
 
-	//	if (distance < minDistance)
-	//	{
-	//		//ボールの表面に押し戻す
-	//		XMVECTOR pushBack = XMVector3Normalize(diff) * (minDistance - distance);
-	//		pos += pushBack;
-	//	}
-	//}
+		if (distance < minDistance)
+		{
+			//ボールの表面に押し戻す
+			XMVECTOR pushBack = XMVector3Normalize(diff) * (minDistance - distance);
+			pos += pushBack;
+			isPlayerHitting_ = true;
+		}
+	}
 
-
-	// **移動制限処理**
+	//移動制限処理
 	XMFLOAT3 newPosition;
 	XMStoreFloat3(&newPosition, pos);
 
-	//newPosition.x = std::clamp(newPosition.x, minPos_.x, maxPos_.x);
-	//newPosition.y = std::clamp(newPosition.y, minPos_.y, maxPos_.y);
-	//newPosition.z = std::clamp(newPosition.z, minPos_.z, maxPos_.z);
-	// **移動を適用**
+	if (CheckPlayerOutOfRange(newPosition, maxPos_, minPos_)) {
+		newPosition.x = std::clamp(newPosition.x, minPos_.x, maxPos_.x);
+		newPosition.y = std::clamp(newPosition.y, minPos_.y, maxPos_.y);
+		newPosition.z = std::clamp(newPosition.z, minPos_.z, maxPos_.z);
+		isPlayerHitting_ = true; // プレイヤーが範囲外に出た場合、衝突フラグを立てる
+	}
+
+	//移動を適用
 	transform_.position_ = newPosition;
+
+	Stage* pStage = (Stage*)FindObject("Stage");    //ステージオブジェクトを探す
+	int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
+	if (hGroundModel < 0) return;                  //モデルが無い場合は終了
+
+	RayCastData data;
+	data.start = transform_.position_;   //レイの発射位置
+	data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
+	Model::RayCast(hGroundModel, &data); //レイを発射
+
+	//地面をすり抜けないようにする
+	if (data.dist < 1.0f) {
+		transform_.position_.y += 1.0f - data.dist;
+		isPlayerHitting_ = true;
+	}
+
+	//オブジェクトや壁に当たっている間、プレイヤーの向きを補正するようにしたらラインに違和感なくなるかも
+	//上下に当たった場合は徐々にプレイヤーが水平に、左右や前後なら徐々に壁と平行な向きに
+	//オブジェクトに当たったらその形に沿って向きを変える
+
 
 	//カメラ移動処理
 	XMVECTOR vTarget{ 0, 0, 25, 0 };
@@ -134,7 +160,7 @@ void Player::Update()
 	Camera::SetPosition(camPos);
 
 	if (canMove_) {
-		//**カプセルリセット処理**
+		//カプセルリセット処理
 		if (Input::IsKeyDown(DIK_LSHIFT) || Input::IsKeyDown(DIK_RSHIFT)) { // シフトキーでカプセルをリセット
 			ClearCapsules();
 			Audio::Play(hLineDeleteSound_);
@@ -157,25 +183,28 @@ void Player::Update()
 
 		if (Input::IsKey(DIK_RETURN)) {
 			Ball* pBall = (Ball*)FindObject("Ball");
+			if (pBall == nullptr) return;
 			pBall->BallMoveStart();
 		}
 	}
 
 	Meter* pMeter_ = (Meter*)FindObject("Meter");
+	if (pMeter_ == nullptr) return;
 	pMeter_->SetMeterVal(maxLineValue_, currentLineValue_);
 
-	Stage* pStage = (Stage*)FindObject("Stage");    //ステージオブジェクトを探す
-	int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
+	//Stage* pStage = (Stage*)FindObject("Stage");    //ステージオブジェクトを探す
+	//int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
+	//if (hGroundModel < 0) return;                  //モデルが無い場合は終了
 
-	RayCastData data;
-	data.start = transform_.position_;   //レイの発射位置
-	data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
-	Model::RayCast(hGroundModel, &data); //レイを発射
-	
-	//地面をすり抜けないようにする
-	if (data.dist < 1.0f) {
-		transform_.position_.y += 1.0f - data.dist;
-	}
+	//RayCastData data;
+	//data.start = transform_.position_;   //レイの発射位置
+	//data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
+	//Model::RayCast(hGroundModel, &data); //レイを発射
+
+	////地面をすり抜けないようにする
+	//if (data.dist < 1.0f) {
+	//	transform_.position_.y += 1.0f - data.dist;
+	//}
 }
 
 void Player::Draw()
@@ -186,21 +215,21 @@ void Player::Draw()
 
 void Player::Release()
 {
-	// **出現中のカプセルを削除**
+	//出現中のカプセルを削除
 	for (auto& capsule : capsuleList_) {
-		if (capsule && capsule->IsActive()) { // **カプセルが存在していてアクティブな場合のみ削除**
+		if (capsule && capsule->IsActive()) { //カプセルが存在していてアクティブな場合のみ削除
 			capsule->KillMe();
 		}
 	}
-	capsuleList_.clear(); // **カプセルリストをクリア**
+	capsuleList_.clear(); //カプセルリストをクリア
 
-	// **プール内のカプセルも削除**
+	//プール内のカプセルも削除
 	for (auto& capsule : capsulePool_) {
-		if (capsule) { // **ポインタが有効かチェック**
+		if (capsule) { //ポインタが有効かチェック
 			capsule->KillMe();
 		}
 	}
-	capsulePool_.clear(); // **プールのクリア**
+	capsulePool_.clear(); //プールのクリア
 }
 
 void Player::OnCollision(GameObject* pTarget)
@@ -215,7 +244,7 @@ Capsule* Player::GetCapsuleFromPool()
 			capsule->SetPosition(transform_.position_);
 			capsule->SetRotate(transform_.rotate_);
 
-			capsuleList_.push_back(capsule); // **カプセルリストに追加**
+			capsuleList_.push_back(capsule); //カプセルリストに追加
 			return capsule;
 		}
 	}
@@ -241,4 +270,14 @@ void Player::ClearCapsules()
 	capsuleList_.clear();  // 画面上のカプセルリストをクリア
 
 	currentLineValue_ = 0.0f;  // カウントリセット
+}
+
+bool Player::CheckPlayerOutOfRange(XMFLOAT3 playerPos, XMFLOAT3 maxPos, XMFLOAT3 minPos)
+{
+	if (playerPos.x > maxPos.x || playerPos.x < minPos.x ||
+		playerPos.y > maxPos.y || playerPos.y < minPos.y ||
+		playerPos.z > maxPos.z || playerPos.z < minPos.z) {
+		return true;
+	}
+	return false;
 }

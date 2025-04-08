@@ -1,8 +1,10 @@
 #include "HeightMeter.h"
 #include"Engine/Image.h"
+#include"Player.h"
 
 HeightMeter::HeightMeter(GameObject* parent)
-	:GameObject(parent, "HeightMeter"), hMeterPict_(-1), hTrianglePict_(-1)
+	:GameObject(parent, "HeightMeter"), hMeterPict_(-1), hTrianglePict_(-1),
+	maxHeight_(0.0f), minHeight_(0.0f), currentHeight_(0.0f)
 {
 }
 
@@ -17,10 +19,16 @@ void HeightMeter::Initialize()
 	meterUITrs_.scale_ = { 0.4f,0.6f,0.6f };
 	triangleUITrs_.position_ = { 0.75f,0.0f,0.0f };
 	triangleUITrs_.scale_ = { 0.4f,0.4f,0.4f };
+
+	maxHeight_ = 50.0f;
+	minHeight_ = 0.0f;
 }
 
 void HeightMeter::Update()
 {
+	Player* player = (Player*)FindObject("Player");
+	if(!player) return;
+	currentHeight_ = player->GetPosition().y;
 }
 
 void HeightMeter::Draw()

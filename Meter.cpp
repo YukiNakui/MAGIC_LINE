@@ -11,14 +11,14 @@ void Meter::Initialize()
 {
 	hMeterPict_ = Image::Load("Meter.png");
 	assert(hMeterPict_ >= 0);
-	meterTrans_.position_ = { 0.899f,-0.498f,0.0f };
-	meterTrans_.scale_ = { 0.3f,0.6f,0.3f };
+	meterTrans_.position_ = { 0.149f,-0.798f,0.0f };
+	meterTrans_.scale_ = { 0.3f,0.3f,0.3f };
 	meterTrans_.rotate_ = { 0.0f,0.0f,180.0f };
 	meterDefalutScaleY_ = meterTrans_.scale_.y;
 	hMeterFramePict_ = Image::Load("MeterFrame.png");
 	assert(hMeterFramePict_ >= 0);
-	meterFrameTrans_.position_ = { 0.9f,0.0f,0.0f };
-	meterFrameTrans_.scale_ = { 0.1f,0.2f,0.1f };
+	meterFrameTrans_.position_ = { 0.15f,-0.55f,0.0f };
+	meterFrameTrans_.scale_ = { 0.1f,0.1f,0.1f };
 }
 
 void Meter::Update()

@@ -14,5 +14,9 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+private:
+	float maxHeight_;
+	float minHeight_;
+	float currentHeight_;
 };
 

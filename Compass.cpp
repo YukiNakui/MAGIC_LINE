@@ -57,7 +57,7 @@ void Compass::Update()
 		float x = radius * cosf(angle);
 		float y = radius * sinf(angle);
 		return center + XMVectorSet(x, y, 0.0f, 0.0f);
-		};
+	};
 
 	// NSEWÇªÇÍÇºÇÍ90ÅãÇ∏ÇÁÇµÇƒîzíu
 	XMStoreFloat3(&northUITrs_.position_, GetPositionByAngle(-XM_PIDIV2));  // -90Åã

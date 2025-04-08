@@ -14,9 +14,9 @@ Stage::Stage(GameObject* parent)
 
 void Stage::Initialize()
 {
-	hModel_ = Model::Load("Model/BoxDefault.fbx");
+	hModel_ = Model::Load("Model/Box.fbx");
 	assert(hModel_ >= 0);
-	transform_.position_.y = -30.0f;
+	transform_.position_.y = 0.0f;
 	transform_.scale_ = { STAGE_WIDTH * 5,STAGE_HEIGHT * 5,STAGE_LENGTH * 5 };
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(STAGE_WIDTH * 5, STAGE_HEIGHT * 5, STAGE_LENGTH * 5));
 	AddCollider(collision);

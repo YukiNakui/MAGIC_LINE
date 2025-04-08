@@ -23,11 +23,11 @@ void PlayScene::Initialize()
 	Instantiate<Ball>(this);
 	Instantiate<Meter>(this);
 	//Instantiate<StageFrame>(this);
-	Instantiate<ThemeDisplay>(this);
 	Instantiate<PlayUI>(this);
 	Instantiate<Compass>(this);
 	//Instantiate<Arrow>(this);
 	Instantiate<HeightMeter>(this);
+	Instantiate<ThemeDisplay>(this);
 }
 
 void PlayScene::Update()

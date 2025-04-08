@@ -39,8 +39,10 @@ private:
 	XMFLOAT3 maxPos_;
 	XMFLOAT3 minPos_;
 
+	bool isPlayerHitting_;
 private:
 	Capsule* GetCapsuleFromPool();
 	void ClearCapsules();
+	bool CheckPlayerOutOfRange(XMFLOAT3 playerPos, XMFLOAT3 maxPos, XMFLOAT3 minPos);
 };
 
