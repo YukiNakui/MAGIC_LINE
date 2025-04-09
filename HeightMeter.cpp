@@ -29,6 +29,7 @@ void HeightMeter::Update()
 	Player* player = (Player*)FindObject("Player");
 	if(!player) return;
 	currentHeight_ = player->GetPosition().y;
+	triangleUITrs_.position_.y = (currentHeight_ - (maxHeight_ - minHeight_)) * 0.02 + 0.47f;
 }
 
 void HeightMeter::Draw()

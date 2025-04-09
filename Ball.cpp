@@ -33,10 +33,6 @@ void Ball::Initialize()
 
 void Ball::Update()
 {
-	/*if (Input::IsKeyDown(DIK_RETURN)) {
-		canMove_ = true;
-	}*/
-
     if (canMove_) {
         //ボールの位置を更新する
         float deltaTime = cdTimer_->GetDeltaTime();

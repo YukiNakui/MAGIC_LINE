@@ -21,11 +21,11 @@ void PlayScene::Initialize()
 	Instantiate<Stage>(this);
 	Instantiate<Player>(this);
 	Instantiate<Ball>(this);
-	Instantiate<Meter>(this);
 	//Instantiate<StageFrame>(this);
 	Instantiate<PlayUI>(this);
 	Instantiate<Compass>(this);
-	//Instantiate<Arrow>(this);
+	Instantiate<Arrow>(this);
+	Instantiate<Meter>(this);
 	Instantiate<HeightMeter>(this);
 	Instantiate<ThemeDisplay>(this);
 }
