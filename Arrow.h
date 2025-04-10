@@ -13,10 +13,8 @@ public:
 private:
 	XMFLOAT3 targetPos_;
 	XMFLOAT3 playerPos_;
-	XMFLOAT3 direction_;
 	XMVECTOR directionVec_;
 	XMVECTOR playerPosVec_;
 	XMVECTOR targetPosVec_;
-	XMVECTOR forwardVec_;
 };
 
