@@ -1,5 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include"CDTimer.h"
+
 class Arrow :
     public GameObject
 {
@@ -16,5 +18,7 @@ private:
 	XMVECTOR directionVec_;
 	XMVECTOR playerPosVec_;
 	XMVECTOR targetPosVec_;
+
+	CDTimer* cdTimer_;
 };
 
