@@ -21,11 +21,33 @@ public:
 	void OnCollision(GameObject* pTarget) override;
 
 private:
+	enum State {
+		sBeforeStart,
+		sMove,
+		sMoveFinish,
+		sResult,
+	};
+	State state_;
+	void StartUpdate();
+	void MoveUpdate();
+	void MoveFinishUpdate();
+	void ResultUpdate();
+
 	CDTimer* cdTimer_;
 	CDTimer* cupsuleTimer_;
 	float capsuleSpawnInterval_;
 	XMFLOAT3 lookTarget_;
 	XMVECTOR front_;
+
+	XMMATRIX rotX;
+	XMMATRIX rotY;
+	XMVECTOR move;
+	XMVECTOR rotVec;
+
+	XMVECTOR cameraTargetVec;
+	XMFLOAT3 targetPos;
+	XMVECTOR cameraEyeVec;
+	XMFLOAT3 camPos;
 
 	float maxLineValue_;
 	float currentLineValue_;//現在引いた線の量
@@ -34,7 +56,8 @@ private:
 	std::vector<Capsule*> capsulePool_; // 再利用用のカプセルプール
 
 	CountStart* pCountStart_;
-	bool canMove_;
+	bool isMoveStarted_; //プレイヤーが動き始めたか
+	bool canControl_; //プレイヤーが操作できるかどうか
 
 	XMFLOAT3 maxPos_;
 	XMFLOAT3 minPos_;

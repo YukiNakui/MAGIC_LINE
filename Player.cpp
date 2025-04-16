@@ -11,10 +11,12 @@
 #include"Ball.h"
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"),hModel_(-1), hLineSound_(-1), hLineDeleteSound_(-1), hBGM_(-1),
+	:GameObject(parent,"Player"),state_(sBeforeStart),hModel_(-1), hLineSound_(-1), hLineDeleteSound_(-1), hBGM_(-1),
 	cdTimer_(nullptr),cupsuleTimer_(nullptr),capsuleSpawnInterval_(0.1f),lookTarget_{ 0,0,0 },front_{0,0,1,0},
+	rotX(XMMatrixIdentity()),rotY(XMMatrixIdentity()),move{ 0,0,0,0 },rotVec{ 0,0,0,0 },
 	maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr),
-	maxPos_(45.0f,50.0f,45.0f), minPos_(-45.0f, 0.0f, -45.0f),isPlayerHitting_(false)
+	maxPos_(45.0f,50.0f,45.0f), minPos_(-45.0f, 0.0f, -45.0f),isPlayerHitting_(false),
+	isMoveStarted_(false), canControl_(false)
 {
 }
 
@@ -34,39 +36,96 @@ void Player::Initialize()
 	cdTimer_ = Instantiate<CDTimer>(this);
 	cdTimer_->SetInitTime(0.1f);
 
+
+	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
+	rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+	
+	cameraTargetVec = XMVectorSet(0, 0, 25, 0);
+	cameraTargetVec = XMVector3TransformCoord(cameraTargetVec, rotY);
+	XMStoreFloat3(&targetPos, XMVectorAdd(pos, cameraTargetVec));
+	Camera::SetTarget(targetPos);
+	cameraEyeVec = XMVectorSet(0, 20, -30, 0);
+	cameraEyeVec = XMVector3TransformCoord(cameraEyeVec, rotY);
+	XMStoreFloat3(&camPos, XMVectorAdd(pos, cameraEyeVec));
+	Camera::SetPosition(camPos);
+
 	cupsuleTimer_ = Instantiate<CDTimer>(this);
 	cupsuleTimer_->SetInitTime(capsuleSpawnInterval_);
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.5f);
 	AddCollider(collision);
-
-	canMove_ = false;
 }
 
 void Player::Update()
+{
+	switch (state_) {
+	case sBeforeStart:	StartUpdate();		break;
+	case sMove:			MoveUpdate();		break;
+	case sMoveFinish:	MoveFinishUpdate(); break;
+	case sResult:		ResultUpdate();		break;
+	}
+
+	Meter* pMeter_ = (Meter*)FindObject("Meter");
+	if (pMeter_ == nullptr) return;
+	pMeter_->SetMeterVal(maxLineValue_, currentLineValue_);
+}
+
+void Player::Draw()
+{
+	Model::SetTransform(hModel_, transform_);
+	Model::Draw(hModel_);
+}
+
+void Player::Release()
+{
+	//出現中のカプセルを削除
+	for (auto& capsule : capsuleList_) {
+		if (capsule && capsule->IsActive()) { //カプセルが存在していてアクティブな場合のみ削除
+			capsule->KillMe();
+		}
+	}
+	capsuleList_.clear(); //カプセルリストをクリア
+
+	//プール内のカプセルも削除
+	for (auto& capsule : capsulePool_) {
+		if (capsule) { //ポインタが有効かチェック
+			capsule->KillMe();
+		}
+	}
+	capsulePool_.clear(); //プールのクリア
+}
+
+void Player::OnCollision(GameObject* pTarget)
+{
+}
+
+void Player::StartUpdate()
 {
 	if (pCountStart_ == nullptr) {
 		pCountStart_ = (CountStart*)FindObject("CountStart");
 	}
 
-	if (!canMove_)
+	if (!isMoveStarted_)
 	{
 		if (pCountStart_ != nullptr && !pCountStart_->IsStartVisible())
 		{
-			canMove_ = true;  //STARTが消えたら移動開始
+			isMoveStarted_ = true;  //STARTが消えたら移動開始
+			canControl_ = true; //操作可能にする
 			Audio::Play(hBGM_);
+			state_ = sMove;
 		}
 	}
+}
 
+void Player::MoveUpdate()
+{
 	isPlayerHitting_ = false;
 
-	XMMATRIX rotX = XMMatrixIdentity();
-	XMMATRIX rotY = XMMatrixIdentity();
-	XMVECTOR move{ 0, 0, 0, 0 };
-	XMVECTOR rotVec{ 0, 0, 0, 0 };
+	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
 	float dir = 1.0f;
 	float deltaTime = cdTimer_->GetDeltaTime();
-	if (canMove_) {
+	XMVECTOR addMove = dir * move * deltaTime;
+	if (canControl_) {
 		if (Input::IsKey(DIK_UP)) {
 			transform_.rotate_.x += 60.0f * deltaTime;
 		}
@@ -87,10 +146,8 @@ void Player::Update()
 		rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
 		rotVec = XMVector3TransformCoord(front_, rotX * rotY);
 		move = 10.0f * rotVec;
+		pos += addMove;
 	}
-	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
-	XMVECTOR addMove = dir * move * deltaTime;
-	pos += addMove;
 
 
 	//ボールとの距離チェック
@@ -101,9 +158,7 @@ void Player::Update()
 		XMVECTOR ballPos = XMLoadFloat3(&ballFloatPos);
 		XMVECTOR diff = pos - ballPos;
 		float distance = XMVectorGetX(XMVector3Length(diff));
-
-		float minDistance = 7.5f; //ボールとプレイヤーの最小距離（プレイヤーのコライダー半径 + ボールの半径)
-
+		float minDistance = 7.5f; //ボールとプレイヤーの最小距離
 		if (distance < minDistance)
 		{
 			//ボールの表面に押し戻す
@@ -148,18 +203,20 @@ void Player::Update()
 
 
 	//カメラ移動処理
-	XMVECTOR vTarget{ 0, 0, 25, 0 };
-	vTarget = XMVector3TransformCoord(vTarget, rotY);
-	XMFLOAT3 targetPos;
-	XMStoreFloat3(&targetPos, XMVectorAdd(pos, vTarget));
-	Camera::SetTarget(targetPos);
-	XMVECTOR vEye{ 0, 20, -30, 0 };
-	vEye = XMVector3TransformCoord(vEye, rotY);
-	XMFLOAT3 camPos;
-	XMStoreFloat3(&camPos, XMVectorAdd(pos, vEye));
-	Camera::SetPosition(camPos);
+	if (canControl_) {
+		cameraTargetVec = XMVectorSet(0, 0, 25, 0);
+		cameraTargetVec = XMVector3TransformCoord(cameraTargetVec, rotY);
+		XMStoreFloat3(&targetPos, XMVectorAdd(pos, cameraTargetVec));
+		Camera::SetTarget(targetPos);
 
-	if (canMove_) {
+		cameraEyeVec = XMVectorSet(0, 20, -30, 0);
+		cameraEyeVec = XMVector3TransformCoord(cameraEyeVec, rotY);
+		XMStoreFloat3(&camPos, XMVectorAdd(pos, cameraEyeVec));
+		Camera::SetPosition(camPos);
+	}
+
+
+	if (canControl_) {
 		//カプセルリセット処理
 		if (Input::IsKeyDown(DIK_LSHIFT) || Input::IsKeyDown(DIK_RSHIFT)) { // シフトキーでカプセルをリセット
 			ClearCapsules();
@@ -182,58 +239,29 @@ void Player::Update()
 		}
 
 		if (Input::IsKey(DIK_RETURN)) {
-			Ball* pBall = (Ball*)FindObject("Ball");
+			/*Ball* pBall = (Ball*)FindObject("Ball");
 			if (pBall == nullptr) return;
-			pBall->BallMoveStart();
+			pBall->BallMoveStart();*/
+			canControl_ = false;
+			state_ = sMoveFinish;
 		}
 	}
-
-	Meter* pMeter_ = (Meter*)FindObject("Meter");
-	if (pMeter_ == nullptr) return;
-	pMeter_->SetMeterVal(maxLineValue_, currentLineValue_);
-
-	//Stage* pStage = (Stage*)FindObject("Stage");    //ステージオブジェクトを探す
-	//int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
-	//if (hGroundModel < 0) return;                  //モデルが無い場合は終了
-
-	//RayCastData data;
-	//data.start = transform_.position_;   //レイの発射位置
-	//data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
-	//Model::RayCast(hGroundModel, &data); //レイを発射
-
-	////地面をすり抜けないようにする
-	//if (data.dist < 1.0f) {
-	//	transform_.position_.y += 1.0f - data.dist;
-	//}
 }
 
-void Player::Draw()
+void Player::MoveFinishUpdate()
 {
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
+	//プレイヤーの姿勢を決まった角度まで上向きに動かしたら、プレイヤーが画面外まで移動
+	//その間カメラは追いかけない
+	//結果表示に遷移
+	state_ = sResult;
 }
 
-void Player::Release()
+void Player::ResultUpdate()
 {
-	//出現中のカプセルを削除
-	for (auto& capsule : capsuleList_) {
-		if (capsule && capsule->IsActive()) { //カプセルが存在していてアクティブな場合のみ削除
-			capsule->KillMe();
-		}
-	}
-	capsuleList_.clear(); //カプセルリストをクリア
-
-	//プール内のカプセルも削除
-	for (auto& capsule : capsulePool_) {
-		if (capsule) { //ポインタが有効かチェック
-			capsule->KillMe();
-		}
-	}
-	capsulePool_.clear(); //プールのクリア
-}
-
-void Player::OnCollision(GameObject* pTarget)
-{
+	//カメラは指定された位置を中心にして、ステージ全体が見えるくらい離れてY軸回転
+	Ball* pBall = (Ball*)FindObject("Ball");
+	if (pBall == nullptr) return;
+	pBall->BallMoveStart();
 }
 
 Capsule* Player::GetCapsuleFromPool()
