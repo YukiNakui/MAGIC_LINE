@@ -18,7 +18,6 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
-	void OnCollision(GameObject* pTarget) override;
 
 private:
 	enum State {
@@ -32,6 +31,8 @@ private:
 	void MoveUpdate();
 	void MoveFinishUpdate();
 	void ResultUpdate();
+public:
+	State GetPlayerState() { return state_; }
 
 	CDTimer* cdTimer_;
 	CDTimer* cupsuleTimer_;
@@ -43,6 +44,8 @@ private:
 	XMMATRIX rotY;
 	XMVECTOR move;
 	XMVECTOR rotVec;
+
+	XMFLOAT3 defaultPlayerPos_;
 
 	XMVECTOR cameraTargetVec;
 	XMFLOAT3 targetPos;

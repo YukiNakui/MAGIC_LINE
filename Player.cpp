@@ -95,10 +95,6 @@ void Player::Release()
 	capsulePool_.clear(); //プールのクリア
 }
 
-void Player::OnCollision(GameObject* pTarget)
-{
-}
-
 void Player::StartUpdate()
 {
 	if (pCountStart_ == nullptr) {
@@ -176,7 +172,7 @@ void Player::MoveUpdate()
 		newPosition.x = std::clamp(newPosition.x, minPos_.x, maxPos_.x);
 		newPosition.y = std::clamp(newPosition.y, minPos_.y, maxPos_.y);
 		newPosition.z = std::clamp(newPosition.z, minPos_.z, maxPos_.z);
-		isPlayerHitting_ = true; // プレイヤーが範囲外に出た場合、衝突フラグを立てる
+		isPlayerHitting_ = true; //プレイヤーが範囲外に出た場合、衝突フラグを立てる
 	}
 
 	//移動を適用
@@ -184,7 +180,7 @@ void Player::MoveUpdate()
 
 	Stage* pStage = (Stage*)FindObject("Stage");    //ステージオブジェクトを探す
 	int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
-	if (hGroundModel < 0) return;                  //モデルが無い場合は終了
+	if (hGroundModel < 0) return;                   //モデルが無い場合は終了
 
 	RayCastData data;
 	data.start = transform_.position_;   //レイの発射位置
@@ -239,10 +235,8 @@ void Player::MoveUpdate()
 		}
 
 		if (Input::IsKey(DIK_RETURN)) {
-			/*Ball* pBall = (Ball*)FindObject("Ball");
-			if (pBall == nullptr) return;
-			pBall->BallMoveStart();*/
 			canControl_ = false;
+			defaultPlayerPos_ = transform_.position_;
 			state_ = sMoveFinish;
 		}
 	}
@@ -253,7 +247,42 @@ void Player::MoveFinishUpdate()
 	//プレイヤーの姿勢を決まった角度まで上向きに動かしたら、プレイヤーが画面外まで移動
 	//その間カメラは追いかけない
 	//結果表示に遷移
-	state_ = sResult;
+	float deltaTime = cdTimer_->GetDeltaTime();
+	if (transform_.rotate_.x > -45.0f) {
+		transform_.rotate_.x -= 60.0f * deltaTime;
+	}
+	else {
+		//1.5秒間、プレイヤーが横方向に小刻みに振動
+		static float time = 0.0f;
+		time += deltaTime;
+		if (time <= 1.0f) {
+			XMVECTOR moveVec = XMVectorSet(0.1f * sinf(XM_PI / 1 - time * 100.0f), 0.0f, 0.0f, 0.0f);
+			rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
+			rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+			moveVec = XMVector3TransformCoord(moveVec, rotX * rotY);
+			XMVECTOR playerPos = XMLoadFloat3(&(transform_.position_));
+			playerPos += moveVec;
+			XMStoreFloat3(&(transform_.position_), playerPos);
+		}
+		else {
+			//プレイヤーを画面外に移動
+			XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
+			float dir = 1.0f;
+			rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
+			rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+			rotVec = XMVector3TransformCoord(front_, rotX * rotY);
+			float t = std::clamp(time - 1.0f, 0.0f, 1.0f);
+			float smoothT = (1.0f - cos(t * XM_PI));
+			move = 10.0f * rotVec * smoothT * 3.0f;
+			XMVECTOR addMove = dir * move * deltaTime;
+			pos += addMove;
+			XMStoreFloat3(&(transform_.position_), pos);
+		}
+	}
+
+	if (transform_.position_.y >= maxPos_.y + 50.0f) {
+		state_ = sResult;
+	}
 }
 
 void Player::ResultUpdate()
@@ -262,13 +291,15 @@ void Player::ResultUpdate()
 	Ball* pBall = (Ball*)FindObject("Ball");
 	if (pBall == nullptr) return;
 	pBall->BallMoveStart();
+
+
 }
 
 Capsule* Player::GetCapsuleFromPool()
 {
 	for (auto& capsule : capsulePool_) {
-		if (!capsule->IsActive()) {  // 非アクティブなカプセルを探す
-			capsule->SetActive(true); // 再利用時にアクティブ化
+		if (!capsule->IsActive()) {  //非アクティブなカプセルを探す
+			capsule->SetActive(true); //再利用時にアクティブ化
 			capsule->SetPosition(transform_.position_);
 			capsule->SetRotate(transform_.rotate_);
 
@@ -277,27 +308,27 @@ Capsule* Player::GetCapsuleFromPool()
 		}
 	}
 
-	// 使えるカプセルがなければ新規作成
+	//使えるカプセルがなければ新規作成
 	Capsule* newCapsule = Instantiate<Capsule>(this->GetParent());
-	newCapsule->SetActive(true);  // 新規作成時にアクティブ化
+	newCapsule->SetActive(true);  //新規作成時にアクティブ化
 	newCapsule->SetPosition(transform_.position_);
 	newCapsule->SetRotate(transform_.rotate_);
 
 	capsulePool_.push_back(newCapsule);
-	capsuleList_.push_back(newCapsule);  // **カプセルリストに追加**
+	capsuleList_.push_back(newCapsule);  //カプセルリストに追加
 	return newCapsule;
 }
 
 void Player::ClearCapsules()
 {
 	for (auto& capsule : capsuleList_) {
-		capsule->SetActive(false);  // **非アクティブ化**
-		capsule->SetPosition({ 0, -1000, 0 });  // 画面外へ移動
-		capsulePool_.push_back(capsule);  // プールに戻す
+		capsule->SetActive(false);  //非アクティブ化
+		capsule->SetPosition({ 0, -1000, 0 });  //画面外へ移動
+		capsulePool_.push_back(capsule);  //プールに戻す
 	}
-	capsuleList_.clear();  // 画面上のカプセルリストをクリア
+	capsuleList_.clear();  //画面上のカプセルリストをクリア
 
-	currentLineValue_ = 0.0f;  // カウントリセット
+	currentLineValue_ = 0.0f;  //カウントリセット
 }
 
 bool Player::CheckPlayerOutOfRange(XMFLOAT3 playerPos, XMFLOAT3 maxPos, XMFLOAT3 minPos)
