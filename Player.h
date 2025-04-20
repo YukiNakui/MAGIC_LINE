@@ -3,6 +3,7 @@
 #include"CDTimer.h"
 #include"Capsule.h"
 #include"CountStart.h"
+#include "CameraOrbit.h"
 #include<vector>
 
 class Player :
@@ -33,7 +34,7 @@ private:
 	void ResultUpdate();
 public:
 	State GetPlayerState() { return state_; }
-
+private:
 	CDTimer* cdTimer_;
 	CDTimer* cupsuleTimer_;
 	float capsuleSpawnInterval_;
@@ -65,10 +66,13 @@ public:
 	XMFLOAT3 maxPos_;
 	XMFLOAT3 minPos_;
 
+	bool isInvisible_;//ÉvÉåÉCÉÑÅ[Ç™ìßñæÇ©
 	bool isPlayerHitting_;
 private:
 	Capsule* GetCapsuleFromPool();
 	void ClearCapsules();
 	bool CheckPlayerOutOfRange(XMFLOAT3 playerPos, XMFLOAT3 maxPos, XMFLOAT3 minPos);
+
+	CameraOrbit* pCameraOrbit_;
 };
 

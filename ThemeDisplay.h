@@ -2,6 +2,7 @@
 #include "Engine/GameObject.h"
 #include"CDTimer.h"
 #include"CountStart.h"
+#include "CameraOrbit.h"
 
 class ThemeDisplay :
     public GameObject
@@ -27,5 +28,6 @@ private:
     float targetScale_;
 
     CountStart* pCountStart_;
+	CameraOrbit* pCameraOrbit_;
 };
 

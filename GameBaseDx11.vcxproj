@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="CameraOrbit.cpp" />
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="CDTimer.cpp" />
     <ClCompile Include="ClearScene.cpp" />
@@ -173,6 +174,7 @@
   <ItemGroup>
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Ball.h" />
+    <ClInclude Include="CameraOrbit.h" />
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="CDTimer.h" />
     <ClInclude Include="ClearScene.h" />

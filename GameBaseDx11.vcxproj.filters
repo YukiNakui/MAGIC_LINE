@@ -116,6 +116,7 @@
     <ClCompile Include="HeightMeter.cpp" />
     <ClCompile Include="Compass.cpp" />
     <ClCompile Include="Arrow.cpp" />
+    <ClCompile Include="CameraOrbit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -208,6 +209,7 @@
     <ClInclude Include="HeightMeter.h" />
     <ClInclude Include="Compass.h" />
     <ClInclude Include="Arrow.h" />
+    <ClInclude Include="CameraOrbit.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

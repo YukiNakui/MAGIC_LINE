@@ -17,7 +17,7 @@ void Ball::Initialize()
 	hModel_ = Model::Load("Model/Ball.fbx");
 	assert(hModel_ >= 0);
 	
-	transform_.position_ = { 0.0,40.0,5.0 };
+	transform_.position_ = { 0.0,55.0,5.0 };
 	ballPos_ = XMLoadFloat3(&transform_.position_);
 	prevBallPos_ = ballPos_;
 	transform_.scale_ = { 5.0f,5.0f,5.0f };

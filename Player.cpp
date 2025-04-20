@@ -16,7 +16,7 @@ Player::Player(GameObject* parent)
 	rotX(XMMatrixIdentity()),rotY(XMMatrixIdentity()),move{ 0,0,0,0 },rotVec{ 0,0,0,0 },
 	maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr),
 	maxPos_(45.0f,50.0f,45.0f), minPos_(-45.0f, 0.0f, -45.0f),isPlayerHitting_(false),
-	isMoveStarted_(false), canControl_(false)
+	isInvisible_(false), isMoveStarted_(false), canControl_(false), pCameraOrbit_(nullptr)
 {
 }
 
@@ -72,8 +72,10 @@ void Player::Update()
 
 void Player::Draw()
 {
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
+	if (!isInvisible_) {
+		Model::SetTransform(hModel_, transform_);
+		Model::Draw(hModel_);
+	}
 }
 
 void Player::Release()
@@ -97,6 +99,17 @@ void Player::Release()
 
 void Player::StartUpdate()
 {
+	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
+	cameraTargetVec = XMVectorSet(0, 0, 25, 0);
+	cameraTargetVec = XMVector3TransformCoord(cameraTargetVec, rotY);
+	XMStoreFloat3(&targetPos, XMVectorAdd(pos, cameraTargetVec));
+	Camera::SetTarget(targetPos);
+
+	cameraEyeVec = XMVectorSet(0, 20, -30, 0);
+	cameraEyeVec = XMVector3TransformCoord(cameraEyeVec, rotY);
+	XMStoreFloat3(&camPos, XMVectorAdd(pos, cameraEyeVec));
+	Camera::SetPosition(camPos);
+
 	if (pCountStart_ == nullptr) {
 		pCountStart_ = (CountStart*)FindObject("CountStart");
 	}
@@ -219,12 +232,12 @@ void Player::MoveUpdate()
 			Audio::Play(hLineDeleteSound_);
 		}
 
-		if (Input::IsKey(DIK_SPACE)) {
+		if (Input::IsKey(DIK_SPACE) && !isPlayerHitting_) {
 			if (currentLineValue_ <= maxLineValue_) {
 				currentLineValue_ += XMVectorGetX(XMVector3Length(addMove));
 				if (cupsuleTimer_->IsTimeOver()) {
 					pCapsule_ = GetCapsuleFromPool();
-
+					
 					pCapsule_->SetPosition(transform_.position_);
 					pCapsule_->SetRotate(transform_.rotate_);
 					cupsuleTimer_->ResetTimer();
@@ -281,6 +294,7 @@ void Player::MoveFinishUpdate()
 	}
 
 	if (transform_.position_.y >= maxPos_.y + 50.0f) {
+		isInvisible_ = true;
 		state_ = sResult;
 	}
 }
@@ -292,7 +306,17 @@ void Player::ResultUpdate()
 	if (pBall == nullptr) return;
 	pBall->BallMoveStart();
 
+	// CameraOrbit の初期化と周回開始
+	if (pCameraOrbit_ == nullptr) {
+		pCameraOrbit_ = Instantiate<CameraOrbit>(this);
+		pCameraOrbit_->SetOrbit({ 0.0f, 25.0f, 0.0f }, 100.0f, 0.5f);
+	}
 
+	// CameraOrbit の更新
+	if (pCameraOrbit_ != nullptr) {
+		float deltaTime = cdTimer_->GetDeltaTime();
+		pCameraOrbit_->Update(deltaTime);
+	}
 }
 
 Capsule* Player::GetCapsuleFromPool()

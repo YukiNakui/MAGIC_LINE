@@ -5,8 +5,8 @@
 
 ThemeDisplay::ThemeDisplay(GameObject* parent)
 	:GameObject(parent,"ThemeDisplay"),hPict_(-1),cdTimer_(nullptr),pCountStart_(nullptr),
-    deltaTime_(0.0f),elapsedTime_(0.0f), displayDuration_(2.0f), transitionDuration_(1.0f), isMoving_(false), hasMoved_(false),
-    targetScale_(0.3f)
+    deltaTime_(0.0f),elapsedTime_(0.0f), displayDuration_(5.0f), transitionDuration_(1.0f), isMoving_(false), hasMoved_(false),
+    targetScale_(0.3f),pCameraOrbit_(nullptr)
 {
 }
 
@@ -27,12 +27,18 @@ void ThemeDisplay::Initialize()
 
     //ñ⁄ïWà íuÇç∂è„Ç…ê›íË
     targetTrans_.position_ = { -0.7f, 0.9f, 0 };  //ç∂è„ÇÃç¿ïW
+
+    pCameraOrbit_ = Instantiate<CameraOrbit>(this);
+	pCameraOrbit_->SetOrbit({ 0.0f, 25.0f, 0.0f }, 100.0f, 1.0f);
 }
 
 void ThemeDisplay::Update()
 {
     deltaTime_ = cdTimer_->GetDeltaTime();
     elapsedTime_ += deltaTime_;  //ó›êœéûä‘Çâ¡éZ
+
+    if (pCameraOrbit_ != nullptr)
+        pCameraOrbit_->Update(deltaTime_);
 
     if (hasMoved_)
         return;
@@ -68,6 +74,10 @@ void ThemeDisplay::Update()
 
             if (pCountStart_ == nullptr) {
                 pCountStart_ = Instantiate<CountStart>(this);
+                if (pCameraOrbit_->IsStopOrbit()) {
+                    pCameraOrbit_->StopOrbit();
+                    pCameraOrbit_ = nullptr;
+                }
             }
         }
     }
