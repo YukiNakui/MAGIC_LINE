@@ -22,11 +22,8 @@ void ThemeDisplay::Initialize()
     cdTimer_ = Instantiate<CDTimer>(this);
     cdTimer_->SetInitTime(3.0f);
 
-    //初期位置
-    transform_.position_ = { 0.0f, 0.0f, 0 };  //画面中央
-
-    //目標位置を左上に設定
-    targetTrans_.position_ = { -0.7f, 0.9f, 0 };  //左上の座標
+    transform_.position_ = { 0.0f, 0.0f, 0 };
+    targetTrans_.position_ = { -0.7f, 0.9f, 0 };
 
     pCameraOrbit_ = Instantiate<CameraOrbit>(this);
 	pCameraOrbit_->SetOrbit({ 0.0f, 25.0f, 0.0f }, 100.0f, 1.0f);

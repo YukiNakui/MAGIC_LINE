@@ -6,7 +6,7 @@
 #include<algorithm>
 #include "Engine/SceneManager.h"
 #include"Stage.h"
-#include"Meter.h"
+#include"LineGauge.h"
 #include"Engine/Audio.h"
 #include"Ball.h"
 
@@ -65,9 +65,9 @@ void Player::Update()
 	case sResult:		ResultUpdate();		break;
 	}
 
-	Meter* pMeter_ = (Meter*)FindObject("Meter");
-	if (pMeter_ == nullptr) return;
-	pMeter_->SetMeterVal(maxLineValue_, currentLineValue_);
+	LineGauge* pLineGauge_ = (LineGauge*)FindObject("LineGauge");
+	if (pLineGauge_ == nullptr) return;
+	pLineGauge_->SetMeterVal(maxLineValue_, currentLineValue_);
 }
 
 void Player::Draw()
@@ -319,7 +319,7 @@ void Player::ResultUpdate()
 	}
 }
 
-Capsule* Player::GetCapsuleFromPool()
+Line* Player::GetCapsuleFromPool()
 {
 	for (auto& capsule : capsulePool_) {
 		if (!capsule->IsActive()) {  //非アクティブなカプセルを探す
@@ -333,7 +333,7 @@ Capsule* Player::GetCapsuleFromPool()
 	}
 
 	//使えるカプセルがなければ新規作成
-	Capsule* newCapsule = Instantiate<Capsule>(this->GetParent());
+	Line* newCapsule = Instantiate<Line>(this->GetParent());
 	newCapsule->SetActive(true);  //新規作成時にアクティブ化
 	newCapsule->SetPosition(transform_.position_);
 	newCapsule->SetRotate(transform_.rotate_);

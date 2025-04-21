@@ -3,7 +3,7 @@
 #include"Engine/SphereCollider.h"
 #include"Engine/SceneManager.h"
 #include"Engine/Input.h"
-#include"Capsule.h"
+#include"Line.h"
 #include<list>
 #include<algorithm>
 
@@ -49,7 +49,7 @@ void Ball::Update()
         XMStoreFloat3(&transform_.position_, ballPos_);
 
         //カプセルの位置取得
-        std::list <Capsule*> pCapsules = GetParent()->FindGameObjects<Capsule>("Capsule");
+        std::list <Line*> pCapsules = GetParent()->FindGameObjects<Line>("Line");
 
         for (auto& pCapsule : pCapsules) {
             if (pCapsule != nullptr) {

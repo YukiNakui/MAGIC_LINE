@@ -1,13 +1,13 @@
-#include "Meter.h"
+#include "LineGauge.h"
 #include"Engine/Image.h"
 
-Meter::Meter(GameObject* parent)
-	:GameObject(parent,"Meter"), hMeterPict_(-1), hMeterFramePict_(-1),
+LineGauge::LineGauge(GameObject* parent)
+	:GameObject(parent,"LineGauge"), hMeterPict_(-1), hMeterFramePict_(-1),
 	meterMaxVal_(0), meterCurrentVal_(0),meterScaleRate_(100)
 {
 }
 
-void Meter::Initialize()
+void LineGauge::Initialize()
 {
 	hMeterPict_ = Image::Load("Meter.png");
 	assert(hMeterPict_ >= 0);
@@ -21,13 +21,13 @@ void Meter::Initialize()
 	meterFrameTrans_.scale_ = { 0.1f,0.1f,0.1f };
 }
 
-void Meter::Update()
+void LineGauge::Update()
 {
 	meterScaleRate_ = 1 - (float)meterCurrentVal_ / (float)meterMaxVal_;
 	meterTrans_.scale_.y = meterDefalutScaleY_ * meterScaleRate_;
 }
 
-void Meter::Draw()
+void LineGauge::Draw()
 {
 	Image::SetTransform(hMeterFramePict_, meterFrameTrans_);
 	Image::Draw(hMeterFramePict_);
@@ -35,6 +35,6 @@ void Meter::Draw()
 	Image::Draw(hMeterPict_);
 }
 
-void Meter::Release()
+void LineGauge::Release()
 {
 }

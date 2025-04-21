@@ -1,7 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include"CDTimer.h"
-#include"Capsule.h"
+#include"Line.h"
 #include"CountStart.h"
 #include "CameraOrbit.h"
 #include<vector>
@@ -34,6 +34,7 @@ private:
 	void ResultUpdate();
 public:
 	State GetPlayerState() { return state_; }
+	bool IsPlayerMoveFinished() { return state_ >= sMoveFinish; }
 private:
 	CDTimer* cdTimer_;
 	CDTimer* cupsuleTimer_;
@@ -55,9 +56,9 @@ private:
 
 	float maxLineValue_;
 	float currentLineValue_;//現在引いた線の量
-	Capsule* pCapsule_;
-	std::vector<Capsule*> capsuleList_; // 画面上に存在するカプセルリスト
-	std::vector<Capsule*> capsulePool_; // 再利用用のカプセルプール
+	Line* pCapsule_;
+	std::vector<Line*> capsuleList_; // 画面上に存在するカプセルリスト
+	std::vector<Line*> capsulePool_; // 再利用用のカプセルプール
 
 	CountStart* pCountStart_;
 	bool isMoveStarted_; //プレイヤーが動き始めたか
@@ -69,7 +70,7 @@ private:
 	bool isInvisible_;//プレイヤーが透明か
 	bool isPlayerHitting_;
 private:
-	Capsule* GetCapsuleFromPool();
+	Line* GetCapsuleFromPool();
 	void ClearCapsules();
 	bool CheckPlayerOutOfRange(XMFLOAT3 playerPos, XMFLOAT3 maxPos, XMFLOAT3 minPos);
 

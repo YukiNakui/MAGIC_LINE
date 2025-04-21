@@ -1,18 +1,18 @@
-#include "Capsule.h"
+#include "Line.h"
 #include"Engine/Model.h"
 
-Capsule::Capsule(GameObject* parent)
-	:GameObject(parent,"Capsule"),hModel_(-1),radius_(1.0f),start_({0,0,1}),end_({0,0,-1}),isActive_(false)
+Line::Line(GameObject* parent)
+	:GameObject(parent,"Line"),hModel_(-1),radius_(1.0f),start_({0,0,1}),end_({0,0,-1}),isActive_(false)
 {
 }
 
-void Capsule::Initialize()
+void Line::Initialize()
 {
 	hModel_ = Model::Load("Model/capsule.fbx");
 	assert(hModel_ >= 0);
 }
 
-void Capsule::Update()
+void Line::Update()
 {
 	//カプセルの回転行列を適用して、始点と終点を更新
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(
@@ -40,7 +40,7 @@ void Capsule::Update()
 	XMStoreFloat3(&end_, XMVectorAdd(worldPos, rotatedEnd));
 }
 
-void Capsule::Draw()
+void Line::Draw()
 {
 	if (!IsActive()) return; // 非アクティブなら描画しない
 
@@ -48,6 +48,6 @@ void Capsule::Draw()
 	Model::Draw(hModel_);
 }
 
-void Capsule::Release()
+void Line::Release()
 {
 }

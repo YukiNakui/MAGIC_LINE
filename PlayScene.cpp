@@ -2,8 +2,7 @@
 #include "Player.h"
 #include"Stage.h"
 #include"Ball.h"
-#include"Meter.h"
-#include"StageFrame.h"
+#include"LineGauge.h"
 #include"ThemeDisplay.h"
 #include"CountStart.h"
 #include"PlayUI.h"
@@ -21,11 +20,10 @@ void PlayScene::Initialize()
 	Instantiate<Stage>(this);
 	Instantiate<Player>(this);
 	Instantiate<Ball>(this);
-	//Instantiate<StageFrame>(this);
 	Instantiate<PlayUI>(this);
 	Instantiate<Compass>(this);
 	Instantiate<Arrow>(this);
-	Instantiate<Meter>(this);
+	Instantiate<LineGauge>(this);
 	Instantiate<HeightMeter>(this);
 	Instantiate<ThemeDisplay>(this);
 }

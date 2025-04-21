@@ -99,7 +99,7 @@
     <ClCompile Include="CDTimer.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageBox.cpp" />
-    <ClCompile Include="Capsule.cpp" />
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="Engine\CapsuleCollider.cpp">
       <Filter>01Engine\Collider</Filter>
     </ClCompile>
@@ -108,7 +108,7 @@
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="ClearScene.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
-    <ClCompile Include="Meter.cpp" />
+    <ClCompile Include="LineGauge.cpp" />
     <ClCompile Include="StageFrame.cpp" />
     <ClCompile Include="ThemeDisplay.cpp" />
     <ClCompile Include="CountStart.cpp" />
@@ -192,7 +192,7 @@
     <ClInclude Include="CDTimer.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageBox.h" />
-    <ClInclude Include="Capsule.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Engine\CapsuleCollider.h">
       <Filter>01Engine\Collider</Filter>
     </ClInclude>
@@ -201,7 +201,7 @@
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="ClearScene.h" />
     <ClInclude Include="GameOverScene.h" />
-    <ClInclude Include="Meter.h" />
+    <ClInclude Include="LineGauge.h" />
     <ClInclude Include="StageFrame.h" />
     <ClInclude Include="ThemeDisplay.h" />
     <ClInclude Include="CountStart.h" />

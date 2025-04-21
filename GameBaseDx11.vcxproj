@@ -130,7 +130,7 @@
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="CameraOrbit.cpp" />
-    <ClCompile Include="Capsule.cpp" />
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="CDTimer.cpp" />
     <ClCompile Include="ClearScene.cpp" />
     <ClCompile Include="Compass.cpp" />
@@ -161,7 +161,7 @@
     <ClCompile Include="Engine\Transform.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="HeightMeter.cpp" />
-    <ClCompile Include="Meter.cpp" />
+    <ClCompile Include="LineGauge.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PlayUI.cpp" />
@@ -175,7 +175,7 @@
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Ball.h" />
     <ClInclude Include="CameraOrbit.h" />
-    <ClInclude Include="Capsule.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="CDTimer.h" />
     <ClInclude Include="ClearScene.h" />
     <ClInclude Include="Compass.h" />
@@ -206,7 +206,7 @@
     <ClInclude Include="Engine\Transform.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="HeightMeter.h" />
-    <ClInclude Include="Meter.h" />
+    <ClInclude Include="LineGauge.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PlayUI.h" />

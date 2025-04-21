@@ -1,7 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-class Meter :
+class LineGauge :
     public GameObject
 {
 	int hMeterPict_;
@@ -9,7 +9,7 @@ class Meter :
 	int hMeterFramePict_;
 	Transform meterFrameTrans_;
 public:
-	Meter(GameObject* parent);
+	LineGauge(GameObject* parent);
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
