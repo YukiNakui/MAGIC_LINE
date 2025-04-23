@@ -24,6 +24,15 @@
       <UniqueIdentifier>{47a6a3f5-8cfd-436b-8d58-beccd108f3f3}</UniqueIdentifier>
       <Extensions>hlsl</Extensions>
     </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{35b83cb0-ccd7-410f-85bc-dd559ad92cc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{a5985283-1cec-4896-8841-c4a4b29d0aff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{eae727ae-e67f-4c7c-8430-e22183ca1974}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\BoxCollider.cpp">
@@ -95,28 +104,59 @@
     <ClCompile Include="Engine\VFX.cpp">
       <Filter>01Engine\ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="CDTimer.cpp" />
-    <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="StageBox.cpp" />
-    <ClCompile Include="Line.cpp" />
     <ClCompile Include="Engine\CapsuleCollider.cpp">
       <Filter>01Engine\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Ball.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="PlayScene.cpp" />
-    <ClCompile Include="ClearScene.cpp" />
-    <ClCompile Include="GameOverScene.cpp" />
-    <ClCompile Include="LineGauge.cpp" />
-    <ClCompile Include="StageFrame.cpp" />
-    <ClCompile Include="ThemeDisplay.cpp" />
-    <ClCompile Include="CountStart.cpp" />
-    <ClCompile Include="PlayUI.cpp" />
-    <ClCompile Include="HeightMeter.cpp" />
-    <ClCompile Include="Compass.cpp" />
-    <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="CameraOrbit.cpp" />
+    <ClCompile Include="UI\Arrow.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Compass.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CountStart.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\HeightMeter.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\LineGauge.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\PlayUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\ThemeDisplay.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Ball.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Line.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Player.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Stage.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\StageBox.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\ClearScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\GameOverScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\TitleScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -188,28 +228,59 @@
     <ClInclude Include="Engine\VFX.h">
       <Filter>01Engine\ResourceManager</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h" />
     <ClInclude Include="CDTimer.h" />
-    <ClInclude Include="Stage.h" />
-    <ClInclude Include="StageBox.h" />
-    <ClInclude Include="Line.h" />
     <ClInclude Include="Engine\CapsuleCollider.h">
       <Filter>01Engine\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Ball.h" />
-    <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="PlayScene.h" />
-    <ClInclude Include="ClearScene.h" />
-    <ClInclude Include="GameOverScene.h" />
-    <ClInclude Include="LineGauge.h" />
-    <ClInclude Include="StageFrame.h" />
-    <ClInclude Include="ThemeDisplay.h" />
-    <ClInclude Include="CountStart.h" />
-    <ClInclude Include="PlayUI.h" />
-    <ClInclude Include="HeightMeter.h" />
-    <ClInclude Include="Compass.h" />
-    <ClInclude Include="Arrow.h" />
     <ClInclude Include="CameraOrbit.h" />
+    <ClInclude Include="UI\Arrow.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Compass.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CountStart.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\HeightMeter.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\LineGauge.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\PlayUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\ThemeDisplay.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Ball.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Line.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Player.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Stage.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\StageBox.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\ClearScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\GameOverScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\TitleScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

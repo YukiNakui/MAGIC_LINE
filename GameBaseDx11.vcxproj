@@ -127,14 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Arrow.cpp" />
-    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="CameraOrbit.cpp" />
-    <ClCompile Include="Line.cpp" />
     <ClCompile Include="CDTimer.cpp" />
-    <ClCompile Include="ClearScene.cpp" />
-    <ClCompile Include="Compass.cpp" />
-    <ClCompile Include="CountStart.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
@@ -159,27 +153,26 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Transform.cpp" />
-    <ClCompile Include="GameOverScene.cpp" />
-    <ClCompile Include="HeightMeter.cpp" />
-    <ClCompile Include="LineGauge.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayScene.cpp" />
-    <ClCompile Include="PlayUI.cpp" />
-    <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="StageBox.cpp" />
-    <ClCompile Include="StageFrame.cpp" />
-    <ClCompile Include="ThemeDisplay.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="Objects\Ball.cpp" />
+    <ClCompile Include="Objects\Line.cpp" />
+    <ClCompile Include="Objects\Player.cpp" />
+    <ClCompile Include="Objects\Stage.cpp" />
+    <ClCompile Include="Objects\StageBox.cpp" />
+    <ClCompile Include="Scenes\ClearScene.cpp" />
+    <ClCompile Include="Scenes\GameOverScene.cpp" />
+    <ClCompile Include="Scenes\PlayScene.cpp" />
+    <ClCompile Include="Scenes\TitleScene.cpp" />
+    <ClCompile Include="UI\Arrow.cpp" />
+    <ClCompile Include="UI\Compass.cpp" />
+    <ClCompile Include="UI\CountStart.cpp" />
+    <ClCompile Include="UI\HeightMeter.cpp" />
+    <ClCompile Include="UI\LineGauge.cpp" />
+    <ClCompile Include="UI\PlayUI.cpp" />
+    <ClCompile Include="UI\ThemeDisplay.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Arrow.h" />
-    <ClInclude Include="Ball.h" />
     <ClInclude Include="CameraOrbit.h" />
-    <ClInclude Include="Line.h" />
     <ClInclude Include="CDTimer.h" />
-    <ClInclude Include="ClearScene.h" />
-    <ClInclude Include="Compass.h" />
-    <ClInclude Include="CountStart.h" />
     <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
@@ -204,17 +197,22 @@
     <ClInclude Include="Engine\Text.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
-    <ClInclude Include="GameOverScene.h" />
-    <ClInclude Include="HeightMeter.h" />
-    <ClInclude Include="LineGauge.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayScene.h" />
-    <ClInclude Include="PlayUI.h" />
-    <ClInclude Include="Stage.h" />
-    <ClInclude Include="StageBox.h" />
-    <ClInclude Include="StageFrame.h" />
-    <ClInclude Include="ThemeDisplay.h" />
-    <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="Objects\Ball.h" />
+    <ClInclude Include="Objects\Line.h" />
+    <ClInclude Include="Objects\Player.h" />
+    <ClInclude Include="Objects\Stage.h" />
+    <ClInclude Include="Objects\StageBox.h" />
+    <ClInclude Include="Scenes\ClearScene.h" />
+    <ClInclude Include="Scenes\GameOverScene.h" />
+    <ClInclude Include="Scenes\PlayScene.h" />
+    <ClInclude Include="Scenes\TitleScene.h" />
+    <ClInclude Include="UI\Arrow.h" />
+    <ClInclude Include="UI\Compass.h" />
+    <ClInclude Include="UI\CountStart.h" />
+    <ClInclude Include="UI\HeightMeter.h" />
+    <ClInclude Include="UI\LineGauge.h" />
+    <ClInclude Include="UI\PlayUI.h" />
+    <ClInclude Include="UI\ThemeDisplay.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">
