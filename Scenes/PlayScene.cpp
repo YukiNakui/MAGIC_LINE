@@ -9,6 +9,7 @@
 #include"../UI/Compass.h"
 #include"../UI/Arrow.h"
 #include"../UI/HeightMeter.h"
+#include"../Engine/CsvReader.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)
@@ -26,6 +27,8 @@ void PlayScene::Initialize()
 	Instantiate<LineGauge>(this);
 	Instantiate<HeightMeter>(this);
 	Instantiate<ThemeDisplay>(this);
+
+	Player* pPlayer = Instantiate<Player>(this);
 }
 
 void PlayScene::Update()
