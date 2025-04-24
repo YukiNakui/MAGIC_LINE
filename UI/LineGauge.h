@@ -25,5 +25,9 @@ private:
 	float meterCurrentVal_;//現在の値
 	float meterScaleRate_;//メーターの大きさの割合
 	float meterDefalutScaleY_;//メーターのY方向のデフォルトの大きさ
+
+	bool isDisplay_;
+public:
+	void SetDisplay(bool display) { isDisplay_ = display; }
 };
 

@@ -3,13 +3,13 @@
 class Compass :
     public GameObject
 {
-	int hCirclePict_;
+	int hCompassFramePict_;
 	int hNorthPict_;
 	int hSouthPict_;
 	int hEastPict_;
 	int hWestPict_;
 
-	Transform circleUITrs_;
+	Transform compassFrameUITrs_;
 	Transform northUITrs_;
 	Transform southUITrs_;
 	Transform eastUITrs_;
@@ -24,5 +24,35 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+
+	void SetCompassFrameUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		compassFrameUITrs_.position_ = position;
+		compassFrameUITrs_.rotate_ = rotate;
+		compassFrameUITrs_.scale_ = scale;
+	}
+	void SetNorthUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		northUITrs_.position_ = position;
+		northUITrs_.rotate_ = rotate;
+		northUITrs_.scale_ = scale;
+	}
+	void SetSouthUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		southUITrs_.position_ = position;
+		southUITrs_.rotate_ = rotate;
+		southUITrs_.scale_ = scale;
+	}
+	void SetEastUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		eastUITrs_.position_ = position;
+		eastUITrs_.rotate_ = rotate;
+		eastUITrs_.scale_ = scale;
+	}
+	void SetWestUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		westUITrs_.position_ = position;
+		westUITrs_.rotate_ = rotate;
+		westUITrs_.scale_ = scale;
+	}
+
+	bool isDisplay_;
+public:
+	void SetDisplay(bool display) { isDisplay_ = display; }
 };
 

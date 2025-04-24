@@ -157,7 +157,6 @@
     <ClCompile Include="Objects\Line.cpp" />
     <ClCompile Include="Objects\Player.cpp" />
     <ClCompile Include="Objects\Stage.cpp" />
-    <ClCompile Include="Objects\StageBox.cpp" />
     <ClCompile Include="Scenes\ClearScene.cpp" />
     <ClCompile Include="Scenes\GameOverScene.cpp" />
     <ClCompile Include="Scenes\PlayScene.cpp" />
@@ -201,7 +200,6 @@
     <ClInclude Include="Objects\Line.h" />
     <ClInclude Include="Objects\Player.h" />
     <ClInclude Include="Objects\Stage.h" />
-    <ClInclude Include="Objects\StageBox.h" />
     <ClInclude Include="Scenes\ClearScene.h" />
     <ClInclude Include="Scenes\GameOverScene.h" />
     <ClInclude Include="Scenes\PlayScene.h" />

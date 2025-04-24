@@ -32,7 +32,6 @@ void Player::Initialize()
 	hBGM_ = Audio::Load("Sounds/BGM/PlayBGM.wav",true);
 	assert(hBGM_ >= 0);
 
-	transform_.position_ = { 0.0f,40.0f,-30.0f };
 	cdTimer_ = Instantiate<CDTimer>(this);
 	cdTimer_->SetInitTime(0.1f);
 

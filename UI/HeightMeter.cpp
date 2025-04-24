@@ -4,7 +4,7 @@
 
 HeightMeter::HeightMeter(GameObject* parent)
 	:GameObject(parent, "HeightMeter"), hMeterPict_(-1), hTrianglePict_(-1),
-	maxHeight_(0.0f), minHeight_(0.0f), currentHeight_(0.0f)
+	maxHeight_(0.0f), minHeight_(0.0f), currentHeight_(0.0f), isDisplay_(false)
 {
 }
 
@@ -34,6 +34,7 @@ void HeightMeter::Update()
 
 void HeightMeter::Draw()
 {
+	if (!isDisplay_) return;
 	Image::SetTransform(hMeterPict_, meterUITrs_);
 	Image::Draw(hMeterPict_);
 	Image::SetTransform(hTrianglePict_, triangleUITrs_);

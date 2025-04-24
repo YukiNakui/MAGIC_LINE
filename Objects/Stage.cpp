@@ -8,7 +8,7 @@ static const int STAGE_HEIGHT = 1;  //ステージのy方向最大
 static const int STAGE_LENGTH = 20; //ステージのz方向最大
 
 Stage::Stage(GameObject* parent)
-	:GameObject(parent,"Stage"),hModel_(-1),pStageBox_(nullptr)
+	:GameObject(parent,"Stage"),hModel_(-1)
 {
 }
 
@@ -16,8 +16,6 @@ void Stage::Initialize()
 {
 	hModel_ = Model::Load("Models/Objects/Box.fbx");
 	assert(hModel_ >= 0);
-	transform_.position_.y = 0.0f;
-	transform_.scale_ = { STAGE_WIDTH * 5,STAGE_HEIGHT * 5,STAGE_LENGTH * 5 };
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(STAGE_WIDTH * 5, STAGE_HEIGHT * 5, STAGE_LENGTH * 5));
 	AddCollider(collision);
 }

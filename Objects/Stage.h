@@ -1,6 +1,5 @@
 #pragma once
 #include "../Engine/GameObject.h"
-#include"StageBox.h"
 
 class Stage :
     public GameObject
@@ -14,7 +13,5 @@ public:
 	void Release() override;
 
 	int GetModelHandle() { return hModel_; }
-private:
-	StageBox* pStageBox_;
 };
 

@@ -6,7 +6,7 @@
 ThemeDisplay::ThemeDisplay(GameObject* parent)
 	:GameObject(parent,"ThemeDisplay"),hPict_(-1),cdTimer_(nullptr),pCountStart_(nullptr),
     deltaTime_(0.0f),elapsedTime_(0.0f), displayDuration_(5.0f), transitionDuration_(1.0f), isMoving_(false), hasMoved_(false),
-    targetScale_(0.3f),pCameraOrbit_(nullptr)
+	targetScale_(0.3f), pCameraOrbit_(nullptr), isDisplay_(true), isStartVisible_(false)
 {
 }
 
@@ -16,7 +16,7 @@ ThemeDisplay::~ThemeDisplay()
 
 void ThemeDisplay::Initialize()
 {
-    hPict_ = Image::Load("UI/Theme/Theme_Don'tDrop.png");
+    hPict_ = Image::Load("UI/Theme/Theme_Catch.png");
     assert(hPict_ >= 0);
 
     cdTimer_ = Instantiate<CDTimer>(this);
@@ -71,6 +71,7 @@ void ThemeDisplay::Update()
 
             if (pCountStart_ == nullptr) {
                 pCountStart_ = Instantiate<CountStart>(this);
+                isStartVisible_ = true;
                 if (pCameraOrbit_->IsStopOrbit()) {
                     pCameraOrbit_->StopOrbit();
                     pCameraOrbit_ = nullptr;
@@ -82,6 +83,7 @@ void ThemeDisplay::Update()
 
 void ThemeDisplay::Draw()
 {
+	if (!isDisplay_) return;
     Image::SetTransform(hPict_, transform_);
     Image::Draw(hPict_);
 }

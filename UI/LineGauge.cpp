@@ -3,7 +3,7 @@
 
 LineGauge::LineGauge(GameObject* parent)
 	:GameObject(parent,"LineGauge"), hMeterPict_(-1), hMeterFramePict_(-1),
-	meterMaxVal_(0), meterCurrentVal_(0),meterScaleRate_(100)
+	meterMaxVal_(0), meterCurrentVal_(0), meterScaleRate_(100), isDisplay_(false)
 {
 }
 
@@ -29,6 +29,7 @@ void LineGauge::Update()
 
 void LineGauge::Draw()
 {
+	if (!isDisplay_) return;
 	Image::SetTransform(hMeterFramePict_, meterFrameTrans_);
 	Image::Draw(hMeterFramePict_);
 	Image::SetTransform(hMeterPict_, meterTrans_);

@@ -33,5 +33,9 @@ private:
 
     float startElapsedTime_;
     bool isStartVisible_;
+
+    bool isDisplay_;
+public:
+    void SetDisplay(bool display) { isDisplay_ = display; }
 };
 

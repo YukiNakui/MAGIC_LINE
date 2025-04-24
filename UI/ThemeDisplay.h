@@ -29,5 +29,11 @@ private:
 
     CountStart* pCountStart_;
 	CameraOrbit* pCameraOrbit_;
+
+    bool isDisplay_;
+    bool isStartVisible_;
+public:
+	void SetDisplay(bool display) { isDisplay_ = display; }
+	bool IsStartVisible() const { return isStartVisible_; }
 };
 

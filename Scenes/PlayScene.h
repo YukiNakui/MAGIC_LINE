@@ -1,5 +1,12 @@
 #pragma once
 #include "../Engine/GameObject.h"
+#include"../UI/LineGauge.h"
+#include"../UI/ThemeDisplay.h"
+#include"../UI/CountStart.h"
+#include"../UI/PlayUI.h"
+#include"../UI/Compass.h"
+#include"../UI/Arrow.h"
+#include"../UI/HeightMeter.h"
 
 class PlayScene : public GameObject
 {
@@ -10,5 +17,14 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+private:
+	//UI
+	LineGauge* pLineGauge_;
+	ThemeDisplay* pThemeDisplay_;
+	CountStart* pCountStart_;
+	PlayUI* pPlayUI_;
+	Compass* pCompass_;
+	Arrow* pArrow_;
+	HeightMeter* pHeightMeter_;
 };
 

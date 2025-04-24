@@ -2,7 +2,7 @@
 #include"../Engine/Image.h"
 
 PlayUI::PlayUI(GameObject* parent)
-	:GameObject(parent,"PlayUI"),hLinePict_(-1), hDeletePict_(-1), hFinishPict_(-1)
+	:GameObject(parent, "PlayUI"), hLinePict_(-1), hDeletePict_(-1), hFinishPict_(-1), isDisplay_(false)
 {
 }
 
@@ -29,6 +29,7 @@ void PlayUI::Update()
 
 void PlayUI::Draw()
 {
+	if (!isDisplay_) return;
 	Image::SetTransform(hLinePict_, lineUITrs_);
 	Image::Draw(hLinePict_);
 	Image::SetTransform(hDeletePict_, deleteUITrs_);

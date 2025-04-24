@@ -7,7 +7,7 @@
 CountStart::CountStart(GameObject* parent)
     :GameObject(parent, "CountStart"), hPictCount_{}, hPictStart_(-1), hCountSound_(-1), hStartSound_(-1), cdTimer_(nullptr),
 	deltaTime_(0.0f),currentCount_(0), elapsedTime_(0.0f), isCounting_(false), finished_(false), scale_(maxScale_),
-    startElapsedTime_(0.0f),isStartVisible_(true)
+	startElapsedTime_(0.0f), isStartVisible_(true), isDisplay_(true)
 {
 }
 
@@ -89,6 +89,7 @@ void CountStart::Update()
 
 void CountStart::Draw()
 {
+	if (!isDisplay_) return;
     if (currentCount_ > 0) {
         Image::SetTransform(hPictCount_[currentCount_ - 1], transform_);
         Image::Draw(hPictCount_[currentCount_ - 1]);

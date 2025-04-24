@@ -18,5 +18,9 @@ private:
 	float maxHeight_;
 	float minHeight_;
 	float currentHeight_;
+
+	bool isDisplay_;
+public:
+	void SetDisplay(bool display) { isDisplay_ = display; }
 };
 

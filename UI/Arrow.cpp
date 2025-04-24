@@ -7,7 +7,7 @@ Arrow::Arrow(GameObject* parent)
 	:GameObject(parent, "Arrow"), hModel_(-1),
 	targetPos_({ 0.0f,0.0f,0.0f }), playerPos_({ 0.0f,0.0f,0.0f }),
 	directionVec_({ 0.0f,0.0f,0.0f }), playerPosVec_({ 0.0f,0.0f,0.0f }),targetPosVec_({ 0.0f,0.0f,0.0f }),
-    cdTimer_(nullptr)
+	cdTimer_(nullptr), isDisplay_(false)
 {
 }
 
@@ -67,6 +67,7 @@ void Arrow::Update()
 
 void Arrow::Draw()
 {
+	if (!isDisplay_) return;
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
 }

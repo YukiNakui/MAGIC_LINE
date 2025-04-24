@@ -20,5 +20,9 @@ private:
 	XMVECTOR targetPosVec_;
 
 	CDTimer* cdTimer_;
+
+	bool isDisplay_;
+public:
+	void SetDisplay(bool display) { isDisplay_ = display; }
 };
 
