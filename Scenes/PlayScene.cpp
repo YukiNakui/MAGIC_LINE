@@ -27,8 +27,6 @@ void PlayScene::Initialize()
 	Instantiate<LineGauge>(this);
 	Instantiate<HeightMeter>(this);
 	Instantiate<ThemeDisplay>(this);
-
-	Player* pPlayer = Instantiate<Player>(this);
 }
 
 void PlayScene::Update()
