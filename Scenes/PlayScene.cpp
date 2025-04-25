@@ -34,45 +34,6 @@ void PlayScene::Initialize()
 		}
     }
 
-
-	//PlayUI* pPlayUI = nullptr;
-	//Compass* pCompass = nullptr;
-	//CsvReader* csvUI = new CsvReader("CSV/UIData/UI.csv");
-	//lines = csvUI->GetLines();//行数
-	//for (int y = 1; y < lines; y++) { // 1行目はヘッダー
-	//	std::string uiName = csvStage->GetString(y, 0);
-	//	XMFLOAT3 position = { csvStage->GetFloat(y, 2), csvStage->GetFloat(y, 3), csvStage->GetFloat(y, 4) };
-	//	XMFLOAT3 rotation = { csvStage->GetFloat(y, 5), csvStage->GetFloat(y, 6), csvStage->GetFloat(y, 7) };
-	//	XMFLOAT3 scale = { csvStage->GetFloat(y, 6), csvStage->GetFloat(y, 9), csvStage->GetFloat(y, 10) };
-
-	//	if (uiName == "PlayUI") {
-	//		int kind = csvUI->GetInt(y, 1);
-	//		if (pPlayUI == nullptr)
-	//			pPlayUI = Instantiate<PlayUI>(this);
-	//		if(kind == 1)
-	//			pPlayUI->SetLineUITransform(position, rotation, scale);
-	//		else if (kind == 2)
-	//			pPlayUI->SetDeleteUITransform(position, rotation, scale);
-	//		else if (kind == 3)
-	//			pPlayUI->SetFinishUITransform(position, rotation, scale);
-	//	}
-	//	else if (uiName == "Compass") {
-	//		int kind = csvUI->GetInt(y, 1);
-	//		if (pCompass == nullptr)
-	//			pCompass = Instantiate<Compass>(this);
-	//		if (kind == 1)
-	//			pCompass->SetCompassFrameUITransform(position, rotation, scale);
-	//		else if (kind == 2)
-	//			pCompass->SetNorthUITransform(position, rotation, scale);
-	//		else if (kind == 3)
-	//			pCompass->SetSouthUITransform(position, rotation, scale);
-	//		else if (kind == 4)
-	//			pCompass->SetEastUITransform(position, rotation, scale);
-	//		else if (kind == 5)
-	//			pCompass->SetWestUITransform(position, rotation, scale);
-	//	}
-	//}
-
 	pPlayUI_ = Instantiate<PlayUI>(this);
 	pCompass_ = Instantiate<Compass>(this);
 	pArrow_ = Instantiate<Arrow>(this);
@@ -87,17 +48,6 @@ void PlayScene::Update()
 	Player* pPlayer = (Player*)FindObject("Player");
 	if (!pPlayer) return;
 	int playerState = pPlayer->GetPlayerState();
-	
-	/*PlayUI* pPlayUI = (PlayUI*)FindObject("PlayUI");
-	if (!pPlayUI) return;
-	Compass* pCompass = (Compass*)FindObject("Compass");
-	if (!pCompass) return;
-	Arrow* pArrow = (Arrow*)FindObject("Arrow");
-	if (!pArrow) return;
-	LineGauge* pLineGauge = (LineGauge*)FindObject("LineGauge");
-	if (!pLineGauge) return;
-	HeightMeter* pHeightMeter = (HeightMeter*)FindObject("HeightMeter");
-	if (!pHeightMeter) return;*/
 
 	if (playerState == 0 && pThemeDisplay_->IsStartVisible()) {
 		pPlayUI_->SetDisplay(true);

@@ -142,9 +142,6 @@
     <ClCompile Include="Objects\Stage.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\StageBox.cpp">
-      <Filter>Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\ClearScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
@@ -157,6 +154,7 @@
     <ClCompile Include="Scenes\TitleScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -266,9 +264,6 @@
     <ClInclude Include="Objects\Stage.h">
       <Filter>Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\StageBox.h">
-      <Filter>Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\ClearScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
@@ -281,6 +276,7 @@
     <ClInclude Include="Scenes\TitleScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

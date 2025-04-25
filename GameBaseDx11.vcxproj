@@ -168,6 +168,7 @@
     <ClCompile Include="UI\LineGauge.cpp" />
     <ClCompile Include="UI\PlayUI.cpp" />
     <ClCompile Include="UI\ThemeDisplay.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraOrbit.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="UI\LineGauge.h" />
     <ClInclude Include="UI\PlayUI.h" />
     <ClInclude Include="UI\ThemeDisplay.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">
