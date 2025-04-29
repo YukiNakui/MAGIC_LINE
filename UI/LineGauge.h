@@ -26,6 +26,38 @@ private:
 	float meterScaleRate_;//メーターの大きさの割合
 	float meterDefalutScaleY_;//メーターのY方向のデフォルトの大きさ
 
+public:
+	enum LineGaugeUIType{
+		LINEGAUGE_METER = 1,
+		LINEGAUGE_METERFRAME
+	};
+
+	void SetLineGaugeMeterUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		meterTrans_.position_ = position;
+		meterTrans_.rotate_ = rotate;
+		meterTrans_.scale_ = scale;
+	}
+
+	void SetLineGaugeMeterFrameUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		meterFrameTrans_.position_ = position;
+		meterFrameTrans_.rotate_ = rotate;
+		meterFrameTrans_.scale_ = scale;
+	}
+
+	void SetLineGaugeUITransform(LineGaugeUIType lineGaugeUIType, XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		switch (lineGaugeUIType) {
+		case LINEGAUGE_METER:
+			SetLineGaugeMeterUITransform(position, rotate, scale);
+			meterDefalutScaleY_ = meterTrans_.scale_.y;
+			break;
+		case LINEGAUGE_METERFRAME:
+			SetLineGaugeMeterFrameUITransform(position, rotate, scale);
+			break;
+		default:
+			break;
+		}
+	}
+
 	bool isDisplay_;
 public:
 	void SetDisplay(bool display) { isDisplay_ = display; }

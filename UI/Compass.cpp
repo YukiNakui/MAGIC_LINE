@@ -2,10 +2,13 @@
 #include"../Engine/Image.h"
 #include"../Objects/Player.h"
 
+namespace {
+	float RADIUS_CORRECT = 0.3f; // 半径補正値
+}
+
 Compass::Compass(GameObject* parent)
-	:GameObject(parent, "PlayUI"), hCompassFramePict_(-1), hNorthPict_(-1), hSouthPict_(-1), hEastPict_(-1), hWestPict_(-1),
-	northVec_(XMVectorSet(0.0f, -0.22f, 0.0f, 0.0f)), southVec_(XMVectorSet(0.0f, 0.22f, 0.0f, 0.0f)), 
-	eastVec_(XMVectorSet(-0.12f, 0.0f, 0.0f, 0.0f)), westVec_(XMVectorSet(0.12f, 0.0f, 0.0f, 0.0f)),
+	:GameObject(parent, "PlayUI"),
+	hCompassFramePict_(-1), hNorthPict_(-1), hSouthPict_(-1), hEastPict_(-1), hWestPict_(-1),
 	isDisplay_(false)
 {
 }
@@ -22,25 +25,6 @@ void Compass::Initialize()
 	assert(hEastPict_ >= 0);
 	hWestPict_ = Image::Load("UI/PlayerUI/W.png");
 	assert(hWestPict_ >= 0);
-
-	compassFrameUITrs_.position_ = { 0.0f, 1.0f, 0.0f };
-	compassFrameUITrs_.scale_ = { 0.8f, 0.45f, 0.5f };
-	compassFrameUITrs_.rotate_ = { 00.0f, 0.0f, 180.0f };
-	XMVECTOR circleVec_;
-	circleVec_ = XMLoadFloat3(&compassFrameUITrs_.position_);
-	XMFLOAT3 northPos, southPos, eastPos, westPos;
-	XMStoreFloat3(&northPos, circleVec_ + northVec_);
-	XMStoreFloat3(&southPos, circleVec_ + southVec_);
-	XMStoreFloat3(&eastPos, circleVec_ + eastVec_);
-	XMStoreFloat3(&westPos, circleVec_ + westVec_);
-	northUITrs_.position_ = northPos;
-	southUITrs_.position_ = southPos;
-	eastUITrs_.position_ = eastPos;
-	westUITrs_.position_ = westPos;
-	northUITrs_.scale_ = { 0.3f, 0.3f, 0.3f };
-	southUITrs_.scale_ = { 0.3f, 0.3f, 0.3f };
-	eastUITrs_.scale_ = { 0.3f, 0.3f, 0.3f };
-	westUITrs_.scale_ = { 0.3f, 0.3f, 0.3f };
 }
 
 void Compass::Update()
@@ -51,20 +35,13 @@ void Compass::Update()
 	float yawRad = XMConvertToRadians(yawDeg); // ラジアンに変換
 
 	XMVECTOR center = XMLoadFloat3(&compassFrameUITrs_.position_);
-	float radius = 0.3f * compassFrameUITrs_.scale_.x; // コンパスサイズに合わせた半径
-
-	auto GetPositionByAngle = [&](float angleOffsetRad) {
-		float angle = yawRad + angleOffsetRad;
-		float x = radius * cosf(angle);
-		float y = radius * sinf(angle);
-		return center + XMVectorSet(x, y, 0.0f, 0.0f);
-	};
+	float radius = RADIUS_CORRECT * compassFrameUITrs_.scale_.x; // コンパスサイズに合わせた半径
 
 	// NSEWそれぞれ90°ずらして配置
-	XMStoreFloat3(&northUITrs_.position_, GetPositionByAngle(-XM_PIDIV2));  // -90°
-	XMStoreFloat3(&eastUITrs_.position_, GetPositionByAngle(XM_PI));       // 180°
-	XMStoreFloat3(&southUITrs_.position_, GetPositionByAngle(XM_PIDIV2)); // 90°
-	XMStoreFloat3(&westUITrs_.position_, GetPositionByAngle(0.0f));      // 0°
+	XMStoreFloat3(&northUITrs_.position_, CalculatePositionByAngle(yawRad, -XM_PIDIV2, center, radius));  // -90°
+	XMStoreFloat3(&eastUITrs_.position_, CalculatePositionByAngle(yawRad, XM_PI, center, radius));       // 180°
+	XMStoreFloat3(&southUITrs_.position_, CalculatePositionByAngle(yawRad, XM_PIDIV2, center, radius)); // 90°
+	XMStoreFloat3(&westUITrs_.position_, CalculatePositionByAngle(yawRad, 0.0f, center, radius));      // 0°
 }
 
 void Compass::Draw()
@@ -84,4 +61,12 @@ void Compass::Draw()
 
 void Compass::Release()
 {
+}
+
+XMVECTOR Compass::CalculatePositionByAngle(float yawRad, float angleOffsetRad, XMVECTOR center, float radius)
+{
+	float angle = yawRad + angleOffsetRad;
+	float x = radius * cosf(angle);
+	float y = radius * sinf(angle);
+	return center + XMVectorSet(x, y, 0.0f, 0.0f);
 }

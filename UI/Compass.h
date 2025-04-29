@@ -14,16 +14,20 @@ class Compass :
 	Transform southUITrs_;
 	Transform eastUITrs_;
 	Transform westUITrs_;
-	XMVECTOR northVec_;
-	XMVECTOR southVec_;
-	XMVECTOR eastVec_;
-	XMVECTOR westVec_;
 public:
 	Compass(GameObject* parent);
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+
+	enum CompassUIType {
+		COMPASS_FRAME = 1,
+		NORTH,
+		SOUTH,
+		EAST,
+		WEST
+	};
 
 	void SetCompassFrameUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
 		compassFrameUITrs_.position_ = position;
@@ -50,6 +54,31 @@ public:
 		westUITrs_.rotate_ = rotate;
 		westUITrs_.scale_ = scale;
 	}
+
+	void SetCompassUITransform(CompassUIType compassUIType, XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		switch (compassUIType) {
+		case COMPASS_FRAME:
+			SetCompassFrameUITransform(position, rotate, scale);
+			break;
+		case NORTH:
+			SetNorthUITransform(position, rotate, scale);
+			break;
+		case SOUTH:
+			SetSouthUITransform(position, rotate, scale);
+			break;
+		case EAST:
+			SetEastUITransform(position, rotate, scale);
+			break;
+		case WEST:
+			SetWestUITransform(position, rotate, scale);
+			break;
+		default:
+			break;
+		}
+	}
+
+private:
+	XMVECTOR CalculatePositionByAngle(float yawRad, float angleOffsetRad, XMVECTOR center, float radius);
 
 	bool isDisplay_;
 public:

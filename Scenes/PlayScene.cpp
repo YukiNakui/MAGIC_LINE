@@ -45,35 +45,36 @@ void PlayScene::Initialize()
 		XMFLOAT3 rotation = { csvUI->GetFloat(y, 5), csvUI->GetFloat(y, 6), csvUI->GetFloat(y, 7) };
 		XMFLOAT3 scale = { csvUI->GetFloat(y, 8), csvUI->GetFloat(y, 9), csvUI->GetFloat(y, 10) };
 		if (uiName == "PlayUI") {
-			pPlayUI_ = Instantiate<PlayUI>(this);
-			if (kind == 1)	
-				pPlayUI_->SetLineUITransform(position, rotation, scale);
-			else if (kind == 2)
-				pPlayUI_->SetDeleteUITransform(position, rotation, scale);
-			else if (kind == 3)
-				pPlayUI_->SetFinishUITransform(position, rotation, scale);
+			if (pPlayUI_ == nullptr)
+				pPlayUI_ = Instantiate<PlayUI>(this);
+			pPlayUI_->SetPlayUITransform((PlayUI::PlayUIType)kind, position, rotation, scale);
 		}
 		else if (uiName == "Compass") {
-			pCompass_ = Instantiate<Compass>(this);
-			if (kind == 1)
-				pCompass_->SetCompassFrameUITransform(position, rotation, scale);
-			else if (kind == 2)
-				pCompass_->SetNorthUITransform(position, rotation, scale);
-			else if(kind == 3)
-				pCompass_->SetSouthUITransform(position, rotation, scale);
-			else if(kind == 4)
-				pCompass_->SetEastUITransform(position, rotation, scale);
-			else if (kind == 5)
-				pCompass_->SetWestUITransform(position, rotation, scale);
+			if (pCompass_ == nullptr)
+				pCompass_ = Instantiate<Compass>(this);
+			pCompass_->SetCompassUITransform((Compass::CompassUIType)kind,position, rotation, scale);
+		}
+		else if (uiName == "Arrow") {
+			if (pArrow_ == nullptr)
+				pArrow_ = Instantiate<Arrow>(this);
+			pArrow_->SetTransformFloat3(position, rotation, scale);
+		}
+		else if (uiName == "LineGauge") {
+			if (pLineGauge_ == nullptr)
+				pLineGauge_ = Instantiate<LineGauge>(this);
+			pLineGauge_->SetLineGaugeUITransform((LineGauge::LineGaugeUIType)kind, position, rotation, scale);
+		}
+		else if (uiName == "HeightMeter") {
+			if (pHeightMeter_ == nullptr)
+				pHeightMeter_ = Instantiate<HeightMeter>(this);
+			pHeightMeter_->SetHeightMeterUITransform((HeightMeter::HeightMeterUIType)kind, position, rotation, scale);
+		}
+		else if (uiName == "ThemeDisplay") {
+			if (pThemeDisplay_ == nullptr)
+				pThemeDisplay_ = Instantiate<ThemeDisplay>(this);
+			pThemeDisplay_->SetThemeDisplayTransform((ThemeDisplay::ThemeDisplayType)kind, position, rotation, scale);
 		}
 	}
-
-	//pPlayUI_ = Instantiate<PlayUI>(this);
-	pCompass_ = Instantiate<Compass>(this);
-	pArrow_ = Instantiate<Arrow>(this);
-	pLineGauge_ = Instantiate<LineGauge>(this);
-	pHeightMeter_ = Instantiate<HeightMeter>(this);
-	pThemeDisplay_ = Instantiate<ThemeDisplay>(this);
 }
 
 void PlayScene::Update()

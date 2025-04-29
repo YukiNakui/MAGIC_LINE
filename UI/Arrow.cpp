@@ -3,6 +3,13 @@
 #include"../Objects/Ball.h"
 #include"../Objects/Player.h"
 
+namespace {
+    const float OSCILLATION_FREQUENCY = 2.0f; // 振動の周波数
+    const float OSCILLATION_AMPLITUDE = 1.0f; // 振動の振幅
+    const float OFFSET_DISTANCE = 5.0f;      // オフセット距離
+    const float SPIN_MULTIPLIER = 180.0f;    // 回転角度の倍率
+}
+
 Arrow::Arrow(GameObject* parent)
 	:GameObject(parent, "Arrow"), hModel_(-1),
 	targetPos_({ 0.0f,0.0f,0.0f }), playerPos_({ 0.0f,0.0f,0.0f }),
@@ -16,28 +23,26 @@ void Arrow::Initialize()
 	hModel_ = Model::Load("Models/UI/SquarePyramid.fbx");
 	assert(hModel_ >= 0);
 	
-    transform_.scale_ = { 2.0f,2.0f,2.0f };
-
     cdTimer_ = Instantiate<CDTimer>(this);
 }
 
 void Arrow::Update()
 {
-    //ボールの位置取得
+    // ボールの位置取得
     Ball* ball = (Ball*)FindObject("Ball");
     if (!ball) return;
     targetPos_ = ball->GetPosition();
 
-    //プレイヤーの位置取得
+    // プレイヤーの位置取得
     Player* player = (Player*)FindObject("Player");
     if (!player) return;
     playerPos_ = player->GetPosition();
 
-    //ベクトル変換
+    // ベクトル変換
     targetPosVec_ = XMLoadFloat3(&targetPos_);
     playerPosVec_ = XMLoadFloat3(&playerPos_);
 
-    //プレイヤーからボールへのベクトル（正規化）
+    // プレイヤーからボールへのベクトル（正規化）
     directionVec_ = XMVector3Normalize(targetPosVec_ - playerPosVec_);
 
 
@@ -53,16 +58,17 @@ void Arrow::Update()
     transform_.rotate_.y = XMConvertToDegrees(yaw);
 
 
-
     static float deltaTime = 0.0f;
     deltaTime = fmodf(deltaTime + cdTimer_->GetDeltaTime(), XM_2PI);
 
-    float oscillation = sinf(deltaTime * 2.0f) * 1.0f;
-    XMVECTOR offset = directionVec_ * (5.0f + oscillation);
+    // オフセットと振動の計算
+    float oscillation = sinf(deltaTime * OSCILLATION_FREQUENCY) * OSCILLATION_AMPLITUDE;
+    XMVECTOR offset = directionVec_ * (OFFSET_DISTANCE + oscillation);
     XMStoreFloat3(&transform_.position_, playerPosVec_ + offset);
 
-    float spin = sinf(deltaTime * 2.0f);
-    transform_.rotate_.z = spin * 180.0f;
+    // 回転の計算
+    float spin = sinf(deltaTime * OSCILLATION_FREQUENCY);
+    transform_.rotate_.z = spin * SPIN_MULTIPLIER;
 }
 
 void Arrow::Draw()

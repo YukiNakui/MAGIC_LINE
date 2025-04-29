@@ -4,7 +4,7 @@
 class PlayUI :
     public GameObject
 {
-    int hLinePict_;
+    int hDrawPict_;
     int hDeletePict_;
     int hFinishPict_;
 	Transform lineUITrs_;
@@ -17,7 +17,14 @@ public:
 	void Draw() override;
 	void Release() override;
 
-	void SetLineUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+	enum PlayUIType {
+		DRAW_LINE=1,
+		DELETE_LINE,
+		FINISH_LINE
+	};
+	PlayUIType playUIType_;
+
+	void SetDrawUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
 		lineUITrs_.position_ = position;
 		lineUITrs_.rotate_ = rotate;
 		lineUITrs_.scale_ = scale;
@@ -35,6 +42,23 @@ public:
 		finishUITrs_.scale_ = scale;
 	}
 
+	void SetPlayUITransform(PlayUIType playUIType, XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
+		switch (playUIType) {
+		case DRAW_LINE:
+			SetDrawUITransform(position, rotate, scale);
+			break;
+		case DELETE_LINE:
+			SetDeleteUITransform(position, rotate, scale);
+			break;
+		case FINISH_LINE:
+			SetFinishUITransform(position, rotate, scale);
+			break;
+		default:
+			break;
+		}
+	}
+
+private:
 	bool isDisplay_;
 public:
 	void SetDisplay(bool display) { isDisplay_ = display; }
