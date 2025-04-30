@@ -32,7 +32,7 @@ void HeightMeter::Update()
 	currentHeight_ = player->GetPosition().y;
 	// プレイヤーの高さに基づいて三角形のY座標を計算
 	triangleUITrs_.position_.y =
-		(currentHeight_ - (maxHeight_ - minHeight_)) * POSITION_SCALE_FACTOR + POSITION_BASE_OFFSET;
+		(currentHeight_ - (maxHeight_ - minHeight_)) * POSITION_SCALE_FACTOR + POSITION_BASE_OFFSET + meterUITrs_.position_.y;
 }
 
 void HeightMeter::Draw()

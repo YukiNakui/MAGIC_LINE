@@ -72,6 +72,9 @@ private:
 private:
 	Line* GetCapsuleFromPool();
 	void ClearCapsules();
+public:
+	std::vector<Line*> GetCapsuleList() { return capsuleList_; }
+private:
 	bool CheckPlayerOutOfRange(XMFLOAT3 playerPos, XMFLOAT3 maxPos, XMFLOAT3 minPos);
 
 	CameraOrbit* pCameraOrbit_;

@@ -7,6 +7,7 @@
 #include"../UI/Compass.h"
 #include"../UI/Arrow.h"
 #include"../UI/HeightMeter.h"
+#include"../MiniMap.h"
 
 class PlayScene : public GameObject
 {
@@ -26,5 +27,6 @@ private:
 	Compass* pCompass_;
 	Arrow* pArrow_;
 	HeightMeter* pHeightMeter_;
+	MiniMap* pMiniMap_;
 };
 

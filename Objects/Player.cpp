@@ -205,11 +205,6 @@ void Player::MoveUpdate()
 		isPlayerHitting_ = true;
 	}
 
-	//オブジェクトや壁に当たっている間、プレイヤーの向きを補正するようにしたらラインに違和感なくなるかも
-	//上下に当たった場合は徐々にプレイヤーが水平に、左右や前後なら徐々に壁と平行な向きに
-	//オブジェクトに当たったらその形に沿って向きを変える
-
-
 	//カメラ移動処理
 	if (canControl_) {
 		cameraTargetVec = XMVectorSet(0, 0, 25, 0);

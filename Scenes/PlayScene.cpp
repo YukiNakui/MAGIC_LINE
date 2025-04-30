@@ -74,6 +74,11 @@ void PlayScene::Initialize()
 				pThemeDisplay_ = Instantiate<ThemeDisplay>(this);
 			pThemeDisplay_->SetThemeDisplayTransform((ThemeDisplay::ThemeDisplayType)kind, position, rotation, scale);
 		}
+		else if (uiName == "MiniMap") {
+			if (pMiniMap_ == nullptr)
+				pMiniMap_ = Instantiate<MiniMap>(this);
+			pMiniMap_->SetMiniMapUITransform((MiniMap::MiniMapUIType)kind, position, rotation, scale);
+		}
 	}
 }
 
@@ -90,6 +95,7 @@ void PlayScene::Update()
 		pArrow_->SetDisplay(true);
 		pLineGauge_->SetDisplay(true);
 		pHeightMeter_->SetDisplay(true);
+		pMiniMap_->SetDisplay(true);
 	}
 	else if (playerState == 1) {
 		pPlayUI_->SetDisplay(true);
@@ -97,6 +103,7 @@ void PlayScene::Update()
 		pArrow_->SetDisplay(true);
 		pLineGauge_->SetDisplay(true);
 		pHeightMeter_->SetDisplay(true);
+		pMiniMap_->SetDisplay(true);
 	}
 	else if (playerState == 2) {
 		pPlayUI_->SetDisplay(false);
@@ -104,6 +111,7 @@ void PlayScene::Update()
 		pArrow_->SetDisplay(false);
 		pLineGauge_->SetDisplay(false);
 		pHeightMeter_->SetDisplay(false);
+		pMiniMap_->SetDisplay(false);
 	}
 }
 
