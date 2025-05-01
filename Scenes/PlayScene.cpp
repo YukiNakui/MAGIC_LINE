@@ -4,6 +4,7 @@
 #include"../Objects/Ball.h"
 #include"../Engine/CsvReader.h"
 #include"../Wall.h"
+#include"../Objects/Line.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)
@@ -117,6 +118,21 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
+	Player* pPlayer = (Player*)FindObject("Player");
+	const auto& capsuleList = pPlayer->GetCapsuleList();
+	for (auto& capsule : capsuleList) {
+		capsule->Draw();
+	}
+
+
+	//UI‚Ì•`‰æ
+	if (pPlayUI_) pPlayUI_->Draw();
+	if (pCompass_) pCompass_->Draw();
+	if (pArrow_) pArrow_->Draw();
+	if (pLineGauge_) pLineGauge_->Draw();
+	if (pHeightMeter_) pHeightMeter_->Draw();
+	if (pThemeDisplay_) pThemeDisplay_->Draw();
+	if (pMiniMap_) pMiniMap_->Draw();
 }
 
 void PlayScene::Release()

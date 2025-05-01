@@ -390,7 +390,6 @@ namespace Direct3D
 		if (NULL == pSwapChain_) return;
 
 		//”wŒi‚ÌF
-		//float clearColor[4] = { 0/255.0f, 191/255.0f, 255/255.0f, 1.0f };//R,G,B,A
 		float clearColor[4] = { 25 / 255.0f, 25 / 255.0f, 112 / 255.0f, 1.0f };//R,G,B,A
 
 		//‰æ–Ê‚ğƒNƒŠƒA
