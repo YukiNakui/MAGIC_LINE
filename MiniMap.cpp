@@ -47,6 +47,7 @@ void MiniMap::Update()
 		Transform capsuleTrs;
 		capsuleTrs.position_.x = defaultLinePosition_.x + capsule->GetPosition().x * CORRECT_POSITION_X;
 		capsuleTrs.position_.y = defaultLinePosition_.y + capsule->GetPosition().z * CORRECT_POSITION_Y;
+		capsuleTrs.rotate_.x = -capsule->GetRotate().x;
 		capsuleTrs.rotate_.z = -capsule->GetRotate().y;
 		capsuleTrs.scale_ = miniMapLineTrs_.scale_;
 		miniMapCapsuleTrs_.push_back(capsuleTrs);

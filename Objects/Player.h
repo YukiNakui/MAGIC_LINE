@@ -5,6 +5,7 @@
 #include"../UI/CountStart.h"
 #include"../CameraOrbit.h"
 #include<vector>
+#include"../Engine/VFX.h"
 
 class Player :
     public GameObject
@@ -78,5 +79,10 @@ private:
 	bool CheckPlayerOutOfRange(XMFLOAT3 playerPos, XMFLOAT3 maxPos, XMFLOAT3 minPos);
 
 	CameraOrbit* pCameraOrbit_;
+private:
+	XMFLOAT3 rocketNozzlePos_;
+	XMVECTOR fireEffectVec_;
+	EmitterData fireEffectData_;
+	int hFireEffect_;
 };
 

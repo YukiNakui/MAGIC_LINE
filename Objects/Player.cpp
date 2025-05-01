@@ -53,6 +53,23 @@ void Player::Initialize()
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.5f);
 	AddCollider(collision);
+
+	fireEffectData_.textureFileName = "Effects/cloudA.png";
+	fireEffectData_.position = XMFLOAT3(-4, 4, 4);
+	fireEffectData_.positionRnd = XMFLOAT3(0.1, 0, 0.1);
+	fireEffectData_.delay = 5;
+	fireEffectData_.number = 1;
+	fireEffectData_.lifeTime = 60;
+	fireEffectData_.gravity = -0.002f;
+	fireEffectData_.direction = XMFLOAT3(0, 1, 0);
+	fireEffectData_.directionRnd = XMFLOAT3(0, 0, 0);
+	fireEffectData_.speed = 0.01f;
+	fireEffectData_.speedRnd = 0.0;
+	fireEffectData_.size = XMFLOAT2(1.5, 1.5);
+	fireEffectData_.sizeRnd = XMFLOAT2(0.4, 0.4);
+	fireEffectData_.scale = XMFLOAT2(1.01, 1.01);
+	fireEffectData_.color = XMFLOAT4(1, 1, 0, 1);
+	fireEffectData_.deltaColor = XMFLOAT4(0, -0.03, 0, -0.02);
 }
 
 void Player::Update()
@@ -67,33 +84,6 @@ void Player::Update()
 	LineGauge* pLineGauge_ = (LineGauge*)FindObject("LineGauge");
 	if (pLineGauge_ == nullptr) return;
 	pLineGauge_->SetMeterVal(maxLineValue_, currentLineValue_);
-}
-
-void Player::Draw()
-{
-	if (!isInvisible_) {
-		Model::SetTransform(hModel_, transform_);
-		Model::Draw(hModel_);
-	}
-}
-
-void Player::Release()
-{
-	//出現中のカプセルを削除
-	for (auto& capsule : capsuleList_) {
-		if (capsule && capsule->IsActive()) { //カプセルが存在していてアクティブな場合のみ削除
-			capsule->KillMe();
-		}
-	}
-	capsuleList_.clear(); //カプセルリストをクリア
-
-	//プール内のカプセルも削除
-	for (auto& capsule : capsulePool_) {
-		if (capsule) { //ポインタが有効かチェック
-			capsule->KillMe();
-		}
-	}
-	capsulePool_.clear(); //プールのクリア
 }
 
 void Player::StartUpdate()
@@ -189,6 +179,13 @@ void Player::MoveUpdate()
 
 	//移動を適用
 	transform_.position_ = newPosition;
+
+	//ロケットのエフェクトに関する処理
+	//エフェクトの位置をロケットの噴出孔の位置に合わせる
+	
+	//エフェクトの向きをロケットの向きに合わせる
+	
+
 
 	Stage* pStage = (Stage*)FindObject("Stage");    //ステージオブジェクトを探す
 	int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
@@ -357,4 +354,31 @@ bool Player::CheckPlayerOutOfRange(XMFLOAT3 playerPos, XMFLOAT3 maxPos, XMFLOAT3
 		return true;
 	}
 	return false;
+}
+
+void Player::Draw()
+{
+	if (!isInvisible_) {
+		Model::SetTransform(hModel_, transform_);
+		Model::Draw(hModel_);
+	}
+}
+
+void Player::Release()
+{
+	//出現中のカプセルを削除
+	for (auto& capsule : capsuleList_) {
+		if (capsule && capsule->IsActive()) { //カプセルが存在していてアクティブな場合のみ削除
+			capsule->KillMe();
+		}
+	}
+	capsuleList_.clear(); //カプセルリストをクリア
+
+	//プール内のカプセルも削除
+	for (auto& capsule : capsulePool_) {
+		if (capsule) { //ポインタが有効かチェック
+			capsule->KillMe();
+		}
+	}
+	capsulePool_.clear(); //プールのクリア
 }
