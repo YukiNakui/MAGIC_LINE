@@ -14,7 +14,7 @@ Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),state_(sBeforeStart),hModel_(-1), hLineSound_(-1), hLineDeleteSound_(-1), hBGM_(-1),
 	cdTimer_(nullptr),cupsuleTimer_(nullptr),capsuleSpawnInterval_(0.1f),lookTarget_{ 0,0,0 },front_{0,0,1,0},
 	rotX(XMMatrixIdentity()),rotY(XMMatrixIdentity()),move{ 0,0,0,0 },rotVec{ 0,0,0,0 },
-	maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr),
+	maxLineValue_(100.0f), currentLineValue_(0.0f), pCapsule_(nullptr),/*pCountStart_(nullptr),*/
 	maxPos_(45.0f,50.0f,45.0f), minPos_(-45.0f, 0.0f, -45.0f),isPlayerHitting_(false),
 	isInvisible_(false), isMoveStarted_(false), canControl_(false), pCameraOrbit_(nullptr),
 	hFireEffect_(-1), hSparkEffect_(-1)
@@ -111,13 +111,16 @@ void Player::StartUpdate()
 	XMStoreFloat3(&camPos, XMVectorAdd(pos, cameraEyeVec));
 	Camera::SetPosition(camPos);
 
-	if (pCountStart_ == nullptr) {
+	/*if (pCountStart_ == nullptr) {
 		pCountStart_ = (CountStart*)FindObject("CountStart");
-	}
+	}*/
+	if (pStartCountdownManager_ == nullptr)
+		pStartCountdownManager_ = (StartCountdownManager*)FindObject("StartCountdownManager");
 
 	if (!isMoveStarted_)
 	{
-		if (pCountStart_ != nullptr && !pCountStart_->IsStartVisible())
+		//if (pCountStart_ != nullptr && !pCountStart_->IsStartVisible())
+		if (pStartCountdownManager_!=nullptr && pStartCountdownManager_->IsFinished())
 		{
 			isMoveStarted_ = true;  //START‚ªÁ‚¦‚½‚çˆÚ“®ŠJŽn
 			canControl_ = true; //‘€ì‰Â”\‚É‚·‚é
@@ -315,6 +318,8 @@ void Player::MoveFinishUpdate()
 
 	if (transform_.position_.y >= maxPos_.y + 50.0f) {
 		isInvisible_ = true;
+		VFX::End(hFireEffect_);
+		VFX::End(hSparkEffect_);
 		state_ = sResult;
 	}
 }

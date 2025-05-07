@@ -1,8 +1,10 @@
 #pragma once
 #include "../Engine/GameObject.h"
 #include"../CDTimer.h"
-#include"CountStart.h"
+//#include"CountStart.h"
+#include"../StartCountdownManager.h"
 #include "../CameraOrbit.h"
+
 
 class ThemeDisplay :
     public GameObject
@@ -27,7 +29,9 @@ private:
 
 	Transform targetTrans_; //ˆÚ“®æ‚ÌTransform
 
-    CountStart* pCountStart_;
+    //CountStart* pCountStart_;
+	StartCountdownManager* pStartCountdownNumber_;
+	
 	CameraOrbit* pCameraOrbit_;
 public:
 	enum ThemeDisplayType {

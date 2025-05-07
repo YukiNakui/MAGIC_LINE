@@ -15,7 +15,7 @@ namespace {
 }
 
 ThemeDisplay::ThemeDisplay(GameObject* parent)
-    : GameObject(parent, "ThemeDisplay"), hPict_(-1), cdTimer_(nullptr), pCountStart_(nullptr),
+	: GameObject(parent, "ThemeDisplay"), hPict_(-1), cdTimer_(nullptr), /*pCountStart_(nullptr),*/
     deltaTime_(0.0f), elapsedTime_(0.0f), displayDuration_(DEFAULT_DISPLAY_DURATION),
     transitionDuration_(DEFAULT_TRANSITION_DURATION), isMoving_(false), hasMoved_(false),
     pCameraOrbit_(nullptr), isDisplay_(true), isStartVisible_(false)
@@ -78,8 +78,16 @@ void ThemeDisplay::Update()
             isMoving_ = false;
             hasMoved_ = true;
 
-            if (pCountStart_ == nullptr) {
+            /*if (pCountStart_ == nullptr) {
                 pCountStart_ = Instantiate<CountStart>(this);
+                isStartVisible_ = true;
+                if (pCameraOrbit_->IsStopOrbit()) {
+                    pCameraOrbit_->StopOrbit();
+                    pCameraOrbit_ = nullptr;
+                }
+            }*/
+            if (pStartCountdownNumber_ == nullptr) {
+				pStartCountdownNumber_ = Instantiate<StartCountdownManager>(this);
                 isStartVisible_ = true;
                 if (pCameraOrbit_->IsStopOrbit()) {
                     pCameraOrbit_->StopOrbit();

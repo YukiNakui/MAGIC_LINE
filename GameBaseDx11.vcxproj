@@ -129,6 +129,8 @@
   <ItemGroup>
     <ClCompile Include="CameraOrbit.cpp" />
     <ClCompile Include="CDTimer.cpp" />
+    <ClCompile Include="CountdownBase.cpp" />
+    <ClCompile Include="CountdownNumber.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
@@ -162,6 +164,8 @@
     <ClCompile Include="Scenes\GameOverScene.cpp" />
     <ClCompile Include="Scenes\PlayScene.cpp" />
     <ClCompile Include="Scenes\TitleScene.cpp" />
+    <ClCompile Include="StartCountdownManager.cpp" />
+    <ClCompile Include="StartDisplay.cpp" />
     <ClCompile Include="UI\Arrow.cpp" />
     <ClCompile Include="UI\Compass.cpp" />
     <ClCompile Include="UI\CountStart.cpp" />
@@ -174,6 +178,8 @@
   <ItemGroup>
     <ClInclude Include="CameraOrbit.h" />
     <ClInclude Include="CDTimer.h" />
+    <ClInclude Include="CountdownBase.h" />
+    <ClInclude Include="CountdownNumber.h" />
     <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
@@ -207,6 +213,8 @@
     <ClInclude Include="Scenes\GameOverScene.h" />
     <ClInclude Include="Scenes\PlayScene.h" />
     <ClInclude Include="Scenes\TitleScene.h" />
+    <ClInclude Include="StartCountdownManager.h" />
+    <ClInclude Include="StartDisplay.h" />
     <ClInclude Include="UI\Arrow.h" />
     <ClInclude Include="UI\Compass.h" />
     <ClInclude Include="UI\CountStart.h" />

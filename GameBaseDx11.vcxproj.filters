@@ -156,6 +156,10 @@
     </ClCompile>
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="MiniMap.cpp" />
+    <ClCompile Include="CountdownBase.cpp" />
+    <ClCompile Include="CountdownNumber.cpp" />
+    <ClCompile Include="StartDisplay.cpp" />
+    <ClCompile Include="StartCountdownManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -279,6 +283,10 @@
     </ClInclude>
     <ClInclude Include="Wall.h" />
     <ClInclude Include="MiniMap.h" />
+    <ClInclude Include="CountdownBase.h" />
+    <ClInclude Include="CountdownNumber.h" />
+    <ClInclude Include="StartDisplay.h" />
+    <ClInclude Include="StartCountdownManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

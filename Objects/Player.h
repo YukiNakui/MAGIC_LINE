@@ -2,7 +2,9 @@
 #include "../Engine/GameObject.h"
 #include"../CDTimer.h"
 #include"Line.h"
-#include"../UI/CountStart.h"
+//#include"../UI/CountStart.h"
+#include"../StartCountdownManager.h"
+
 #include"../CameraOrbit.h"
 #include<vector>
 #include"../Engine/VFX.h"
@@ -61,7 +63,9 @@ private:
 	std::vector<Line*> capsuleList_; // 画面上に存在するカプセルリスト
 	std::vector<Line*> capsulePool_; // 再利用用のカプセルプール
 
-	CountStart* pCountStart_;
+	//CountStart* pCountStart_;
+	StartCountdownManager* pStartCountdownManager_;
+
 	bool isMoveStarted_; //プレイヤーが動き始めたか
 	bool canControl_; //プレイヤーが操作できるかどうか
 

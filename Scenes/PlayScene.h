@@ -2,7 +2,6 @@
 #include "../Engine/GameObject.h"
 #include"../UI/LineGauge.h"
 #include"../UI/ThemeDisplay.h"
-#include"../UI/CountStart.h"
 #include"../UI/PlayUI.h"
 #include"../UI/Compass.h"
 #include"../UI/Arrow.h"
@@ -22,7 +21,6 @@ private:
 	//UI
 	LineGauge* pLineGauge_;
 	ThemeDisplay* pThemeDisplay_;
-	CountStart* pCountStart_;
 	PlayUI* pPlayUI_;
 	Compass* pCompass_;
 	Arrow* pArrow_;
