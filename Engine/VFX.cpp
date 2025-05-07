@@ -280,3 +280,31 @@ void VFX::End(int handle)
         }
     }
 }
+
+void VFX::SetEmitterPosition(int handle, const XMFLOAT3& newPosition)
+{
+    // 指定されたハンドルを持つエミッターを探す
+    for (auto emitter = emitterList_.begin(); emitter != emitterList_.end(); ++emitter)
+    {
+        if ((*emitter)->handle == handle)
+        {
+            // エミッターの位置を更新
+            (*emitter)->data.position = newPosition;
+            break;
+        }
+    }
+}
+
+void VFX::SetEmitterDirection(int handle, const XMFLOAT3& newDirection)
+{
+    // 指定されたハンドルを持つエミッターを探す
+    for (auto emitter = emitterList_.begin(); emitter != emitterList_.end(); ++emitter)
+    {
+        if ((*emitter)->handle == handle)
+        {
+            // エミッターの移動方向を更新
+            (*emitter)->data.direction = newDirection;
+            break;
+        }
+    }
+}

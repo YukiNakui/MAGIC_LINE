@@ -121,5 +121,8 @@ namespace VFX
 	//エミッタを削除（エフェクト終了）
 	//引数：handle	エフェクトの番号
 	void End(int handle);
+
+	void SetEmitterPosition(int handle, const XMFLOAT3& newPosition);
+	void SetEmitterDirection(int handle, const XMFLOAT3& newDirection);
 };
 

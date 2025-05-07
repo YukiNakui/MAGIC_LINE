@@ -16,7 +16,8 @@ Player::Player(GameObject* parent)
 	rotX(XMMatrixIdentity()),rotY(XMMatrixIdentity()),move{ 0,0,0,0 },rotVec{ 0,0,0,0 },
 	maxLineValue_(100.0f),currentLineValue_(0.0f),pCapsule_(nullptr),pCountStart_(nullptr),
 	maxPos_(45.0f,50.0f,45.0f), minPos_(-45.0f, 0.0f, -45.0f),isPlayerHitting_(false),
-	isInvisible_(false), isMoveStarted_(false), canControl_(false), pCameraOrbit_(nullptr)
+	isInvisible_(false), isMoveStarted_(false), canControl_(false), pCameraOrbit_(nullptr),
+	hFireEffect_(-1), hSparkEffect_(-1)
 {
 }
 
@@ -55,7 +56,7 @@ void Player::Initialize()
 	AddCollider(collision);
 
 	fireEffectData_.textureFileName = "Effects/cloudA.png";
-	fireEffectData_.position = XMFLOAT3(-4, 4, 4);
+	fireEffectData_.position = XMFLOAT3(-1, -1, -1);
 	fireEffectData_.positionRnd = XMFLOAT3(0.1, 0, 0.1);
 	fireEffectData_.delay = 5;
 	fireEffectData_.number = 1;
@@ -70,6 +71,17 @@ void Player::Initialize()
 	fireEffectData_.scale = XMFLOAT2(1.01, 1.01);
 	fireEffectData_.color = XMFLOAT4(1, 1, 0, 1);
 	fireEffectData_.deltaColor = XMFLOAT4(0, -0.03, 0, -0.02);
+	
+	sparkEffectData_.textureFileName = "Effects/cloudA.png";
+	sparkEffectData_.number = 3;
+	sparkEffectData_.positionRnd = XMFLOAT3(0.8, 0, 0.8);
+	sparkEffectData_.direction = XMFLOAT3(0, 1, 0);
+	sparkEffectData_.directionRnd = XMFLOAT3(10, 10, 10);
+	sparkEffectData_.size = XMFLOAT2(0.2, 0.2);
+	sparkEffectData_.scale = XMFLOAT2(0.95, 0.95);
+	sparkEffectData_.lifeTime = 120;
+	sparkEffectData_.speed = 0.1f;
+	sparkEffectData_.gravity = 0;
 }
 
 void Player::Update()
@@ -180,10 +192,27 @@ void Player::MoveUpdate()
 	//移動を適用
 	transform_.position_ = newPosition;
 
+	XMVECTOR backVec = XMVectorSet(0, 0, -1, 0);
+	//プレイヤーの向きに合わせてバックベクトルを回転
+	backVec = XMVector3TransformCoord(backVec, rotX * rotY);
+	XMFLOAT3 backDir;
+	XMStoreFloat3(&backDir, backVec);
+
+	if (hFireEffect_ <= 0)
+		hFireEffect_ = VFX::Start(fireEffectData_);
+	if (hSparkEffect_ <= 0)
+		hSparkEffect_ = VFX::Start(sparkEffectData_);
 	//ロケットのエフェクトに関する処理
 	//エフェクトの位置をロケットの噴出孔の位置に合わせる
-	
 	//エフェクトの向きをロケットの向きに合わせる
+	if (hFireEffect_ > 0) {
+		VFX::SetEmitterPosition(hFireEffect_, transform_.position_);
+		VFX::SetEmitterDirection(hFireEffect_, backDir);
+	}
+	if (hSparkEffect_ > 0) {
+		VFX::SetEmitterPosition(hSparkEffect_, transform_.position_);
+		VFX::SetEmitterDirection(hSparkEffect_, backDir);
+	}
 	
 
 

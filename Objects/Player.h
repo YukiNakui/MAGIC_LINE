@@ -84,5 +84,7 @@ private:
 	XMVECTOR fireEffectVec_;
 	EmitterData fireEffectData_;
 	int hFireEffect_;
+	EmitterData sparkEffectData_;
+	int hSparkEffect_;
 };
 
