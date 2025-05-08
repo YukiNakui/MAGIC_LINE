@@ -322,6 +322,21 @@ void Player::MoveFinishUpdate()
 		VFX::End(hSparkEffect_);
 		state_ = sResult;
 	}
+	else {
+		XMVECTOR backVec = XMVectorSet(0, 0, -1, 0);
+		//プレイヤーの向きに合わせてバックベクトルを回転
+		backVec = XMVector3TransformCoord(backVec, rotX * rotY);
+		XMFLOAT3 backDir;
+		XMStoreFloat3(&backDir, backVec);
+		if (hFireEffect_ > 0) {
+			VFX::SetEmitterPosition(hFireEffect_, transform_.position_);
+			VFX::SetEmitterDirection(hFireEffect_, backDir);
+		}
+		if (hSparkEffect_ > 0) {
+			VFX::SetEmitterPosition(hSparkEffect_, transform_.position_);
+			VFX::SetEmitterDirection(hSparkEffect_, backDir);
+		}
+	}
 }
 
 void Player::ResultUpdate()

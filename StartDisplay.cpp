@@ -25,7 +25,9 @@ void StartDisplay::Initialize()
     assert(hStartSound_ >= 0);
 
     Audio::Play(hStartSound_);
+
     cdTimer_ = Instantiate<CDTimer>(this);
+	cdTimer_->SetInitTime(START_DISPLAY_DURATION);
 }
 
 void StartDisplay::Update()

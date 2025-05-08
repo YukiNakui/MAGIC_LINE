@@ -1,6 +1,7 @@
 #pragma once
 #include "../Engine/GameObject.h"
 #include"../CDTimer.h"
+#include"../CountdownNumber.h"
 
 class Ball :
     public GameObject
@@ -30,5 +31,7 @@ private:
 	float lowSpeedTime_;                //’á‘¬ó‘Ô‚ÌŒo‰ßŠÔ
 	float lowSpeedThreshold_;     //’á‘¬‚Æ”»’è‚·‚é‘¬“x
 	float timeBeforeSceneChange_; //’á‘¬ó‘Ô‚ª‘±‚¢‚½‚çØ‚è‘Ö‚¦‚Ü‚Å‚ÌŠÔ
+
+	CountdownNumber* pCountDownNumber_;
 };
 

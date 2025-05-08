@@ -104,6 +104,8 @@ void Ball::Update()
 
                     // 低速状態をカウント
                     if (ballSpeed < lowSpeedThreshold_) {
+                        if(pCountDownNumber_==nullptr)
+							pCountDownNumber_ = Instantiate<CountdownNumber>(this);
                         lowSpeedTime_ += deltaTime;
                         if (lowSpeedTime_ >= timeBeforeSceneChange_) {
                             SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
@@ -112,6 +114,8 @@ void Ball::Update()
                     }
                     else {
                         lowSpeedTime_ = 0.0f; // 速度が閾値を超えたらリセット
+                        if (pCountDownNumber_ != nullptr)
+                            pCountDownNumber_->ResetCountdown();
                     }
 
                     //位置の更新
@@ -138,11 +142,5 @@ void Ball::OnCollision(GameObject* pTarget)
 	if (pTarget->GetObjectName() == "Stage") {
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
-	}
-	else if (pTarget->GetObjectName() == "Capsule") {
-		/*SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-		pSceneManager->ChangeScene(SCENE_ID_CLEAR);*/
-		//Capsule capsule = pTarget;
-		//float capsuleRad = capsule.GetRadius();
 	}
 }

@@ -13,7 +13,7 @@ public:
     void Draw() override;
     void Release() override;
 
-    void StartCountdown(); // カウントダウンを開始
+    //void StartCountdown(); // カウントダウンを開始
 
     bool IsFinished() const { return isFinished_; }
 

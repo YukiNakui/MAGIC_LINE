@@ -12,7 +12,7 @@ namespace {
 }
 
 CountdownNumber::CountdownNumber(GameObject* parent)
-    : CountdownBase(parent, "CountdownNumber"), currentCount_(COUNT_IMAGES), isCounting_(true), finished_(false)
+    : CountdownBase(parent, "CountdownNumber"), currentCount_(COUNT_IMAGES), isCounting_(true), isFinished_(false)
 {
 }
 
@@ -41,19 +41,22 @@ void CountdownNumber::Update()
     deltaTime_ = cdTimer_->GetDeltaTime();
     elapsedTime_ += deltaTime_;
 
-    if (elapsedTime_ >= COUNTDOWN_INTERVAL && currentCount_ > 0) {
+    if (elapsedTime_ >= COUNTDOWN_INTERVAL && currentCount_ >= 0) {
         elapsedTime_ = 0.0f;
         currentCount_--;
 
-        if (currentCount_ > 0) {
-            Audio::Play(hCountSound_);
+        if (currentCount_ <= 0) {
+            isFinished_ = true;
         }
         else {
-            finished_ = true;
+            Audio::Play(hCountSound_);
         }
+        scale_ = MAX_SCALE;
+        cdTimer_->ResetTimer();
     }
 
     // ÉXÉPÅ[Éãï‚ä‘
+	if (isFinished_) return;
     float t = std::clamp(elapsedTime_, 0.0f, COUNTDOWN_INTERVAL);
     float smoothT = 0.5f * (1.0f - cos(t * XM_PI));
     scale_ = MAX_SCALE - smoothT * (MAX_SCALE - MIN_SCALE);
@@ -71,4 +74,14 @@ void CountdownNumber::Draw()
 void CountdownNumber::Release()
 {
     CountdownBase::Release();
+}
+
+void CountdownNumber::ResetCountdown()
+{
+	currentCount_ = COUNT_IMAGES;
+	elapsedTime_ = 0.0f;
+	isCounting_ = true;
+	isFinished_ = false;
+	scale_ = MAX_SCALE;
+	//Audio::Play(hCountSound_);
 }
