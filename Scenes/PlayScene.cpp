@@ -5,6 +5,8 @@
 #include"../Engine/CsvReader.h"
 #include"../Wall.h"
 #include"../Objects/Line.h"
+#include"../Engine/VFX.h"
+#include"../Effect.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)
@@ -27,8 +29,8 @@ void PlayScene::Initialize()
 			pStage->SetTransformFloat3(position, rotation, scale);
 		}
         else if (objectName == "Player") {
-            Player* pPlayer = Instantiate<Player>(this);
-			pPlayer->SetTransformFloat3(position, rotation, scale);
+            pPlayer_ = Instantiate<Player>(this);
+			pPlayer_->SetTransformFloat3(position, rotation, scale);
 		}
         else if (objectName == "Ball") {
             Ball* pBall = Instantiate<Ball>(this);
@@ -49,36 +51,43 @@ void PlayScene::Initialize()
 			if (pPlayUI_ == nullptr)
 				pPlayUI_ = Instantiate<PlayUI>(this);
 			pPlayUI_->SetPlayUITransform((PlayUI::PlayUIType)kind, position, rotation, scale);
+			pPlayUI_->SetRenderOrder(10);
 		}
 		else if (uiName == "Compass") {
 			if (pCompass_ == nullptr)
 				pCompass_ = Instantiate<Compass>(this);
 			pCompass_->SetCompassUITransform((Compass::CompassUIType)kind,position, rotation, scale);
+			pCompass_->SetRenderOrder(10);
 		}
 		else if (uiName == "Arrow") {
 			if (pArrow_ == nullptr)
 				pArrow_ = Instantiate<Arrow>(this);
 			pArrow_->SetTransformFloat3(position, rotation, scale);
+			pArrow_->SetRenderOrder(10);
 		}
 		else if (uiName == "LineGauge") {
 			if (pLineGauge_ == nullptr)
 				pLineGauge_ = Instantiate<LineGauge>(this);
 			pLineGauge_->SetLineGaugeUITransform((LineGauge::LineGaugeUIType)kind, position, rotation, scale);
+			pLineGauge_->SetRenderOrder(10);
 		}
 		else if (uiName == "HeightMeter") {
 			if (pHeightMeter_ == nullptr)
 				pHeightMeter_ = Instantiate<HeightMeter>(this);
 			pHeightMeter_->SetHeightMeterUITransform((HeightMeter::HeightMeterUIType)kind, position, rotation, scale);
+			pHeightMeter_->SetRenderOrder(10);
 		}
 		else if (uiName == "ThemeDisplay") {
 			if (pThemeDisplay_ == nullptr)
 				pThemeDisplay_ = Instantiate<ThemeDisplay>(this);
 			pThemeDisplay_->SetThemeDisplayTransform((ThemeDisplay::ThemeDisplayType)kind, position, rotation, scale);
+			pThemeDisplay_->SetRenderOrder(10);
 		}
 		else if (uiName == "MiniMap") {
 			if (pMiniMap_ == nullptr)
 				pMiniMap_ = Instantiate<MiniMap>(this);
 			pMiniMap_->SetMiniMapUITransform((MiniMap::MiniMapUIType)kind, position, rotation, scale);
+			pMiniMap_->SetRenderOrder(10);
 		}
 	}
 }
@@ -86,9 +95,9 @@ void PlayScene::Initialize()
 void PlayScene::Update()
 {
 	//プレイヤーの状態取得
-	Player* pPlayer = (Player*)FindObject("Player");
-	if (!pPlayer) return;
-	int playerState = pPlayer->GetPlayerState();
+	pPlayer_ = (Player*)FindObject("Player");
+	if (!pPlayer_) return;
+	int playerState = pPlayer_->GetPlayerState();
 
 	if (playerState == 0 && pThemeDisplay_->IsStartVisible()) {
 		pPlayUI_->SetDisplay(true);
@@ -118,21 +127,26 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
-	Player* pPlayer = (Player*)FindObject("Player");
-	const auto& capsuleList = pPlayer->GetCapsuleList();
-	for (auto& capsule : capsuleList) {
-		capsule->Draw();
-	}
+	//pPlayer_ = (Player*)FindObject("Player");
+	//const auto& capsuleList = pPlayer_->GetCapsuleList();
+	//for (auto& capsule : capsuleList) {
+	//	capsule->Draw();
+	//}
 
+	////UIの描画
+	//if (pPlayUI_) pPlayUI_->Draw();
+	//if (pCompass_) pCompass_->Draw();
+	//if (pArrow_) pArrow_->Draw();
+	//if (pLineGauge_) pLineGauge_->Draw();
+	//if (pHeightMeter_) pHeightMeter_->Draw();
+	//if (pThemeDisplay_) pThemeDisplay_->Draw();
+	//if (pMiniMap_) pMiniMap_->Draw();
 
-	//UIの描画
-	if (pPlayUI_) pPlayUI_->Draw();
-	if (pCompass_) pCompass_->Draw();
-	if (pArrow_) pArrow_->Draw();
-	if (pLineGauge_) pLineGauge_->Draw();
-	if (pHeightMeter_) pHeightMeter_->Draw();
-	if (pThemeDisplay_) pThemeDisplay_->Draw();
-	if (pMiniMap_) pMiniMap_->Draw();
+	// 子オブジェクトの描画順をソート
+	SortChildrenByRenderOrder();
+
+	// 子オブジェクトの描画
+	DrawChildren();
 }
 
 void PlayScene::Release()

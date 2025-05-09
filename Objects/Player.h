@@ -4,7 +4,7 @@
 #include"Line.h"
 //#include"../UI/CountStart.h"
 #include"../StartCountdownManager.h"
-
+#include"../Effect.h"
 #include"../CameraOrbit.h"
 #include<vector>
 #include"../Engine/VFX.h"
@@ -72,6 +72,9 @@ private:
 	XMFLOAT3 maxPos_;
 	XMFLOAT3 minPos_;
 
+	//U“®ŠÔ
+	float vibrationTime_;
+
 	bool isInvisible_;//ƒvƒŒƒCƒ„[‚ª“§–¾‚©
 	bool isPlayerHitting_;
 private:
@@ -90,5 +93,8 @@ private:
 	int hFireEffect_;
 	EmitterData sparkEffectData_;
 	int hSparkEffect_;
+
+	Effect* fireEffect_;
+	Effect* sparkEffect_;
 };
 

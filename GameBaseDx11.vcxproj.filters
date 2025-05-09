@@ -160,6 +160,7 @@
     <ClCompile Include="CountdownNumber.cpp" />
     <ClCompile Include="StartDisplay.cpp" />
     <ClCompile Include="StartCountdownManager.cpp" />
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -287,6 +288,7 @@
     <ClInclude Include="CountdownNumber.h" />
     <ClInclude Include="StartDisplay.h" />
     <ClInclude Include="StartCountdownManager.h" />
+    <ClInclude Include="Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

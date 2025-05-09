@@ -131,6 +131,7 @@
     <ClCompile Include="CDTimer.cpp" />
     <ClCompile Include="CountdownBase.cpp" />
     <ClCompile Include="CountdownNumber.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="CDTimer.h" />
     <ClInclude Include="CountdownBase.h" />
     <ClInclude Include="CountdownNumber.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />

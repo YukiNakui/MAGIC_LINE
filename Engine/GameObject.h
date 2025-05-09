@@ -3,6 +3,7 @@
 #include <list>
 #include <string>
 #include <assert.h>
+#include <algorithm>
 #include "SphereCollider.h"
 #include "BoxCollider.h"
 #include "CapsuleCollider.h"
@@ -32,6 +33,7 @@ protected:
 	//衝突判定リスト
 	std::list<Collider*>	colliderList_;	
 
+	int renderOrder_; // 描画順序
 public:
 	//コンストラクタ
 	GameObject();
@@ -212,6 +214,26 @@ public:
 		transform_.position_ = position;
 		transform_.rotate_ = rotate;
 		transform_.scale_ = scale;
+	}
+
+
+	void SetRenderOrder(int order) { renderOrder_ = order; }
+	int GetRenderOrder() const { return renderOrder_; }
+
+	void AddChild(GameObject* child) { childList_.push_back(child); }
+
+	// 子オブジェクトの描画順をソート
+	void SortChildrenByRenderOrder() {
+		childList_.sort([](GameObject* a, GameObject* b) {
+			return a->GetRenderOrder() < b->GetRenderOrder();
+			});
+	}
+
+	void DrawChildren() {
+		SortChildrenByRenderOrder();
+		for (auto& child : childList_) {
+			child->Draw();
+		}
 	}
 
 private:

@@ -1,5 +1,6 @@
 #pragma once
 #include "../Engine/GameObject.h"
+#include"../Objects/Player.h"
 #include"../UI/LineGauge.h"
 #include"../UI/ThemeDisplay.h"
 #include"../UI/PlayUI.h"
@@ -18,6 +19,8 @@ public:
 	void Draw() override;
 	void Release() override;
 private:
+	//Objects
+	Player* pPlayer_;
 	//UI
 	LineGauge* pLineGauge_;
 	ThemeDisplay* pThemeDisplay_;

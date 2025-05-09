@@ -52,6 +52,8 @@ void Player::Initialize()
 	cupsuleTimer_ = Instantiate<CDTimer>(this);
 	cupsuleTimer_->SetInitTime(capsuleSpawnInterval_);
 
+	vibrationTime_ = 0.0f;
+
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.5f);
 	AddCollider(collision);
 
@@ -201,21 +203,39 @@ void Player::MoveUpdate()
 	XMFLOAT3 backDir;
 	XMStoreFloat3(&backDir, backVec);
 
-	if (hFireEffect_ <= 0)
+	/*if (hFireEffect_ <= 0)
 		hFireEffect_ = VFX::Start(fireEffectData_);
 	if (hSparkEffect_ <= 0)
-		hSparkEffect_ = VFX::Start(sparkEffectData_);
+		hSparkEffect_ = VFX::Start(sparkEffectData_);*/
+	if (fireEffect_ == nullptr && sparkEffect_ == nullptr) {
+		// Fire Effect を生成
+		fireEffect_ = Instantiate<Effect>(this);
+		fireEffect_->SetEmitterData(fireEffectData_);
+		// Spark Effect を生成
+		sparkEffect_ = Instantiate<Effect>(this);
+		sparkEffect_->SetEmitterData(sparkEffectData_);
+	}
+	else {
+		// Fire Effect の位置を更新
+		fireEffect_->SetEffectPosition(transform_.position_);
+		// Spark Effect の位置を更新
+		sparkEffect_->SetEffectPosition(transform_.position_);
+		// Fire Effect の向きを更新
+		fireEffect_->SetEffectDirection(backDir);
+		// Spark Effect の向きを更新
+		sparkEffect_->SetEffectDirection(backDir);
+	}
 	//ロケットのエフェクトに関する処理
 	//エフェクトの位置をロケットの噴出孔の位置に合わせる
 	//エフェクトの向きをロケットの向きに合わせる
-	if (hFireEffect_ > 0) {
+	/*if (hFireEffect_ > 0) {
 		VFX::SetEmitterPosition(hFireEffect_, transform_.position_);
 		VFX::SetEmitterDirection(hFireEffect_, backDir);
 	}
 	if (hSparkEffect_ > 0) {
 		VFX::SetEmitterPosition(hSparkEffect_, transform_.position_);
 		VFX::SetEmitterDirection(hSparkEffect_, backDir);
-	}
+	}*/
 	
 
 
@@ -288,11 +308,10 @@ void Player::MoveFinishUpdate()
 		transform_.rotate_.x -= 60.0f * deltaTime;
 	}
 	else {
-		//1.5秒間、プレイヤーが横方向に小刻みに振動
-		static float time = 0.0f;
-		time += deltaTime;
-		if (time <= 1.0f) {
-			XMVECTOR moveVec = XMVectorSet(0.1f * sinf(XM_PI / 1 - time * 100.0f), 0.0f, 0.0f, 0.0f);
+		//プレイヤーが横方向に小刻みに振動
+		vibrationTime_ += deltaTime;
+		if (vibrationTime_ <= 1.0f) {
+			XMVECTOR moveVec = XMVectorSet(0.1f * sinf(XM_PI / 1 - vibrationTime_ * 100.0f), 0.0f, 0.0f, 0.0f);
 			rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
 			rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
 			moveVec = XMVector3TransformCoord(moveVec, rotX * rotY);
@@ -307,7 +326,7 @@ void Player::MoveFinishUpdate()
 			rotX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
 			rotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
 			rotVec = XMVector3TransformCoord(front_, rotX * rotY);
-			float t = std::clamp(time - 1.0f, 0.0f, 1.0f);
+			float t = std::clamp(vibrationTime_ - 1.0f, 0.0f, 1.0f);
 			float smoothT = (1.0f - cos(t * XM_PI));
 			move = 10.0f * rotVec * smoothT * 3.0f;
 			XMVECTOR addMove = dir * move * deltaTime;
@@ -318,8 +337,12 @@ void Player::MoveFinishUpdate()
 
 	if (transform_.position_.y >= maxPos_.y + 50.0f) {
 		isInvisible_ = true;
-		VFX::End(hFireEffect_);
-		VFX::End(hSparkEffect_);
+		/*VFX::End(hFireEffect_);
+		VFX::End(hSparkEffect_);*/
+		if (fireEffect_ != nullptr && sparkEffect_ != nullptr) {
+			fireEffect_->StopEffect();
+			sparkEffect_->StopEffect();
+		}
 		state_ = sResult;
 	}
 	else {
@@ -328,14 +351,22 @@ void Player::MoveFinishUpdate()
 		backVec = XMVector3TransformCoord(backVec, rotX * rotY);
 		XMFLOAT3 backDir;
 		XMStoreFloat3(&backDir, backVec);
-		if (hFireEffect_ > 0) {
+		/*if (hFireEffect_ > 0) {
 			VFX::SetEmitterPosition(hFireEffect_, transform_.position_);
 			VFX::SetEmitterDirection(hFireEffect_, backDir);
 		}
 		if (hSparkEffect_ > 0) {
 			VFX::SetEmitterPosition(hSparkEffect_, transform_.position_);
 			VFX::SetEmitterDirection(hSparkEffect_, backDir);
-		}
+		}*/
+		// Fire Effect の位置を更新
+		fireEffect_->SetEffectPosition(transform_.position_);
+		// Spark Effect の位置を更新
+		sparkEffect_->SetEffectPosition(transform_.position_);
+		// Fire Effect の向きを更新
+		fireEffect_->SetEffectDirection(backDir);
+		// Spark Effect の向きを更新
+		sparkEffect_->SetEffectDirection(backDir);
 	}
 }
 
