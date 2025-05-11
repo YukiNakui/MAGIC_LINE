@@ -10,11 +10,11 @@
 //ボール関連の定数
 namespace BallConstants {
     constexpr float GRAVITY = 9.8f;             //重力
-    constexpr float COLLISION_RADIUS = 5.8f;   //ボールとカプセルの衝突半径
+    constexpr float COLLISION_RADIUS = 5.0f;   //ボールとカプセルの衝突半径
     constexpr float MIN_SPEED = 1.0f;          //ボールの最低速度
-    constexpr float BOUNCE_FACTOR = 0.6f;      //反発係数
+    constexpr float BOUNCE_FACTOR = 0.4f;      //反発係数
     constexpr float LOW_SPEED_THRESHOLD = 5.0f; //低速と判定する速度
-    constexpr float PENETRATION_CORRECTION = 0.5f; //衝突時の補正値
+    constexpr float PENETRATION_CORRECTION = 0.1f; //衝突時の補正値
 }
 
 Ball::Ball(GameObject* parent)

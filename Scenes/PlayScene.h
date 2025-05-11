@@ -7,7 +7,7 @@
 #include"../UI/Compass.h"
 #include"../UI/Arrow.h"
 #include"../UI/HeightMeter.h"
-#include"../MiniMap.h"
+#include"../UI/MiniMap.h"
 
 //プレイシーン
 class PlayScene : public GameObject

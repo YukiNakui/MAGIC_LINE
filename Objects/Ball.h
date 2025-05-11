@@ -1,7 +1,7 @@
 #pragma once
 #include "../Engine/GameObject.h"
-#include"../CDTimer.h"
-#include"../CountdownNumber.h"
+#include"../Functions/CDTimer.h"
+#include"../UI/CountdownNumber.h"
 
 class Ball :
     public GameObject

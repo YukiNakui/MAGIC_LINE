@@ -1,5 +1,5 @@
 #include "Wall.h"
-#include"Engine/Model.h"
+#include"../Engine/Model.h"
 
 Wall::Wall(GameObject* parent)
 	:GameObject(parent, "Wall")

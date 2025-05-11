@@ -1,8 +1,8 @@
 #include "MiniMap.h"
-#include"Engine/Image.h"
-#include"Objects/Player.h"
-#include"Objects/Ball.h"
-#include"Objects/Line.h"
+#include"../Engine/Image.h"
+#include"../Objects/Player.h"
+#include"../Objects/Ball.h"
+#include"../Objects/Line.h"
 
 namespace {
 	const float CORRECT_POSITION_X = 0.0025f; //Xç¿ïWÇÃï‚ê≥åWêî

@@ -1,6 +1,6 @@
 #pragma once
 #include "../Engine/GameObject.h"
-#include"../CDTimer.h"
+#include"../Functions/CDTimer.h"
 
 class Arrow :
     public GameObject

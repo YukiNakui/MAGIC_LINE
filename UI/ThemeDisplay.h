@@ -1,8 +1,8 @@
 #pragma once
 #include "../Engine/GameObject.h"
-#include"../CDTimer.h"
-#include"../StartCountdownManager.h"
-#include "../CameraOrbit.h"
+#include"../Functions/CDTimer.h"
+#include"StartCountdownManager.h"
+#include "../Functions/CameraOrbit.h"
 
 
 class ThemeDisplay :

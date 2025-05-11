@@ -127,11 +127,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CameraOrbit.cpp" />
-    <ClCompile Include="CDTimer.cpp" />
-    <ClCompile Include="CountdownBase.cpp" />
-    <ClCompile Include="CountdownNumber.cpp" />
-    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
@@ -156,31 +151,31 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Transform.cpp" />
-    <ClCompile Include="MiniMap.cpp" />
+    <ClCompile Include="Functions\CameraOrbit.cpp" />
+    <ClCompile Include="Functions\CDTimer.cpp" />
+    <ClCompile Include="Functions\CountdownBase.cpp" />
+    <ClCompile Include="Functions\Effect.cpp" />
     <ClCompile Include="Objects\Ball.cpp" />
     <ClCompile Include="Objects\Line.cpp" />
     <ClCompile Include="Objects\Player.cpp" />
     <ClCompile Include="Objects\Stage.cpp" />
+    <ClCompile Include="Objects\Wall.cpp" />
     <ClCompile Include="Scenes\ClearScene.cpp" />
     <ClCompile Include="Scenes\GameOverScene.cpp" />
     <ClCompile Include="Scenes\PlayScene.cpp" />
     <ClCompile Include="Scenes\TitleScene.cpp" />
-    <ClCompile Include="StartCountdownManager.cpp" />
-    <ClCompile Include="StartDisplay.cpp" />
     <ClCompile Include="UI\Arrow.cpp" />
     <ClCompile Include="UI\Compass.cpp" />
+    <ClCompile Include="UI\CountdownNumber.cpp" />
     <ClCompile Include="UI\HeightMeter.cpp" />
     <ClCompile Include="UI\LineGauge.cpp" />
+    <ClCompile Include="UI\MiniMap.cpp" />
     <ClCompile Include="UI\PlayUI.cpp" />
+    <ClCompile Include="UI\StartCountdownManager.cpp" />
+    <ClCompile Include="UI\StartDisplay.cpp" />
     <ClCompile Include="UI\ThemeDisplay.cpp" />
-    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CameraOrbit.h" />
-    <ClInclude Include="CDTimer.h" />
-    <ClInclude Include="CountdownBase.h" />
-    <ClInclude Include="CountdownNumber.h" />
-    <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
@@ -205,24 +200,29 @@
     <ClInclude Include="Engine\Text.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
-    <ClInclude Include="MiniMap.h" />
+    <ClInclude Include="Functions\CameraOrbit.h" />
+    <ClInclude Include="Functions\CDTimer.h" />
+    <ClInclude Include="Functions\CountdownBase.h" />
+    <ClInclude Include="Functions\Effect.h" />
     <ClInclude Include="Objects\Ball.h" />
     <ClInclude Include="Objects\Line.h" />
     <ClInclude Include="Objects\Player.h" />
     <ClInclude Include="Objects\Stage.h" />
+    <ClInclude Include="Objects\Wall.h" />
     <ClInclude Include="Scenes\ClearScene.h" />
     <ClInclude Include="Scenes\GameOverScene.h" />
     <ClInclude Include="Scenes\PlayScene.h" />
     <ClInclude Include="Scenes\TitleScene.h" />
-    <ClInclude Include="StartCountdownManager.h" />
-    <ClInclude Include="StartDisplay.h" />
     <ClInclude Include="UI\Arrow.h" />
     <ClInclude Include="UI\Compass.h" />
+    <ClInclude Include="UI\CountdownNumber.h" />
     <ClInclude Include="UI\HeightMeter.h" />
     <ClInclude Include="UI\LineGauge.h" />
+    <ClInclude Include="UI\MiniMap.h" />
     <ClInclude Include="UI\PlayUI.h" />
+    <ClInclude Include="UI\StartCountdownManager.h" />
+    <ClInclude Include="UI\StartDisplay.h" />
     <ClInclude Include="UI\ThemeDisplay.h" />
-    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

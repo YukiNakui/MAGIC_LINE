@@ -33,6 +33,9 @@
     <Filter Include="UI">
       <UniqueIdentifier>{eae727ae-e67f-4c7c-8430-e22183ca1974}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Functions">
+      <UniqueIdentifier>{cebaa02e-4022-4935-ae0f-e2dd1950d164}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\BoxCollider.cpp">
@@ -104,18 +107,13 @@
     <ClCompile Include="Engine\VFX.cpp">
       <Filter>01Engine\ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="CDTimer.cpp" />
     <ClCompile Include="Engine\CapsuleCollider.cpp">
       <Filter>01Engine\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="CameraOrbit.cpp" />
     <ClCompile Include="UI\Arrow.cpp">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="UI\Compass.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\CountStart.cpp">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="UI\HeightMeter.cpp">
@@ -154,13 +152,33 @@
     <ClCompile Include="Scenes\TitleScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Wall.cpp" />
-    <ClCompile Include="MiniMap.cpp" />
-    <ClCompile Include="CountdownBase.cpp" />
-    <ClCompile Include="CountdownNumber.cpp" />
-    <ClCompile Include="StartDisplay.cpp" />
-    <ClCompile Include="StartCountdownManager.cpp" />
-    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="UI\CountdownNumber.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\MiniMap.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\StartCountdownManager.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\StartDisplay.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions\CameraOrbit.cpp">
+      <Filter>Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions\CDTimer.cpp">
+      <Filter>Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions\CountdownBase.cpp">
+      <Filter>Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions\Effect.cpp">
+      <Filter>Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Wall.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -232,18 +250,13 @@
     <ClInclude Include="Engine\VFX.h">
       <Filter>01Engine\ResourceManager</Filter>
     </ClInclude>
-    <ClInclude Include="CDTimer.h" />
     <ClInclude Include="Engine\CapsuleCollider.h">
       <Filter>01Engine\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="CameraOrbit.h" />
     <ClInclude Include="UI\Arrow.h">
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="UI\Compass.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\CountStart.h">
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="UI\HeightMeter.h">
@@ -282,13 +295,33 @@
     <ClInclude Include="Scenes\TitleScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Wall.h" />
-    <ClInclude Include="MiniMap.h" />
-    <ClInclude Include="CountdownBase.h" />
-    <ClInclude Include="CountdownNumber.h" />
-    <ClInclude Include="StartDisplay.h" />
-    <ClInclude Include="StartCountdownManager.h" />
-    <ClInclude Include="Effect.h" />
+    <ClInclude Include="UI\CountdownNumber.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\MiniMap.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\StartCountdownManager.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\StartDisplay.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions\CameraOrbit.h">
+      <Filter>Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions\CDTimer.h">
+      <Filter>Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions\CountdownBase.h">
+      <Filter>Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions\Effect.h">
+      <Filter>Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Wall.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

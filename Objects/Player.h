@@ -1,10 +1,10 @@
 #pragma once
 #include "../Engine/GameObject.h"
-#include "../CDTimer.h"
+#include "../Functions/CDTimer.h"
 #include "Line.h"
-#include "../StartCountdownManager.h"
-#include "../Effect.h"
-#include "../CameraOrbit.h"
+#include "../UI/StartCountdownManager.h"
+#include "../Functions/Effect.h"
+#include "../Functions/CameraOrbit.h"
 #include <vector>
 #include "../Engine/VFX.h"
 

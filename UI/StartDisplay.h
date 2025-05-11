@@ -1,5 +1,5 @@
 #pragma once
-#include "CountdownBase.h"
+#include "../Functions/CountdownBase.h"
 #include"CountdownNumber.h"
 
 class StartDisplay : public CountdownBase {

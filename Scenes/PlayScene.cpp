@@ -3,10 +3,9 @@
 #include"../Objects/Stage.h"
 #include"../Objects/Ball.h"
 #include"../Engine/CsvReader.h"
-#include"../Wall.h"
+#include"../Objects/Wall.h"
 #include"../Objects/Line.h"
 #include"../Engine/VFX.h"
-#include"../Effect.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)

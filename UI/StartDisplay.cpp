@@ -1,6 +1,6 @@
 #include "StartDisplay.h"
-#include "Engine/Image.h"
-#include "Engine/Audio.h"
+#include "../Engine/Image.h"
+#include "../Engine/Audio.h"
 #include <cassert>
 
 namespace {

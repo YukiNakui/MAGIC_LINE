@@ -1,5 +1,5 @@
 #include "CameraOrbit.h"
-#include "Engine/Camera.h"
+#include "../Engine/Camera.h"
 
 //ƒJƒƒ‰‹O“¹ŠÖ˜A‚Ì’è”‚ğ’è‹`
 namespace CameraOrbitConstants {
