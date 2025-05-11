@@ -17,10 +17,11 @@ public:
 	void Draw() override;
 	void Release() override;
 
+	//操作方法UIの種類
 	enum PlayUIType {
-		DRAW_LINE=1,
-		DELETE_LINE,
-		FINISH_LINE
+		DRAW_LINE = 1,		//ラインを引くUI
+		DELETE_LINE,		//ラインを消すUI
+		FINISH_LINE			//ラインを引くのをやめるUI
 	};
 	PlayUIType playUIType_;
 
@@ -42,6 +43,7 @@ public:
 		finishUITrs_.scale_ = scale;
 	}
 
+	//操作方法UIのTransformを一括で設定
 	void SetPlayUITransform(PlayUIType playUIType, XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
 		switch (playUIType) {
 		case DRAW_LINE:
@@ -59,8 +61,9 @@ public:
 	}
 
 private:
-	bool isDisplay_;
+	bool isDisplay_; //操作方法UIが表示されているかどうかのフラグ
 public:
+	//操作方法UIの表示・非表示を設定
 	void SetDisplay(bool display) { isDisplay_ = display; }
 };
 

@@ -11,12 +11,13 @@ ClearScene::ClearScene(GameObject* parent)
 
 void ClearScene::Initialize()
 {
+	//‰æ‘œ‚ÆBGM‚Ì“Ç‚İ‚İ
 	hPict_ = Image::Load("Scenes/CLEAR.png");
 	assert(hPict_ >= 0);
 	hBGM_ = Audio::Load("Sounds/BGM/ClearBGM.wav", true);
 	assert(hBGM_ >= 0);
 
-	Audio::Play(hBGM_);
+	Audio::Play(hBGM_);//BGM‚ğÄ¶
 }
 
 void ClearScene::Update()

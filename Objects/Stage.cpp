@@ -3,9 +3,11 @@
 #include"../Engine/BoxCollider.h"
 #include<vector>
 
-static const int STAGE_WIDTH = 20;  //ステージのx方向最大
-static const int STAGE_HEIGHT = 1;  //ステージのy方向最大
-static const int STAGE_LENGTH = 20; //ステージのz方向最大
+namespace {
+	int STAGE_WIDTH = 20;  //ステージのx方向最大
+	int STAGE_HEIGHT = 1;  //ステージのy方向最大
+	int STAGE_LENGTH = 20; //ステージのz方向最大
+}
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent,"Stage"),hModel_(-1)

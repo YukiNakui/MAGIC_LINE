@@ -15,10 +15,12 @@ PlayScene::PlayScene(GameObject* parent)
 
 void PlayScene::Initialize()
 {
+	//ステージデータを読み込む
 	CsvReader* csvStage = new CsvReader("CSV/StageData/stage01.csv");
-	int lines = csvStage->GetLines();//行数
+	int lines = csvStage->GetLines();
 
-    for (int y = 1; y < lines; y++) { // 1行目はヘッダー
+	//ステージデータに基づいてオブジェクトを生成
+    for (int y = 1; y < lines; y++) {
         std::string objectName = csvStage->GetString(y, 0);
 		XMFLOAT3 position = { csvStage->GetFloat(y, 1), csvStage->GetFloat(y, 2), csvStage->GetFloat(y, 3) };
 		XMFLOAT3 rotation = { csvStage->GetFloat(y, 4), csvStage->GetFloat(y, 5), csvStage->GetFloat(y, 6) };
@@ -36,12 +38,18 @@ void PlayScene::Initialize()
             Ball* pBall = Instantiate<Ball>(this);
 			pBall->SetTransformFloat3(position, rotation, scale);
 		}
+		else if (objectName == "Wall") {
+			Wall* pWall = Instantiate<Wall>(this);
+			pWall->SetTransformFloat3(position, rotation, scale);
+		}
     }
-	Instantiate<Wall>(this);
 
+	//UIデータを読み込む
 	CsvReader* csvUI = new CsvReader("CSV/UIData/UI.csv");
-	lines = csvUI->GetLines();//行数
-	for (int y = 1; y < lines; y++) { // 1行目はヘッダー
+	lines = csvUI->GetLines();
+
+	//UIデータに基づいてオブジェクトを生成
+	for (int y = 1; y < lines; y++) {
 		std::string uiName = csvUI->GetString(y, 0);
 		int kind = csvUI->GetInt(y, 1);
 		XMFLOAT3 position = { csvUI->GetFloat(y, 2), csvUI->GetFloat(y, 3), csvUI->GetFloat(y, 4) };
@@ -99,56 +107,38 @@ void PlayScene::Update()
 	if (!pPlayer_) return;
 	int playerState = pPlayer_->GetPlayerState();
 
+	//プレイヤーの状態に応じてUIを表示・非表示に切り替え
 	if (playerState == 0 && pThemeDisplay_->IsStartVisible()) {
-		pPlayUI_->SetDisplay(true);
-		pCompass_->SetDisplay(true);
-		pArrow_->SetDisplay(true);
-		pLineGauge_->SetDisplay(true);
-		pHeightMeter_->SetDisplay(true);
-		pMiniMap_->SetDisplay(true);
-	}
-	else if (playerState == 1) {
-		pPlayUI_->SetDisplay(true);
-		pCompass_->SetDisplay(true);
-		pArrow_->SetDisplay(true);
-		pLineGauge_->SetDisplay(true);
-		pHeightMeter_->SetDisplay(true);
-		pMiniMap_->SetDisplay(true);
-	}
-	else if (playerState == 2) {
-		pPlayUI_->SetDisplay(false);
-		pCompass_->SetDisplay(false);
-		pArrow_->SetDisplay(false);
-		pLineGauge_->SetDisplay(false);
-		pHeightMeter_->SetDisplay(false);
-		pMiniMap_->SetDisplay(false);
-	}
+        SetUIVisibility(true);
+    }
+    else if (playerState == 1) {
+        SetUIVisibility(true);
+    }
+    else if (playerState == 2) {
+        SetUIVisibility(false);
+    }
 }
 
 void PlayScene::Draw()
 {
-	//pPlayer_ = (Player*)FindObject("Player");
-	//const auto& capsuleList = pPlayer_->GetCapsuleList();
-	//for (auto& capsule : capsuleList) {
-	//	capsule->Draw();
-	//}
-
-	////UIの描画
-	//if (pPlayUI_) pPlayUI_->Draw();
-	//if (pCompass_) pCompass_->Draw();
-	//if (pArrow_) pArrow_->Draw();
-	//if (pLineGauge_) pLineGauge_->Draw();
-	//if (pHeightMeter_) pHeightMeter_->Draw();
-	//if (pThemeDisplay_) pThemeDisplay_->Draw();
-	//if (pMiniMap_) pMiniMap_->Draw();
-
-	// 子オブジェクトの描画順をソート
+	//子オブジェクトの描画順をソート
 	SortChildrenByRenderOrder();
 
-	// 子オブジェクトの描画
+	//子オブジェクトの描画
 	DrawChildren();
 }
 
 void PlayScene::Release()
 {
+}
+
+void PlayScene::SetUIVisibility(bool isVisible)
+{
+	// 全UIコンポーネントの表示・非表示を一括で設定
+	if (pPlayUI_) pPlayUI_->SetDisplay(isVisible);
+	if (pCompass_) pCompass_->SetDisplay(isVisible);
+	if (pArrow_) pArrow_->SetDisplay(isVisible);
+	if (pLineGauge_) pLineGauge_->SetDisplay(isVisible);
+	if (pHeightMeter_) pHeightMeter_->SetDisplay(isVisible);
+	if (pMiniMap_) pMiniMap_->SetDisplay(isVisible);
 }

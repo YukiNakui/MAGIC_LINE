@@ -169,7 +169,6 @@
     <ClCompile Include="StartDisplay.cpp" />
     <ClCompile Include="UI\Arrow.cpp" />
     <ClCompile Include="UI\Compass.cpp" />
-    <ClCompile Include="UI\CountStart.cpp" />
     <ClCompile Include="UI\HeightMeter.cpp" />
     <ClCompile Include="UI\LineGauge.cpp" />
     <ClCompile Include="UI\PlayUI.cpp" />
@@ -219,7 +218,6 @@
     <ClInclude Include="StartDisplay.h" />
     <ClInclude Include="UI\Arrow.h" />
     <ClInclude Include="UI\Compass.h" />
-    <ClInclude Include="UI\CountStart.h" />
     <ClInclude Include="UI\HeightMeter.h" />
     <ClInclude Include="UI\LineGauge.h" />
     <ClInclude Include="UI\PlayUI.h" />

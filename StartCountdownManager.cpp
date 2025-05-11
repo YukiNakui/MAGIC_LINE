@@ -21,9 +21,9 @@ void StartCountdownManager::Initialize()
 void StartCountdownManager::Update()
 {
     if (isCounting_) {
-        // カウントダウン中の処理
+        //カウントダウン中の処理
         if (countdownNumber_->IsFinished()) {
-            // カウントダウン終了後、スタート表示を開始
+            //カウントダウン終了後、スタート表示を開始
             if (startDisplay_ == nullptr)
                 startDisplay_ = Instantiate<StartDisplay>(this);
             isCounting_ = false;
@@ -32,11 +32,11 @@ void StartCountdownManager::Update()
     }
 
     if (isStartActive_) {
-        // スタート表示中の処理
+        //スタート表示中の処理
         if (!startDisplay_->IsStartVisible()) {
-            // スタートの表示が終了
+            //スタートの表示が終了
             isStartActive_ = false;
-            isFinished_ = true; // 全ての処理が完了
+            isFinished_ = true; //全ての処理が完了
         }
     }
 }
@@ -48,15 +48,3 @@ void StartCountdownManager::Draw()
 void StartCountdownManager::Release()
 {
 }
-
-//void StartCountdownManager::StartCountdown()
-//{
-//    // カウントダウンを開始
-//    isCounting_ = true;
-//    isStartActive_ = false;
-//    isFinished_ = false;
-//
-//    countdownNumber_->SetDisplay(true); // カウントダウンを表示
-//    startDisplay_->SetDisplay(false);  // スタートを非表示
-//    countdownNumber_->Initialize();    // カウントダウンを再初期化
-//}

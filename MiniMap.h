@@ -5,20 +5,25 @@
 class MiniMap :
     public GameObject
 {
-	int hMiniMapFramePict_;
-	int hMiniMapBallPict_;
-	int hMiniMapPlayerPict_;
-	int hMiniMapLinePict_;
-	Transform miniMapFrameTrs_;
-	Transform miniMapBallTrs_;
-	Transform miniMapPlayerTrs_;
-	Transform miniMapLineTrs_;
+	//ミニマップのUI要素画像のハンドル
+	int hMiniMapFramePict_;  //ミニマップフレーム画像ハンドル
+	int hMiniMapBallPict_;   //ミニマップボール画像ハンドル
+	int hMiniMapPlayerPict_; //ミニマッププレイヤー画像ハンドル
+	int hMiniMapLinePict_;   //ミニマップライン画像ハンドル
 
+	//各UI要素のTransform情報
+	Transform miniMapFrameTrs_;  //ミニマップフレームのTransform
+	Transform miniMapBallTrs_;   //ミニマップボールのTransform
+	Transform miniMapPlayerTrs_; //ミニマッププレイヤーのTransform
+	Transform miniMapLineTrs_;   //ミニマップラインのTransform
+
+	//ミニマップに表示されるカプセルのTransformリスト
 	std::vector<Transform> miniMapCapsuleTrs_;
 
-	XMFLOAT3 defaultPlayerPosition_;
-	XMFLOAT3 defaultBallPosition_;
-	XMFLOAT3 defaultLinePosition_;
+	//デフォルトの位置情報
+	XMFLOAT3 defaultPlayerPosition_; //プレイヤーのデフォルト位置
+	XMFLOAT3 defaultBallPosition_;   //ボールのデフォルト位置
+	XMFLOAT3 defaultLinePosition_;   //ラインのデフォルト位置
 public:
 	MiniMap(GameObject* parent);
 	void Initialize() override;
@@ -26,14 +31,12 @@ public:
 	void Draw() override;
 	void Release() override;
 
-	
-
-	enum MiniMapUIType
-	{
-		MiniMapFrame=1,
-		MiniMapBall,
-		MiniMapPlayer,
-		MiniMapLine,
+	//ミニマップUIの種類
+	enum MiniMapUIType {
+		MiniMapFrame = 1, //ミニマップフレーム
+		MiniMapBall,      //ミニマップボール
+		MiniMapPlayer,    //ミニマッププレイヤー
+		MiniMapLine       //ミニマップライン
 	};
 
 	void SetMiniMapFrameTransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
@@ -63,6 +66,7 @@ public:
 		defaultLinePosition_ = position;
 	}
 
+	//ミニマップUIのTransformを設定する関数
 	void SetMiniMapUITransform(MiniMapUIType miniMapUIType, XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
 		switch (miniMapUIType) {
 		case MiniMapFrame:
@@ -84,8 +88,8 @@ public:
 
 
 private:
-	bool isDisplay_;
+	bool isDisplay_; //ミニマップの表示フラグ
 public:
+	//ミニマップの表示状態を取得する関数
 	void SetDisplay(bool display) { isDisplay_ = display; }
 };
-

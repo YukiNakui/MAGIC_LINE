@@ -4,8 +4,8 @@
 
 class Effect : public GameObject {
 private:
-    int handle_;              // VFXのエミッタハンドル
-    bool isActive_;           // エフェクトがアクティブかどうか
+    int handle_;              //VFXのエミッタハンドル
+    bool isActive_;           //エフェクトがアクティブかどうか
 
 public:
     Effect(GameObject* parent)
@@ -18,18 +18,18 @@ public:
 
     void Initialize() override {}
 
-    // エフェクトデータを設定
+    //エフェクトデータを設定
     void SetEmitterData(const EmitterData& emitterData) {
         if (handle_ >= 0) {
-            StopEffect(); // 既存のエフェクトを停止
+            StopEffect(); //既存のエフェクトを停止
         }
 
-        // 新しいエフェクトを開始
+        //新しいエフェクトを開始
         handle_ = VFX::Start(emitterData);
         isActive_ = true;
     }
 
-    // エフェクトを停止
+    //エフェクトを停止
     void StopEffect() {
         if (isActive_ && handle_ >= 0) {
             VFX::End(handle_);
@@ -38,19 +38,19 @@ public:
         }
     }
 
-    // エフェクトがアクティブかどうか
+    //エフェクトがアクティブかどうか
     bool IsActive() const {
         return isActive_;
     }
 
-    // 位置を更新
+    //位置を更新
     void SetEffectPosition(const XMFLOAT3& position) {
         if (isActive_ && handle_ >= 0) {
             VFX::SetEmitterPosition(handle_, position);
         }
     }
 
-    // 方向を更新
+    //方向を更新
     void SetEffectDirection(const XMFLOAT3& direction) {
         if (isActive_ && handle_ >= 0) {
             VFX::SetEmitterDirection(handle_, direction);

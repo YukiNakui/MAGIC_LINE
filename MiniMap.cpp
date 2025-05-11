@@ -5,8 +5,8 @@
 #include"Objects/Line.h"
 
 namespace {
-	const float CORRECT_POSITION_X = 0.0025f;
-	const float CORRECT_POSITION_Y = 0.003f;
+	const float CORRECT_POSITION_X = 0.0025f; //X座標の補正係数
+	const float CORRECT_POSITION_Y = 0.003f;  //Y座標の補正係数
 }
 
 MiniMap::MiniMap(GameObject* parent)
@@ -17,6 +17,7 @@ MiniMap::MiniMap(GameObject* parent)
 
 void MiniMap::Initialize()
 {
+	//画像のロード
 	hMiniMapFramePict_ = Image::Load("UI/MiniMap/MiniMapFrame.png");
 	assert(hMiniMapFramePict_ >= 0);
 	hMiniMapBallPict_ = Image::Load("UI/MiniMap/MiniMapBall.png");
@@ -29,27 +30,38 @@ void MiniMap::Initialize()
 
 void MiniMap::Update()
 {
+	//プレイヤーオブジェクトを取得
 	Player* pPlayer = (Player*)FindObject("Player");
 	if (!pPlayer) return;
+	//ボールオブジェクトを取得
 	Ball* pBall = (Ball*)FindObject("Ball");
 	if (!pBall) return;
 
+	//プレイヤーの位置と回転をミニマップに反映
 	miniMapPlayerTrs_.position_.x = defaultPlayerPosition_.x + pPlayer->GetPosition().x * CORRECT_POSITION_X;
 	miniMapPlayerTrs_.position_.y = defaultPlayerPosition_.y + pPlayer->GetPosition().z * CORRECT_POSITION_Y;
 	miniMapPlayerTrs_.rotate_.z = -pPlayer->GetRotate().y;
+
+	//ボールの位置をミニマップに反映
 	miniMapBallTrs_.position_.x = defaultBallPosition_.x + pBall->GetPosition().x * CORRECT_POSITION_X;
 	miniMapBallTrs_.position_.y = defaultBallPosition_.y + pBall->GetPosition().z * CORRECT_POSITION_Y;
 
-	// カプセルリストを取得
+	//カプセルリストを取得し、ミニマップ上に反映
 	const auto& capsuleList = pPlayer->GetCapsuleList();
-	miniMapCapsuleTrs_.clear();
+	miniMapCapsuleTrs_.clear(); //前回のカプセルリストをクリア
 	for (auto& capsule : capsuleList) {
 		Transform capsuleTrs;
+
+		//カプセルの位置と回転をミニマップに反映
 		capsuleTrs.position_.x = defaultLinePosition_.x + capsule->GetPosition().x * CORRECT_POSITION_X;
 		capsuleTrs.position_.y = defaultLinePosition_.y + capsule->GetPosition().z * CORRECT_POSITION_Y;
 		capsuleTrs.rotate_.x = -capsule->GetRotate().x;
 		capsuleTrs.rotate_.z = -capsule->GetRotate().y;
+
+		//スケールを設定
 		capsuleTrs.scale_ = miniMapLineTrs_.scale_;
+
+		//カプセルのTransformをリストに追加
 		miniMapCapsuleTrs_.push_back(capsuleTrs);
 	}
 }

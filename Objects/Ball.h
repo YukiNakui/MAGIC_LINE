@@ -14,24 +14,33 @@ public:
 	void Draw() override;
 	void Release() override;
 	void OnCollision(GameObject* pTarget) override;
-	void BallMoveStart() {
-		canMove_ = true; 
-		ballPos_ = XMLoadFloat3(&transform_.position_);
-		prevBallPos_ = ballPos_;
-	}
+
+    //ボールの移動開始処理
+    void BallMoveStart() {
+        canMove_ = true; //ボールの移動を許可
+        ballPos_ = XMLoadFloat3(&transform_.position_); //現在のボールの位置
+        prevBallPos_ = ballPos_; //前の位置を現在の位置で初期化
+    }
+
 private:
-	CDTimer* cdTimer_;
-	XMVECTOR moveVec_;//ボールの進行方向ベクトル
-	XMVECTOR ballPos_;//現在のボールの位置
-	XMVECTOR prevBallPos_;//前のボールの位置
-	XMVECTOR ballVelocity_;//ボールの速度
-	float gravity_;//重力
-	bool canMove_;
+    CDTimer* cdTimer_; //タイマー
 
-	float lowSpeedTime_;                //低速状態の経過時間
-	float lowSpeedThreshold_;     //低速と判定する速度
-	float timeBeforeSceneChange_; //低速状態が続いたら切り替えまでの時間
+    //ボールの物理挙動を管理するベクトル
+    XMVECTOR moveVec_;     //ボールの進行方向ベクトル
+    XMVECTOR ballPos_;     //現在のボールの位置
+    XMVECTOR prevBallPos_; //前回のボールの位置
+    XMVECTOR ballVelocity_;//ボールの速度
 
-	CountdownNumber* pCountDownNumber_;
+    float gravity_;        //ボールに作用する重力
+    bool canMove_;         //ボールが移動可能かどうかのフラグ
+
+    //低速状態の管理
+    float lowSpeedTime_;         //低速状態が続いた時間
+
+    CountdownNumber* pCountDownNumber_; //カウントダウンの数字表示オブジェクト
+
+	void HandleCapsuleCollisions();//カプセルとの衝突処理
+	void HandleCollisionWithCapsule(XMVECTOR distance, XMVECTOR closestPoint, XMVECTOR capsuleDir, float distLength);
+	void CheckLowSpeedState();//低速状態のチェック
 };
 

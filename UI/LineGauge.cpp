@@ -21,6 +21,7 @@ void LineGauge::Initialize()
 
 void LineGauge::Update()
 {
+	//メーターの大きさを更新
 	meterScaleRate_ = 1 - (float)meterCurrentVal_ / (float)meterMaxVal_;
 	meterTrans_.scale_.y = meterDefalutScaleY_ * meterScaleRate_;
 }

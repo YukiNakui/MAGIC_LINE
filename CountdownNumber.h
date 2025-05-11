@@ -3,6 +3,7 @@
 
 class CountdownNumber : public CountdownBase {
 public:
+	//カウントダウン画像の枚数
     static constexpr int COUNT_IMAGES = 3;
 
     CountdownNumber(GameObject* parent);
@@ -16,10 +17,10 @@ public:
     bool IsFinished() const { return isFinished_; }
     void ResetCountdown();
 private:
-    int hPictCount_[COUNT_IMAGES]; // カウントダウン画像のハンドル
-    int hCountSound_;              // カウントダウン音のハンドル
-    int currentCount_;             // 現在のカウント
-    bool isCounting_;              // カウントダウン中か
-    bool isFinished_;                // カウントダウンが終了したか
+    int hPictCount_[COUNT_IMAGES]; //カウントダウン画像のハンドル
+    int hCountSound_;              //カウントダウン音のハンドル
+    int currentCount_;             //現在のカウント
+    bool isCounting_;              //カウントダウン中か
+    bool isFinished_;              //カウントダウンが終了したか
 };
 

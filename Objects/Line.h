@@ -13,15 +13,21 @@ public:
 	void Release() override;
 	int GetModelHandle() { return hModel_; }
 private:
-	float radius_;    //半径
-	XMFLOAT3 start_;  //始点
-	XMFLOAT3 end_;    //終点
-	bool isActive_;
+    float radius_;    //ラインの半径
+    XMFLOAT3 start_;  //ラインの始点
+    XMFLOAT3 end_;    //ラインの終点
+    bool isActive_;   //ラインがアクティブかどうか
+
 public:
-	float GetRadius() { return radius_; }
-	XMFLOAT3 GetStartPos() { return start_; }
-	XMFLOAT3 GetEndPos() { return end_; }
-	void SetActive(bool active) { isActive_ = active; }
-	bool IsActive() const { return isActive_; }
+    //ラインの半径を取得
+    float GetRadius() { return radius_; }
+    //ラインの始点を取得
+    XMFLOAT3 GetStartPos() { return start_; }
+    //ラインの終点を取得
+    XMFLOAT3 GetEndPos() { return end_; }
+    //ラインのアクティブ状態を設定
+    void SetActive(bool active) { isActive_ = active; }
+    //ラインがアクティブかどうかを判定
+    bool IsActive() const { return isActive_; }
 };
 

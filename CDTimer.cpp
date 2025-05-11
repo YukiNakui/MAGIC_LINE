@@ -47,11 +47,11 @@ void CDTimer::Initialize()
 
 void CDTimer::Update()
 {
-    DWORD nowTime = timeGetTime();
-    deltaTime_ = nowTime - oldTime_;
-    if (isTimerRun_)
-        CountDownTimer_ = CountDownTimer_ - (float)deltaTime_ / 1000.0;
-    oldTime_ = nowTime;
+    DWORD nowTime = timeGetTime();                     //現在の時刻を取得
+    deltaTime_ = nowTime - oldTime_;                   //フレーム間の経過時間を計算
+    if (isTimerRun_)                                   //タイマーが動作中の場合
+        CountDownTimer_ = CountDownTimer_ - (float)deltaTime_ / 1000.0; //経過時間をカウントダウンタイマーから減算
+    oldTime_ = nowTime;                                //時刻を更新
 }
 
 void CDTimer::Draw()

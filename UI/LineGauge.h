@@ -21,15 +21,16 @@ public:
 		meterCurrentVal_ = _crr;
 	}
 private:
-	float meterMaxVal_;//メーターの最大値
-	float meterCurrentVal_;//現在の値
-	float meterScaleRate_;//メーターの大きさの割合
-	float meterDefalutScaleY_;//メーターのY方向のデフォルトの大きさ
+	float meterMaxVal_;			//メーターの最大値
+	float meterCurrentVal_;		//現在の値
+	float meterScaleRate_;		//メーターの大きさの割合
+	float meterDefalutScaleY_;	//メーターのY方向のデフォルトの大きさ
 
 public:
+	//ライン残量UIの種類
 	enum LineGaugeUIType{
-		LINEGAUGE_METER = 1,
-		LINEGAUGE_METERFRAME
+		LINEGAUGE_METER = 1,		//メーター
+		LINEGAUGE_METERFRAME		//メーターの枠
 	};
 
 	void SetLineGaugeMeterUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
@@ -44,6 +45,7 @@ public:
 		meterFrameTrans_.scale_ = scale;
 	}
 
+	//メーターまたはメーターの枠のTransformを一括で設定
 	void SetLineGaugeUITransform(LineGaugeUIType lineGaugeUIType, XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
 		switch (lineGaugeUIType) {
 		case LINEGAUGE_METER:
@@ -58,8 +60,9 @@ public:
 		}
 	}
 
-	bool isDisplay_;
+	bool isDisplay_; //メーターが表示されているかどうかのフラグ
 public:
+	//メーターの最大値と最小値を設定
 	void SetDisplay(bool display) { isDisplay_ = display; }
 };
 

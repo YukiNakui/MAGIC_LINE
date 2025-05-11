@@ -5,8 +5,8 @@
 namespace {
 	const float MAXHEIGHT = 50.0f;       //最大高さ
 	const float MINHEIGHT = 0.0f;       //最小高さ
-	const float POSITION_SCALE_FACTOR = 0.02f;   // Y方向の位置スケール係数
-	const float POSITION_BASE_OFFSET = 0.47f;    // Y方向の位置オフセット
+	const float POSITION_SCALE_FACTOR = 0.02f;   //Y方向の位置スケール係数
+	const float POSITION_BASE_OFFSET = 0.47f;    //Y方向の位置オフセット
 }
 
 HeightMeter::HeightMeter(GameObject* parent)
@@ -30,7 +30,7 @@ void HeightMeter::Update()
 	Player* player = (Player*)FindObject("Player");
 	if(!player) return;
 	currentHeight_ = player->GetPosition().y;
-	// プレイヤーの高さに基づいて三角形のY座標を計算
+	//プレイヤーの高さに基づいて三角形のY座標を計算
 	triangleUITrs_.position_.y =
 		(currentHeight_ - (maxHeight_ - minHeight_)) * POSITION_SCALE_FACTOR + POSITION_BASE_OFFSET + meterUITrs_.position_.y;
 }

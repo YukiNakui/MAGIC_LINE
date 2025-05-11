@@ -9,6 +9,7 @@
 #include"../UI/HeightMeter.h"
 #include"../MiniMap.h"
 
+//プレイシーン
 class PlayScene : public GameObject
 {
 	int hModel_;
@@ -18,16 +19,19 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+
+    void SetUIVisibility(bool isVisible);
 private:
-	//Objects
-	Player* pPlayer_;
-	//UI
-	LineGauge* pLineGauge_;
-	ThemeDisplay* pThemeDisplay_;
-	PlayUI* pPlayUI_;
-	Compass* pCompass_;
-	Arrow* pArrow_;
-	HeightMeter* pHeightMeter_;
-	MiniMap* pMiniMap_;
+    //ゲームオブジェクト
+	Player* pPlayer_;   //プレイヤー
+
+    //UI要素
+    LineGauge* pLineGauge_;          //ライン残量UI
+    ThemeDisplay* pThemeDisplay_;   //お題表示UI
+    PlayUI* pPlayUI_;               //操作方法UI
+    Compass* pCompass_;             //コンパスUI
+    Arrow* pArrow_;                 //矢印UI
+    HeightMeter* pHeightMeter_;     //高度計UI
+    MiniMap* pMiniMap_;             //ミニマップ
 };
 

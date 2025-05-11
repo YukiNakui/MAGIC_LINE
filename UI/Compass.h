@@ -21,12 +21,13 @@ public:
 	void Draw() override;
 	void Release() override;
 
+	//コンパスUIの種類
 	enum CompassUIType {
-		COMPASS_FRAME = 1,
-		NORTH,
-		SOUTH,
-		EAST,
-		WEST
+		COMPASS_FRAME = 1, //コンパスのフレーム
+		NORTH,             //北のUI
+		SOUTH,             //南のUI
+		EAST,              //東のUI
+		WEST               //西のUI
 	};
 
 	void SetCompassFrameUITransform(XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
@@ -55,6 +56,7 @@ public:
 		westUITrs_.scale_ = scale;
 	}
 
+	//コンパスUIのTransformを一括で設定
 	void SetCompassUITransform(CompassUIType compassUIType, XMFLOAT3 position, XMFLOAT3 rotate, XMFLOAT3 scale) {
 		switch (compassUIType) {
 		case COMPASS_FRAME:
@@ -78,10 +80,14 @@ public:
 	}
 
 private:
+	//矢印の角度計算
 	XMVECTOR CalculatePositionByAngle(float yawRad, float angleOffsetRad, XMVECTOR center, float radius);
 
+	//コンパスの表示状態
 	bool isDisplay_;
+
 public:
+	//コンパスの表示状態を設定
 	void SetDisplay(bool display) { isDisplay_ = display; }
 };
 

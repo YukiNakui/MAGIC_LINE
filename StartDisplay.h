@@ -12,12 +12,13 @@ public:
     void Draw() override;
     void Release() override;
 
+    //表示されているか
     bool IsStartVisible() const { return isStartVisible_; }
 
 private:
-    int hPictStart_;         // 「START」画像のハンドル
-    int hStartSound_;        // 「START」音のハンドル
-    bool isStartVisible_;    // 「START」が表示中か
-    float startElapsedTime_; // 「START」の経過時間
+    int hPictStart_;         //画像のハンドル
+    int hStartSound_;        //音のハンドル
+    bool isStartVisible_;    //表示中か
+    float startElapsedTime_; //経過時間
 };
 

@@ -14,6 +14,6 @@ public:
 	void Draw() override;
 	void Release() override;
 private:
-	CDTimer* cdTimer_;
+	CDTimer* cdTimer_;//タイマー
 };
 

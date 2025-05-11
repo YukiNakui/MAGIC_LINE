@@ -11,12 +11,13 @@ GameOverScene::GameOverScene(GameObject* parent)
 
 void GameOverScene::Initialize()
 {
+	//‰æ‘œ‚ÆBGM‚Ì“Ç‚İ‚İ
 	hPict_ = Image::Load("Scenes/GAMEOVER.png");
 	assert(hPict_ >= 0);
 	hBGM_ = Audio::Load("Sounds/BGM/GameOverBGM.wav", true);
 	assert(hBGM_ >= 0);
 
-	Audio::Play(hBGM_);
+	Audio::Play(hBGM_);//BGM‚ğÄ¶
 }
 
 void GameOverScene::Update()

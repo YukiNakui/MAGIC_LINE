@@ -3,7 +3,7 @@
 #include"../Objects/Player.h"
 
 namespace {
-	float RADIUS_CORRECT = 0.3f; // 半径補正値
+	float RADIUS_CORRECT = 0.3f; //半径補正値
 }
 
 Compass::Compass(GameObject* parent)
@@ -29,19 +29,21 @@ void Compass::Initialize()
 
 void Compass::Update()
 {
+	//プレイヤー取得
 	Player* player = (Player*)FindObject("Player");
 	if (!player) return;
-	float yawDeg = player->GetRotate().y; // Y軸回転（度数）
-	float yawRad = XMConvertToRadians(yawDeg); // ラジアンに変換
+
+	float yawDeg = player->GetRotate().y;
+	float yawRad = XMConvertToRadians(yawDeg);
 
 	XMVECTOR center = XMLoadFloat3(&compassFrameUITrs_.position_);
-	float radius = RADIUS_CORRECT * compassFrameUITrs_.scale_.x; // コンパスサイズに合わせた半径
+	float radius = RADIUS_CORRECT * compassFrameUITrs_.scale_.x; //コンパスサイズに合わせた半径
 
-	// NSEWそれぞれ90°ずらして配置
-	XMStoreFloat3(&northUITrs_.position_, CalculatePositionByAngle(yawRad, -XM_PIDIV2, center, radius));  // -90°
-	XMStoreFloat3(&eastUITrs_.position_, CalculatePositionByAngle(yawRad, XM_PI, center, radius));       // 180°
-	XMStoreFloat3(&southUITrs_.position_, CalculatePositionByAngle(yawRad, XM_PIDIV2, center, radius)); // 90°
-	XMStoreFloat3(&westUITrs_.position_, CalculatePositionByAngle(yawRad, 0.0f, center, radius));      // 0°
+	//NSEWそれぞれずらして配置
+	XMStoreFloat3(&northUITrs_.position_, CalculatePositionByAngle(yawRad, -XM_PIDIV2, center, radius));
+	XMStoreFloat3(&eastUITrs_.position_, CalculatePositionByAngle(yawRad, XM_PI, center, radius));
+	XMStoreFloat3(&southUITrs_.position_, CalculatePositionByAngle(yawRad, XM_PIDIV2, center, radius));
+	XMStoreFloat3(&westUITrs_.position_, CalculatePositionByAngle(yawRad, 0.0f, center, radius));
 }
 
 void Compass::Draw()

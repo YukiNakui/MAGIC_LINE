@@ -13,16 +13,15 @@ public:
     void Draw() override;
     void Release() override;
 
-    //void StartCountdown(); // カウントダウンを開始
-
+	//カウントダウンが終了したかどうか
     bool IsFinished() const { return isFinished_; }
 
 private:
-    CountdownNumber* countdownNumber_;
-    StartDisplay* startDisplay_;
-    bool isCounting_;  // 現在カウントダウン中かどうか
-    bool isStartActive_; // 現在スタート表示中かどうか
-    bool isFinished_;  // 全ての処理が終了したかどうか
+	CountdownNumber* countdownNumber_;//カウントダウン表示
+	StartDisplay* startDisplay_; //スタート表示
+    bool isCounting_;  //現在カウントダウン中かどうか
+    bool isStartActive_; //現在スタート表示中かどうか
+    bool isFinished_;  //全ての処理が終了したかどうか
 };
 
 
