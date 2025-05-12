@@ -34,9 +34,6 @@ private:
     float gravity_;        //ボールに作用する重力
     bool canMove_;         //ボールが移動可能かどうかのフラグ
 
-    //低速状態の管理
-    float lowSpeedTime_;         //低速状態が続いた時間
-
     CountdownNumber* pCountDownNumber_; //カウントダウンの数字表示オブジェクト
 
 	void HandleCapsuleCollisions();//カプセルとの衝突処理

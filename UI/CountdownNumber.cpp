@@ -42,6 +42,7 @@ void CountdownNumber::Initialize()
 
 void CountdownNumber::Update()
 {
+	if (!isCounting_) return; //カウントダウン中でない場合は何もしない
     //フレーム間の経過時間を取得
     deltaTime_ = cdTimer_->GetDeltaTime();
     elapsedTime_ += deltaTime_; //累積経過時間を更新
@@ -90,8 +91,22 @@ void CountdownNumber::ResetCountdown()
 {
     currentCount_ = COUNT_IMAGES;  //カウントを初期値に戻す
     elapsedTime_ = 0.0f;           //経過時間をリセット
-    isCounting_ = true;            //カウントダウン中フラグを有効化
+    isCounting_ = false;            //カウントダウン中フラグを無効化
+    isDisplay_ = false;
     isFinished_ = false;           //終了フラグを無効化
     scale_ = MAX_SCALE;            //スケールを初期値に戻す
+}
+
+void CountdownNumber::StartCountdown()
+{
+    isCounting_ = true;
+    isDisplay_ = true;
     Audio::Play(hCountSound_);     //サウンドを再生
+}
+
+void CountdownNumber::StopCountdown()
+{
+    isCounting_ = false;
+    isDisplay_ = false;
+    Audio::Stop(hCountSound_);     //サウンドを停止
 }

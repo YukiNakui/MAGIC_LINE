@@ -14,8 +14,11 @@ public:
     void Draw() override;
     void Release() override;
 
-    bool IsFinished() const { return isFinished_; }
-    void ResetCountdown();
+	bool IsFinished() const { return isFinished_; }//カウントダウンが終了したか
+    bool IsCounting() { return isCounting_; }//カウントダウンしているか
+	void ResetCountdown();//カウントダウンをリセット
+	void StartCountdown();//カウントダウンを開始
+	void StopCountdown();//カウントダウンを停止
 private:
     int hPictCount_[COUNT_IMAGES]; //カウントダウン画像のハンドル
     int hCountSound_;              //カウントダウン音のハンドル

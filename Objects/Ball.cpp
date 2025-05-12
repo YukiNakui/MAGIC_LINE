@@ -11,10 +11,11 @@
 namespace BallConstants {
     constexpr float GRAVITY = 9.8f;             //重力
     constexpr float COLLISION_RADIUS = 5.0f;   //ボールとカプセルの衝突半径
-    constexpr float MIN_SPEED = 1.0f;          //ボールの最低速度
-    constexpr float BOUNCE_FACTOR = 0.4f;      //反発係数
-    constexpr float LOW_SPEED_THRESHOLD = 5.0f; //低速と判定する速度
-    constexpr float PENETRATION_CORRECTION = 0.1f; //衝突時の補正値
+    constexpr float MIN_SPEED = 1.5f;          //ボールの最低速度
+    constexpr float BOUNCE_FACTOR = 0.8f;      //反発係数
+    constexpr float LOW_SPEED_THRESHOLD = 3.0f; //低速と判定する速度
+    constexpr float PENETRATION_CORRECTION = 0.2f; //衝突時の補正値
+    constexpr float MIN_HEIGHT = -10.0f;
 }
 
 Ball::Ball(GameObject* parent)
@@ -48,7 +49,11 @@ void Ball::Update()
         ballVelocity_ = XMVectorAdd(ballVelocity_, XMVectorSet(0.0f, -gravity_ * deltaTime, 0.0f, 0.0f));
 
         //進行方向ベクトルを計算
-        moveVec_ = XMVector3Normalize(ballVelocity_);
+        if (XMVectorGetX(XMVector3Length(ballVelocity_)) > 0.0f)
+            moveVec_ = XMVector3Normalize(ballVelocity_);
+        else
+            moveVec_ = XMVectorZero(); //速度がゼロの場合は移動ベクトルをゼロにする
+
         //ボールの位置を更新
         ballPos_ = XMVectorAdd(ballPos_, XMVectorScale(ballVelocity_, deltaTime));
 
@@ -57,6 +62,12 @@ void Ball::Update()
 
         //カプセルとの衝突判定
         HandleCapsuleCollisions();
+
+        //最低高度以下になったら、ゲームオーバー
+        if (transform_.position_.y <= BallConstants::MIN_HEIGHT) {
+            SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+            pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
+        }
     }
 }
 
@@ -80,17 +91,21 @@ void Ball::HandleCapsuleCollisions()
             XMVECTOR ballToStart = XMVectorSubtract(ballPos_, capsuleStartPos);
             float dot = XMVector3Dot(ballToStart, capsuleDir).m128_f32[0];
             float capsuleLength = XMVector3Length(capsuleDir).m128_f32[0];
-            float t = std::clamp(dot / (capsuleLength * capsuleLength), 0.0f, 1.0f);
-            XMVECTOR closestPointOnCapsule = XMVectorAdd(capsuleStartPos, XMVectorScale(capsuleDir, t));
+			XMVECTOR closestPointOnCapsule;
+            if (capsuleLength > 0.0f) {
+                float t = std::clamp(dot / (capsuleLength * capsuleLength), 0.0f, 1.0f);
+                closestPointOnCapsule = XMVectorAdd(capsuleStartPos, XMVectorScale(capsuleDir, t));
+            }
+            else
+                closestPointOnCapsule = capsuleStartPos; //カプセルが点の場合、開始点を最近接点とする
 
             //ボールとカプセルの最短距離を計算
             XMVECTOR distance = XMVectorSubtract(ballPos_, closestPointOnCapsule);
             float distLength = XMVectorGetX(XMVector3Length(distance));
 
             //衝突判定
-            if (distLength <= BallConstants::COLLISION_RADIUS) {
+            if (distLength <= BallConstants::COLLISION_RADIUS)
                 HandleCollisionWithCapsule(distance, closestPointOnCapsule, capsuleDir, distLength);
-            }
         }
     }
 }
@@ -101,20 +116,23 @@ void Ball::HandleCollisionWithCapsule(XMVECTOR distance, XMVECTOR closestPoint, 
     XMVECTOR capsuleAxis = XMVector3Normalize(capsuleDir);
     XMVECTOR ballToContact = XMVectorSubtract(ballPos_, closestPoint);
     XMVECTOR normal = XMVectorSubtract(ballToContact, XMVectorScale(capsuleAxis, XMVector3Dot(ballToContact, capsuleAxis).m128_f32[0]));
-    normal = XMVector3Normalize(normal);
+
+    if (XMVectorGetX(XMVector3Length(normal)) > 0.0f)
+        normal = XMVector3Normalize(normal);
+    else
+        normal = XMVector3Normalize(capsuleAxis);
 
     //衝突深度を補正
     float penetrationDepth = BallConstants::COLLISION_RADIUS - distLength;
-    ballPos_ = XMVectorAdd(ballPos_, XMVectorScale(normal, penetrationDepth + BallConstants::PENETRATION_CORRECTION));
+    ballPos_ = XMVectorAdd(closestPoint, XMVectorScale(normal, BallConstants::COLLISION_RADIUS + BallConstants::PENETRATION_CORRECTION));
 
     //反射ベクトルを計算
-    XMVECTOR reflectedVelocity = XMVector3Reflect(ballVelocity_, normal);
+    XMVECTOR reflectedVelocity = XMVectorSubtract(ballVelocity_, XMVectorScale(normal, 2.0f * XMVector3Dot(ballVelocity_, normal).m128_f32[0]));
     reflectedVelocity = XMVectorScale(reflectedVelocity, BallConstants::BOUNCE_FACTOR);
 
     //最低速度を保証
-    if (XMVectorGetX(XMVector3Length(reflectedVelocity)) < BallConstants::MIN_SPEED) {
+    if (XMVectorGetX(XMVector3Length(reflectedVelocity)) < BallConstants::MIN_SPEED)
         reflectedVelocity = XMVectorScale(normal, BallConstants::MIN_SPEED);
-    }
 
     //新しい速度を適用
     ballVelocity_ = reflectedVelocity;
@@ -128,10 +146,13 @@ void Ball::CheckLowSpeedState()
     //ボールの速度を計算
     float ballSpeed = XMVectorGetX(XMVector3Length(ballVelocity_));
 
-    if (ballSpeed < BallConstants::LOW_SPEED_THRESHOLD) {
+    if (ballSpeed <= BallConstants::LOW_SPEED_THRESHOLD) {
         //カウントダウンオブジェクトを生成
-        if (pCountDownNumber_ == nullptr) {
+        if (pCountDownNumber_ == nullptr)
             pCountDownNumber_ = Instantiate<CountdownNumber>(this);
+        else {
+            if (!pCountDownNumber_->IsCounting())
+                pCountDownNumber_->StartCountdown();
         }
 
         //カウントダウンが終了したらシーンを切り替え
@@ -141,8 +162,6 @@ void Ball::CheckLowSpeedState()
         }
     }
     else {
-        //速度が閾値を超えた場合、リセット
-        lowSpeedTime_ = 0.0f;
         if (pCountDownNumber_ != nullptr) {
             pCountDownNumber_->ResetCountdown();
         }
