@@ -8,7 +8,7 @@ PlayUI::PlayUI(GameObject* parent)
 
 void PlayUI::Initialize()
 {
-	hDrawPict_ = Image::Load("UI/PlayerUI/Line_UI.png");
+	hDrawPict_ = Image::Load("UI/PlayerUI/Draw_UI.png");
 	assert(hDrawPict_ >= 0);
 	hDeletePict_ = Image::Load("UI/PlayerUI/Delete_UI.png");
 	assert(hDeletePict_ >= 0);
