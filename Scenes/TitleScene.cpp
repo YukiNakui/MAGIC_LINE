@@ -33,7 +33,7 @@ void TitleScene::Update()
 	if (cdTimer_ != nullptr) {
 		if (cdTimer_->IsTimeOver()) {
 			SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-			pSceneManager->ChangeScene(SCENE_ID_PLAY);//シーン変更
+			pSceneManager->ChangeScene(SCENE_ID_EXPLANATION);//シーン変更
 		}
 	}
 }

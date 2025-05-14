@@ -2,13 +2,13 @@
 #include "../Engine/GameObject.h"
 #include "../Functions/CDTimer.h"
 
-class GameOverScene : public GameObject
+class ExplanationScene :
+    public GameObject
 {
 	int hPict_;
 	int hSelectSound_;
-	int hBGM_;
 public:
-	GameOverScene(GameObject* parent);
+	ExplanationScene(GameObject* parent);
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;

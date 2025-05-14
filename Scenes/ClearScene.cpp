@@ -5,7 +5,7 @@
 #include"../Engine/Audio.h"
 
 ClearScene::ClearScene(GameObject* parent)
-	:GameObject(parent,"ClearScene"),hPict_(-1), hBGM_(-1)
+	:GameObject(parent,"ClearScene"), hSelectSound_(-1), hBGM_(-1), cdTimer_(nullptr)
 {
 }
 
@@ -14,6 +14,8 @@ void ClearScene::Initialize()
 	//‰æ‘œ‚ÆBGM‚Ì“Ç‚İ‚İ
 	hPict_ = Image::Load("Scenes/CLEAR.png");
 	assert(hPict_ >= 0);
+	hSelectSound_ = Audio::Load("Sounds/SoundEffect/SelectSound.wav");
+	assert(hSelectSound_ >= 0);
 	hBGM_ = Audio::Load("Sounds/BGM/ClearBGM.wav", true);
 	assert(hBGM_ >= 0);
 
@@ -23,8 +25,16 @@ void ClearScene::Initialize()
 void ClearScene::Update()
 {
 	if (Input::IsKeyDown(DIK_RETURN)) {
-		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-		pSceneManager->ChangeScene(SCENE_ID_TITLE);
+		Audio::Stop(hBGM_);//BGM’â~
+		Audio::Play(hSelectSound_);//SEÄ¶
+		cdTimer_ = Instantiate<CDTimer>(this);
+		cdTimer_->SetInitTime(1.0f);
+	}
+	if (cdTimer_ != nullptr) {
+		if (cdTimer_->IsTimeOver()) {
+			SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+			pSceneManager->ChangeScene(SCENE_ID_TITLE);//ƒV[ƒ“•ÏX
+		}
 	}
 }
 

@@ -179,6 +179,9 @@
     <ClCompile Include="Objects\Wall.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\ExplanationScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -321,6 +324,9 @@
     </ClInclude>
     <ClInclude Include="Objects\Wall.h">
       <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\ExplanationScene.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
