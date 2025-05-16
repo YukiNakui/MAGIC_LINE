@@ -132,9 +132,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//エフェクトの更新
 				VFX::Update();
 
+				
+
+				// 1. シャドウマップ生成パス
+				Direct3D::RenderShadowMapPass();
+
 
 				//このフレームの描画開始
 				Direct3D::BeginDraw();
+
+
+				// 3D描画（影対応）前だけ
+				Direct3D::SetShader(Direct3D::SHADER_SHADOW);
+				Direct3D::SetShadowMapToPS();
+
 
 				//全オブジェクトを描画
 				//ルートオブジェクトのDrawを呼んだあと、自動的に子、孫のUpdateが呼ばれる
