@@ -16,6 +16,9 @@ void ExplanationScene::Initialize()
 	assert(hPict_ >= 0);
 	hSelectSound_ = Audio::Load("Sounds/SoundEffect/SelectSound.wav");
 	assert(hSelectSound_ >= 0);
+
+	transform_.position_ = IMAGE_TRANS_POS;
+	transform_.scale_ = IMAGE_TRANS_SCALE;
 }
 
 void ExplanationScene::Update()
