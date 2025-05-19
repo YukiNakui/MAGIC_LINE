@@ -134,7 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				
 
-				// 1. シャドウマップ生成パス
+				//シャドウマップ生成パス
 				Direct3D::RenderShadowMapPass();
 
 
@@ -142,7 +142,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				Direct3D::BeginDraw();
 
 
-				// 3D描画（影対応）前だけ
+				//3D描画（影対応）前だけ
 				Direct3D::SetShader(Direct3D::SHADER_SHADOW);
 				Direct3D::SetShadowMapToPS();
 

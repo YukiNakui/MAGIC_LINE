@@ -434,6 +434,8 @@ namespace Direct3D
 		pContext_->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);	
 
 
+
+
 		// ★★ ここで通常ビューポートを必ず再セット！★★
 		D3D11_VIEWPORT vp;
 		vp.Width = (float)screenWidth_;
