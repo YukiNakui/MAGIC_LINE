@@ -4,6 +4,9 @@
 Texture2D		g_texture: register(t0);	//テクスチャー
 SamplerState	g_sampler : register(s0);	//サンプラー
 
+Texture2D g_shadowMap : register(t1);
+SamplerState g_shadowSampler : register(s1);
+
 //───────────────────────────────────────
  // コンスタントバッファ
 // DirectX 側から送信されてくる、ポリゴン頂点以外の諸情報の定義
@@ -20,7 +23,7 @@ cbuffer global
 	float4		g_vecCameraPosition;// 視点（カメラの位置）
 	float		g_shuniness;		// ハイライトの強さ（テカリ具合）
 	bool		g_isTexture;		// テクスチャ貼ってあるかどうか
-
+    float4x4 g_matLightViewProj; // 追加
 };
 
 //───────────────────────────────────────
@@ -32,6 +35,7 @@ struct VS_OUT
 	float4 normal : TEXCOORD2;		//法線
 	float2 uv	  : TEXCOORD0;		//UV座標
 	float4 eye	  : TEXCOORD1;		//視線
+    float4 shadowPos : TEXCOORD3; // 追加
 };
 
 //───────────────────────────────────────
@@ -58,6 +62,8 @@ VS_OUT VS(float4 pos : POSITION, float4 Normal : NORMAL, float2 Uv : TEXCOORD)
 	//UV「座標
 	outData.uv = Uv;	//そのままピクセルシェーダーへ
 
+	
+    outData.shadowPos = mul(worldPos, g_matLightViewProj); // 追加
 
 	//まとめて出力
 	return outData;
@@ -68,44 +74,84 @@ VS_OUT VS(float4 pos : POSITION, float4 Normal : NORMAL, float2 Uv : TEXCOORD)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	//ライトの向き
-	float4 lightDir = g_vecLightDir;	//グルーバル変数は変更できないので、いったんローカル変数へ
-	lightDir = normalize(lightDir);	//向きだけが必要なので正規化
+	////ライトの向き
+	//float4 lightDir = g_vecLightDir;	//グルーバル変数は変更できないので、いったんローカル変数へ
+	//lightDir = normalize(lightDir);	//向きだけが必要なので正規化
 
-	//法線はピクセルシェーダーに持ってきた時点で補完され長さが変わっている
-	//正規化しておかないと面の明るさがおかしくなる
-	inData.normal = normalize(inData.normal);
+	////法線はピクセルシェーダーに持ってきた時点で補完され長さが変わっている
+	////正規化しておかないと面の明るさがおかしくなる
+	//inData.normal = normalize(inData.normal);
 
-	//拡散反射光（ディフューズ）
-	//法線と光のベクトルの内積が、そこの明るさになる
-	float4 shade = saturate(dot(inData.normal, -lightDir));
-	shade.a = 1;	//暗いところが透明になるので、強制的にアルファは1
+	////拡散反射光（ディフューズ）
+	////法線と光のベクトルの内積が、そこの明るさになる
+	//float4 shade = saturate(dot(inData.normal, -lightDir));
+	//shade.a = 1;	//暗いところが透明になるので、強制的にアルファは1
 
-	float4 diffuse;
-	//テクスチャ有無
-	if (g_isTexture == true)
-	{
-		//テクスチャの色
-		diffuse = g_texture.Sample(g_sampler, inData.uv);
-	}
-	else
-	{
-		//マテリアルの色
-		diffuse = g_vecDiffuse;
-	}
+	//float4 diffuse;
+	////テクスチャ有無
+	//if (g_isTexture == true)
+	//{
+	//	//テクスチャの色
+	//	diffuse = g_texture.Sample(g_sampler, inData.uv);
+	//}
+	//else
+	//{
+	//	//マテリアルの色
+	//	diffuse = g_vecDiffuse;
+	//}
 
-	//環境光（アンビエント）
-	//これはMaya側で指定し、グローバル変数で受け取ったものをそのまま
-	float4 ambient = g_vecAmbient;
-    ambient = float4(0.6f, 0.6f, 0.6f, 0.6f);
-	//鏡面反射光（スペキュラー）
-	float4 speculer = float4(0, 0, 0, 0);	//とりあえずハイライトは無しにしておいて…
-	if (g_vecSpeculer.a != 0)	//スペキュラーの情報があれば
-	{
-		float4 R = reflect(lightDir, inData.normal);			//正反射ベクトル
-		speculer = pow(saturate(dot(R, inData.eye)), g_shuniness) * g_vecSpeculer;	//ハイライトを求める
-	}
+	////環境光（アンビエント）
+	////これはMaya側で指定し、グローバル変数で受け取ったものをそのまま
+	//float4 ambient = g_vecAmbient;
+ //   ambient = float4(0.6f, 0.6f, 0.6f, 0.6f);
+	////鏡面反射光（スペキュラー）
+	//float4 speculer = float4(0, 0, 0, 0);	//とりあえずハイライトは無しにしておいて…
+	//if (g_vecSpeculer.a != 0)	//スペキュラーの情報があれば
+	//{
+	//	float4 R = reflect(lightDir, inData.normal);			//正反射ベクトル
+	//	speculer = pow(saturate(dot(R, inData.eye)), g_shuniness) * g_vecSpeculer;	//ハイライトを求める
+	//}
 
-	//最終的な色
-	return diffuse * shade + diffuse * ambient + speculer;
+	////最終的な色
+	//return diffuse * shade + diffuse * ambient + speculer;
+	
+	
+    float3 shadowCoord = inData.shadowPos.xyz / inData.shadowPos.w;
+    shadowCoord = shadowCoord * 0.5f + 0.5f;
+
+    float shadow = 1.0f;
+
+// 範囲外なら影無し
+    if (shadowCoord.x < 0 || shadowCoord.x > 1 || shadowCoord.y < 0 || shadowCoord.y > 1)
+    {
+        shadow = 1.0f;
+    }
+    else
+    {
+        float shadowDepth = g_shadowMap.Sample(g_shadowSampler, shadowCoord.xy).r;
+        float currentDepth = shadowCoord.z;
+        float bias = 0.01f; // ← バイアスを少し大きく
+        shadow = (currentDepth - bias > shadowDepth) ? 0.4f : 1.0f;
+    }
+
+    float4 lightDir = normalize(g_vecLightDir);
+    inData.normal = normalize(inData.normal);
+    float4 shade = saturate(dot(inData.normal, -lightDir));
+    shade.a = 1;
+
+    float4 diffuse;
+    if (g_isTexture == true)
+        diffuse = g_texture.Sample(g_sampler, inData.uv);
+    else
+        diffuse = g_vecDiffuse;
+
+    float4 ambient = float4(0.6f, 0.6f, 0.6f, 0.6f);
+    float4 speculer = float4(0, 0, 0, 0);
+    if (g_vecSpeculer.a != 0)
+    {
+        float4 R = reflect(lightDir, inData.normal);
+        speculer = pow(saturate(dot(R, inData.eye)), g_shuniness) * g_vecSpeculer;
+    }
+
+    return shadow * (diffuse * shade + diffuse * ambient) + speculer;
 }

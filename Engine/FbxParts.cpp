@@ -454,6 +454,19 @@ void FbxParts::Draw(Transform& transform)
 		cb.isTexture = pMaterial_[i].pTexture != nullptr;
 
 
+		///シャドウマップ関連処理
+		XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1);	//光源の位置
+		XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);	//光源の方向
+		XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);		//上方向ベクトル
+		float nearZ = 0.1f;	//近くのクリッピング面
+		float farZ = 100.0f;	//遠くのクリッピング面
+		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
+		XMMATRIX lightProj = XMMatrixOrthographicLH(800, 600, nearZ, farZ);
+		XMMATRIX lightViewProj = lightView * lightProj;
+		cb.lightViewProj = lightViewProj;
+		///シャドウマップ関連処理
+
+
 		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのリソースアクセスを一時止める
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));		// リソースへ値を送る
 

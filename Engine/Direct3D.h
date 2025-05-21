@@ -119,7 +119,7 @@ namespace Direct3D
 
 	//シャドウマップ用
 	void CreateShadowMap(int width, int height);
-	void RenderShadowMapPass();
+	void RenderShadowMapPass(int width, int height);
 	void SetShadowMapToPS(int slot = 0);
 };
 

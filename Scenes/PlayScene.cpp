@@ -6,6 +6,7 @@
 #include"../Objects/Wall.h"
 #include"../Objects/Line.h"
 #include"../Engine/VFX.h"
+#include"../UI/CountdownNumber.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)
@@ -28,18 +29,22 @@ void PlayScene::Initialize()
 		if (objectName == "Stage") {
 			Stage* pStage = Instantiate<Stage>(this);
 			pStage->SetTransformFloat3(position, rotation, scale);
+			pStage->SetRenderOrder(0);
 		}
         else if (objectName == "Player") {
             pPlayer_ = Instantiate<Player>(this);
 			pPlayer_->SetTransformFloat3(position, rotation, scale);
+			pPlayer_->SetRenderOrder(0);
 		}
         else if (objectName == "Ball") {
             Ball* pBall = Instantiate<Ball>(this);
 			pBall->SetTransformFloat3(position, rotation, scale);
+			pBall->SetRenderOrder(0);
 		}
 		else if (objectName == "Wall") {
 			Wall* pWall = Instantiate<Wall>(this);
 			pWall->SetTransformFloat3(position, rotation, scale);
+			pWall->SetRenderOrder(0);
 		}
     }
 
@@ -105,6 +110,11 @@ void PlayScene::Update()
 	pPlayer_ = (Player*)FindObject("Player");
 	if (!pPlayer_) return;
 	int playerState = pPlayer_->GetPlayerState();
+
+	CountdownNumber* pCountDown = (CountdownNumber*)FindObject("CountdownNumber");
+	if (pCountDown) {
+		pCountDown->SetRenderOrder(11);
+	}
 
 	//プレイヤーの状態に応じてUIを表示・非表示に切り替え
 	if (playerState == 0 && pThemeDisplay_->IsStartVisible()) {

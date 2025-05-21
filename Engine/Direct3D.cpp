@@ -598,7 +598,7 @@ namespace Direct3D
 		shadowViewport_.MaxDepth = 1.0f;
 	}
 
-	void RenderShadowMapPass()
+	void RenderShadowMapPass(int width, int height)
 	{
 		// 1. レンダーターゲットをシャドウマップ用へ切り替え
 		pContext_->OMSetRenderTargets(0, nullptr, pShadowMapDSV_);
@@ -610,6 +610,15 @@ namespace Direct3D
 
 		// 3. 全オブジェクトを「ライト視点のView/Proj行列」で描画
 		// ... 各オブジェクトごとにWorld行列セット → Draw ...
+		XMVECTOR lightPos = XMVectorSet(0.0f, 10.0f, 0.0f, 1.0f);
+		XMVECTOR lightDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
+		XMVECTOR upVec = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
+
+		float nearZ = 0.1f;
+		float farZ = 100.0f;
+		XMMATRIX lightProj = XMMatrixOrthographicLH(width, height, nearZ, farZ);
+		XMMATRIX lightViewProj = lightView * lightProj;
 	}
 
 	void SetShadowMapToPS(int slot)
