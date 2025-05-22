@@ -297,34 +297,6 @@ namespace Direct3D
 		}
 
 
-		//シャドウマップ用
-		{
-			// 頂点シェーダの作成（コンパイル）
-			ID3DBlob* pCompileVS = NULL;
-			D3DCompileFromFile(L"Shader/ShadowShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
-			pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_SHADOW].pVertexShader);
-
-			// 頂点レイアウトの作成（1頂点の情報が何のデータをどんな順番で持っているか）
-			D3D11_INPUT_ELEMENT_DESC layout[] = {
-				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, vectorSize * 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//頂点位置
-				{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, vectorSize * 1, D3D11_INPUT_PER_VERTEX_DATA, 0 },	//法線
-				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, vectorSize * 2, D3D11_INPUT_PER_VERTEX_DATA, 0 },	//テクスチャ（UV）座標
-			};
-			pDevice_->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &shaderBundle[SHADER_SHADOW].pVertexLayout);
-
-
-			//シェーダーが無事作成できたので、コンパイルしたやつはいらない
-			pCompileVS->Release();
-
-			//ラスタライザ作成
-			D3D11_RASTERIZER_DESC rdc = {};
-			rdc.CullMode = D3D11_CULL_BACK;
-			rdc.FillMode = D3D11_FILL_SOLID;
-			rdc.FrontCounterClockwise = FALSE;	//反時計回りは表面じゃない
-			pDevice_->CreateRasterizerState(&rdc, &shaderBundle[SHADER_SHADOW].pRasterizerState);
-		}
-
-
 		//DEBUG用
 		{
 			// 頂点シェーダの作成（コンパイル）
@@ -432,19 +404,6 @@ namespace Direct3D
 
 		//深度バッファクリア
 		pContext_->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);	
-
-
-
-
-		// ★★ ここで通常ビューポートを必ず再セット！★★
-		D3D11_VIEWPORT vp;
-		vp.Width = (float)screenWidth_;
-		vp.Height = (float)screenHeight_;
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
-		pContext_->RSSetViewports(1, &vp);
 	}
 
 
@@ -558,71 +517,5 @@ namespace Direct3D
 		{
 			pContext_->OMSetRenderTargets(1, &pRenderTargetView_, nullptr);
 		}
-	}
-
-
-
-
-
-
-	void CreateShadowMap(int width, int height)
-	{
-		D3D11_TEXTURE2D_DESC texDesc = {};
-		texDesc.Width = width;
-		texDesc.Height = height;
-		texDesc.MipLevels = 1;
-		texDesc.ArraySize = 1;
-		texDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-		texDesc.SampleDesc.Count = 1;
-		texDesc.Usage = D3D11_USAGE_DEFAULT;
-		texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-
-		pDevice_->CreateTexture2D(&texDesc, nullptr, &pShadowMapTex_);
-
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		pDevice_->CreateDepthStencilView(pShadowMapTex_, &dsvDesc, &pShadowMapDSV_);
-
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = 1;
-		pDevice_->CreateShaderResourceView(pShadowMapTex_, &srvDesc, &pShadowMapSRV_);
-
-		shadowViewport_.TopLeftX = 0;
-		shadowViewport_.TopLeftY = 0;
-		shadowViewport_.Width = (float)width;
-		shadowViewport_.Height = (float)height;
-		shadowViewport_.MinDepth = 0.0f;
-		shadowViewport_.MaxDepth = 1.0f;
-	}
-
-	void RenderShadowMapPass(int width, int height)
-	{
-		// 1. レンダーターゲットをシャドウマップ用へ切り替え
-		pContext_->OMSetRenderTargets(0, nullptr, pShadowMapDSV_);
-		pContext_->ClearDepthStencilView(pShadowMapDSV_, D3D11_CLEAR_DEPTH, 1.0f, 0);
-		pContext_->RSSetViewports(1, &shadowViewport_);
-
-		// 2. シャドウ用のシェーダーをセット（頂点シェーダのみ）
-		SetShader(SHADER_SHADOW);
-
-		// 3. 全オブジェクトを「ライト視点のView/Proj行列」で描画
-		// ... 各オブジェクトごとにWorld行列セット → Draw ...
-		XMVECTOR lightPos = XMVectorSet(0.0f, 10.0f, 0.0f, 1.0f);
-		XMVECTOR lightDir = XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
-		XMVECTOR upVec = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-
-		float nearZ = 0.1f;
-		float farZ = 100.0f;
-		XMMATRIX lightProj = XMMatrixOrthographicLH(width, height, nearZ, farZ);
-		XMMATRIX lightViewProj = lightView * lightProj;
-	}
-
-	void SetShadowMapToPS(int slot)
-	{
-		pContext_->PSSetShaderResources(slot, 1, &pShadowMapSRV_);
 	}
 }

@@ -449,19 +449,18 @@ void FbxParts::Draw(Transform& transform)
 		cb.speculer = pMaterial_[i].specular;
 		cb.shininess = pMaterial_[i].shininess;
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
-		//cb.lightDirection = XMFLOAT4(1, -1, 1, 0);		//光の方向
 		cb.lightDirection = XMFLOAT4(0, -1, 0, 0);		//光の方向
 		cb.isTexture = pMaterial_[i].pTexture != nullptr;
 
 
 		///シャドウマップ関連処理
-		XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1);	//光源の位置
-		XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);	//光源の方向
-		XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);		//上方向ベクトル
-		float nearZ = 0.1f;	//近くのクリッピング面
-		float farZ = 100.0f;	//遠くのクリッピング面
+		XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1); // オブジェクトの真上
+		XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
+		XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
+		float nearZ = 0.1f;
+		float farZ = 1000.0f;
 		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-		XMMATRIX lightProj = XMMatrixOrthographicLH(800, 600, nearZ, farZ);
+		XMMATRIX lightProj = XMMatrixOrthographicLH(800, 600, nearZ, farZ); // 必要に応じて幅高さ調整
 		XMMATRIX lightViewProj = lightView * lightProj;
 		cb.lightViewProj = lightViewProj;
 		///シャドウマップ関連処理

@@ -1,28 +1,20 @@
-cbuffer CBMatrix : register(b0)
+cbuffer ShadowMapCB : register(b0)
 {
-    float4x4 World;
-    float4x4 LightViewProj;
+    float4x4 g_matWorld;
+    float4x4 g_matLightViewProj;
 };
-
 struct VS_IN
 {
     float3 pos : POSITION;
 };
-
 struct VS_OUT
 {
     float4 pos : SV_POSITION;
 };
-
 VS_OUT VS(VS_IN input)
 {
-    VS_OUT output;
-    float4 worldPos = mul(float4(input.pos, 1), World);
-    output.pos = mul(worldPos, LightViewProj);
-    return output;
-}
-
-float PS(VS_OUT input) : SV_Depth
-{
-    return input.pos.z / input.pos.w;
+    VS_OUT outData;
+    float4 worldPos = mul(float4(input.pos, 1), g_matWorld);
+    outData.pos = mul(worldPos, g_matLightViewProj);
+    return outData;
 }

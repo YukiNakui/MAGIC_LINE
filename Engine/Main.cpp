@@ -133,19 +133,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				VFX::Update();
 
 				
-
-
-				//シャドウマップ生成パス
-				Direct3D::RenderShadowMapPass(screenWidth,screenHeight);
-
-
 				//このフレームの描画開始
 				Direct3D::BeginDraw();
-
-
-				//3D描画（影対応）前だけ
-				Direct3D::SetShader(Direct3D::SHADER_SHADOW);
-				Direct3D::SetShadowMapToPS();
 
 
 				//全オブジェクトを描画
