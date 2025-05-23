@@ -460,7 +460,7 @@ void FbxParts::Draw(Transform& transform)
 		float nearZ = 0.1f;
 		float farZ = 1000.0f;
 		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-		XMMATRIX lightProj = XMMatrixOrthographicLH(800, 600, nearZ, farZ); // 必要に応じて幅高さ調整
+		XMMATRIX lightProj = XMMatrixOrthographicLH(1280, 720, nearZ, farZ); // 必要に応じて幅高さ調整
 		XMMATRIX lightViewProj = lightView * lightProj;
 		cb.lightViewProj = lightViewProj;
 		///シャドウマップ関連処理
@@ -620,4 +620,24 @@ void FbxParts::RayCast(RayCastData * data)
 			}
 		}
 	}
+}
+
+// シャドウマップ用描画（定数バッファにライトViewProj行列を送るだけ）
+void FbxParts::DrawShadowMap(Transform& transform, const XMMATRIX& lightViewProj)
+{
+	// 必要ならSHADER_SHADOWに切り替え
+	// 頂点バッファ、インデックスバッファ等は今まで通り
+	// 定数バッファには「ワールド行列」と「lightViewProj」だけ送る
+	// ピクセルシェーダは無し or 空
+
+	// ...省略（今までのDraw()の流用でOK、ただしカメラ行列→lightViewProj）
+
+	// 例:
+	cb.world = XMMatrixTranspose(transform.GetWorldMatrix());
+	cb.lightViewProj = XMMatrixTranspose(lightViewProj);
+	// → 定数バッファに書き込み
+
+	pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
+	// インデックスバッファやバーテックスバッファもセットして
+	pContext_->DrawIndexed(...);
 }

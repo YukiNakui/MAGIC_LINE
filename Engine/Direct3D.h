@@ -27,7 +27,7 @@ namespace Direct3D
 
 
 	//■シェーダー関連で必要なセット
-	enum SHADER_TYPE{SHADER_3D, SHADER_2D, SHADER_UNLIT, SHADER_BILLBOARD,SHADER_MAX};	//3タイプ（3D用、2D用、当たり判定枠表示用）
+	enum SHADER_TYPE{SHADER_3D, SHADER_2D, SHADER_UNLIT, SHADER_BILLBOARD, SHADER_SHADOW, SHADER_MAX};	//3タイプ（3D用、2D用、当たり判定枠表示用）
 	struct SHADER_BUNDLE
 	{
 		//【頂点入力レイアウト情報】
@@ -60,16 +60,6 @@ namespace Direct3D
 	extern int		screenWidth_;		//スクリーンの幅
 	extern int		screenHeight_;		//スクリーンの高さ
 	extern bool		isDrawCollision_;	//コリジョンを表示するかフラグ
-
-
-
-
-	// シャドウマップ用リソース
-	extern ID3D11Texture2D* pShadowMapTex_;
-	extern ID3D11DepthStencilView* pShadowMapDSV_;
-	extern ID3D11ShaderResourceView* pShadowMapSRV_;
-	extern D3D11_VIEWPORT          shadowViewport_;
-
 
 
 	////////////////////////ここからは関数///////////////////////////////
@@ -113,5 +103,11 @@ namespace Direct3D
 	//Zバッファへの書き込みON/OFF
 	//引数：isWrite	  true=書き込みON／false=書き込みOFF
 	void SetDepthBafferWriteEnable(bool isWrite);
+
+
+	////シャドウマップ用
+	void BeginShadowMapDraw();
+
+	void EndShadowMapDraw(int screenWidth,int screenHeight);
 };
 

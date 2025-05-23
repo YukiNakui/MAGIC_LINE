@@ -207,6 +207,50 @@ namespace Direct3D
 
 
 
+		////シャドウマップ用
+		// 例: シャドウマップのサイズ
+		const int SHADOW_WIDTH = 2048;
+		const int SHADOW_HEIGHT = 2048;
+
+		// シャドウマップ用テクスチャ
+		D3D11_TEXTURE2D_DESC shadowDesc = {};
+		shadowDesc.Width = SHADOW_WIDTH;
+		shadowDesc.Height = SHADOW_HEIGHT;
+		shadowDesc.MipLevels = 1;
+		shadowDesc.ArraySize = 1;
+		shadowDesc.Format = DXGI_FORMAT_R32_TYPELESS; // 深度用
+		shadowDesc.SampleDesc.Count = 1;
+		shadowDesc.Usage = D3D11_USAGE_DEFAULT;
+		shadowDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+		shadowDesc.CPUAccessFlags = 0;
+		shadowDesc.MiscFlags = 0;
+		pDevice_->CreateTexture2D(&shadowDesc, nullptr, &pShadowMapTex_);
+
+		// DSV
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		pDevice_->CreateDepthStencilView(pShadowMapTex_, &dsvDesc, &pShadowMapDSV_);
+
+		// SRV
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = 1;
+		pDevice_->CreateShaderResourceView(pShadowMapTex_, &srvDesc, &pShadowMapSRV_);
+
+		// ビューポート
+		shadowViewport_.TopLeftX = 0;
+		shadowViewport_.TopLeftY = 0;
+		shadowViewport_.Width = (float)SHADOW_WIDTH;
+		shadowViewport_.Height = (float)SHADOW_HEIGHT;
+		shadowViewport_.MinDepth = 0.0f;
+		shadowViewport_.MaxDepth = 1.0f;
+
+		////シャドウマップ用
+
+
+
 
 
 
@@ -517,5 +561,35 @@ namespace Direct3D
 		{
 			pContext_->OMSetRenderTargets(1, &pRenderTargetView_, nullptr);
 		}
+	}
+
+
+
+	////シャドウマップ用
+	void BeginShadowMapDraw()
+	{
+		// DSVクリア
+		pContext_->ClearDepthStencilView(pShadowMapDSV_, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		// シャドウマップへのレンダリング
+		pContext_->OMSetRenderTargets(0, nullptr, pShadowMapDSV_);
+		// ライト用ビューポート
+		pContext_->RSSetViewports(1, &shadowViewport_);
+		// シャドウマップ用シェーダをセット
+		SetShader(SHADER_SHADOW); // 必要なら追加
+	}
+
+	void EndShadowMapDraw(int screenWidth, int screenHeight)
+	{
+		// メインレンダーターゲット/ビューポートに戻す
+		pContext_->OMSetRenderTargets(1, &pRenderTargetView_, pDepthStencilView);
+		// メイン用ビューポート
+		D3D11_VIEWPORT mainVP; // 画面サイズに合わせて
+		mainVP.Width = (float)screenWidth;			//幅
+		mainVP.Height = (float)screenHeight;		//高さ
+		mainVP.MinDepth = 0.0f;		//手前
+		mainVP.MaxDepth = 1.0f;		//奥
+		mainVP.TopLeftX = 0;		//左
+		mainVP.TopLeftY = 0;		//上
+		pContext_->RSSetViewports(1, &mainVP);
 	}
 }

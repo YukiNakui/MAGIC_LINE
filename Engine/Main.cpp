@@ -132,9 +132,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//エフェクトの更新
 				VFX::Update();
 
-				
+
 				//このフレームの描画開始
-				Direct3D::BeginDraw();
+				//Direct3D::BeginDraw();
+
+
+				// 1. シャドウマップ生成パス
+				BeginShadowMapDraw();
+				// --- 各オブジェクトを「ライト視点」の行列で描画 ---
+				// FbxParts::DrawShadowMap(transform, lightViewProj); ←新しく作る！
+				EndShadowMapDraw();
+
+				// 2. 通常のシーン描画パス
+				BeginDraw();
+				// --- 各オブジェクトを「カメラ視点＋シャドウマップ参照」付きで描画 ---
+				// FbxParts::Draw(transform, cameraViewProj, lightViewProj, pShadowMapSRV_);
 
 
 				//全オブジェクトを描画
