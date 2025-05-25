@@ -105,6 +105,13 @@ namespace Direct3D
 	void SetDepthBafferWriteEnable(bool isWrite);
 
 
+
+	//シャドウマップ用
+	extern ID3D11Texture2D* pShadowMapTex_;
+	extern ID3D11ShaderResourceView* pShadowMapSRV_;
+	extern ID3D11DepthStencilView* pShadowMapDSV_;
+	extern D3D11_VIEWPORT shadowViewport_;
+	extern ID3D11SamplerState* pShadowSampler_;
 	////シャドウマップ用
 	void BeginShadowMapDraw();
 

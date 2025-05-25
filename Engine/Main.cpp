@@ -133,31 +133,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				VFX::Update();
 
 
-				//このフレームの描画開始
+
+
+				// 1. ライト行列
+				XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1);
+				XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);
+				XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);
+				XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
+				XMMATRIX lightProj = XMMatrixOrthographicLH(1280, 720, 0.1f, 1000.0f);
+				XMMATRIX lightViewProj = lightView * lightProj;
+
+				// 2. シャドウマップ生成
+				Direct3D::BeginShadowMapDraw();
+				pRootObject->DrawShadowMapSub(lightViewProj);
+				Direct3D::EndShadowMapDraw(screenWidth, screenHeight);
+
+				// 3. 本描画
+				Direct3D::BeginDraw();
+				Direct3D::pContext_->PSSetShaderResources(1, 1, &Direct3D::pShadowMapSRV_);
+				Direct3D::pContext_->PSSetSamplers(1, 1, &Direct3D::pShadowSampler_);
+				pRootObject->DrawSub();
+				VFX::Draw();
+				Direct3D::EndDraw();
+
+				//
 				//Direct3D::BeginDraw();
 
-
-				// 1. シャドウマップ生成パス
-				BeginShadowMapDraw();
-				// --- 各オブジェクトを「ライト視点」の行列で描画 ---
-				// FbxParts::DrawShadowMap(transform, lightViewProj); ←新しく作る！
-				EndShadowMapDraw();
-
-				// 2. 通常のシーン描画パス
-				BeginDraw();
-				// --- 各オブジェクトを「カメラ視点＋シャドウマップ参照」付きで描画 ---
-				// FbxParts::Draw(transform, cameraViewProj, lightViewProj, pShadowMapSRV_);
-
-
-				//全オブジェクトを描画
-				//ルートオブジェクトのDrawを呼んだあと、自動的に子、孫のUpdateが呼ばれる
-				pRootObject->DrawSub();
-
 				//エフェクトの描画
-				VFX::Draw();
+				//VFX::Draw();
 
 				//描画終了
-				Direct3D::EndDraw();
+				//Direct3D::EndDraw();
 
 
 

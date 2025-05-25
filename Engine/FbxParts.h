@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include "Texture.h"
 #include "Transform.h"
+#include "GameObject.h"
 
 using namespace DirectX;
 
@@ -13,7 +14,9 @@ struct RayCastData;
 //-----------------------------------------------------------
 //FBXの１つのパーツを扱うクラス
 //-----------------------------------------------------------
-class FbxParts
+
+//class FbxParts
+class FbxParts : public GameObject//シャドウマップ用にgameobjectを継承させてみてる　本来はしてない
 {
 	// 一つの頂点情報を格納する構造体
 	struct VERTEX
@@ -157,6 +160,14 @@ public:
 
 
 
-	void DrawShadowMap(Transform& transform, const XMMATRIX& lightViewProj);
+	//void DrawShadowMap(Transform& transform, const XMMATRIX& lightViewProj);
+	void Initialize() override {}
+	void Update() override {}
+	void Draw() override {}
+	void Release() override {}
+	// GameObjectからのオーバーライド
+	void DrawShadowMap(const DirectX::XMMATRIX& lightViewProj) override;
+	// ↓内部で使う実体
+	void DrawShadowMapImpl(Transform& transform, const DirectX::XMMATRIX& lightViewProj);
 };
 

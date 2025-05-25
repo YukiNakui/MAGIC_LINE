@@ -42,11 +42,15 @@ namespace Direct3D
 	int						screenHeight_ = 0;
 
 
+
+
 	//シャドウマップ用
 	ID3D11Texture2D* pShadowMapTex_ = nullptr;
-	ID3D11DepthStencilView* pShadowMapDSV_ = nullptr;
 	ID3D11ShaderResourceView* pShadowMapSRV_ = nullptr;
-	D3D11_VIEWPORT          shadowViewport_ = {};
+	ID3D11DepthStencilView* pShadowMapDSV_ = nullptr;
+	D3D11_VIEWPORT shadowViewport_ = {};
+	ID3D11SamplerState* pShadowSampler_ = nullptr;
+
 
 
 	//初期化処理
@@ -208,6 +212,12 @@ namespace Direct3D
 
 
 		////シャドウマップ用
+		 
+		//シャドウマップ用
+		/*pShadowMapTex_ = nullptr;
+		pShadowMapDSV_ = nullptr;
+		pShadowMapSRV_ = nullptr;
+		shadowViewport_ = {};*/
 		// 例: シャドウマップのサイズ
 		const int SHADOW_WIDTH = 2048;
 		const int SHADOW_HEIGHT = 2048;
@@ -225,6 +235,20 @@ namespace Direct3D
 		shadowDesc.CPUAccessFlags = 0;
 		shadowDesc.MiscFlags = 0;
 		pDevice_->CreateTexture2D(&shadowDesc, nullptr, &pShadowMapTex_);
+
+		D3D11_SAMPLER_DESC sampDesc = {};
+		sampDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampDesc.BorderColor[0] = 1.0f;
+		sampDesc.BorderColor[1] = 1.0f;
+		sampDesc.BorderColor[2] = 1.0f;
+		sampDesc.BorderColor[3] = 1.0f;
+		sampDesc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		Direct3D::pDevice_->CreateSamplerState(&sampDesc, &Direct3D::pShadowSampler_);
 
 		// DSV
 		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};

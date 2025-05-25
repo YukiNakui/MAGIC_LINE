@@ -18,3 +18,7 @@ VS_OUT VS(VS_IN input)
     outData.pos = mul(worldPos, g_matLightViewProj);
     return outData;
 }
+float4 PS(VS_OUT input) : SV_Target
+{
+    return float4(1, 1, 1, 1); // é¿ç€ÇÕégÇÌÇÍÇ»Ç¢
+}
