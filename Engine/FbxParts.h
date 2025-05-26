@@ -4,7 +4,8 @@
 #include <DirectXMath.h>
 #include "Texture.h"
 #include "Transform.h"
-#include "GameObject.h"
+
+#include "GameObject.h"//シャドウマップ用にinclude
 
 using namespace DirectX;
 
@@ -160,7 +161,6 @@ public:
 
 
 
-	//void DrawShadowMap(Transform& transform, const XMMATRIX& lightViewProj);
 	void Initialize() override {}
 	void Update() override {}
 	void Draw() override {}

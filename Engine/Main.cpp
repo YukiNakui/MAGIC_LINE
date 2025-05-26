@@ -156,13 +156,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				VFX::Draw();
 				Direct3D::EndDraw();
 
-				//
+				
+				////このフレームの描画開始
 				//Direct3D::BeginDraw();
 
-				//エフェクトの描画
+				////全オブジェクトを描画
+				////ルートオブジェクトのDrawを呼んだあと、自動的に子、孫のUpdateが呼ばれる
+				//pRootObject->DrawSub();
+
+				////エフェクトの描画
 				//VFX::Draw();
 
-				//描画終了
+				////描画終了
 				//Direct3D::EndDraw();
 
 

@@ -454,15 +454,15 @@ void FbxParts::Draw(Transform& transform)
 
 
 		///シャドウマップ関連処理
-		XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1); // オブジェクトの真上
-		XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
-		XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
-		float nearZ = 0.1f;
-		float farZ = 1000.0f;
-		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-		XMMATRIX lightProj = XMMatrixOrthographicLH(1280, 720, nearZ, farZ); // 必要に応じて幅高さ調整
-		XMMATRIX lightViewProj = lightView * lightProj;
-		cb.lightViewProj = lightViewProj;
+		//XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1); // オブジェクトの真上
+		//XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
+		//XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
+		//float nearZ = 0.1f;
+		//float farZ = 1000.0f;
+		//XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
+		//XMMATRIX lightProj = XMMatrixOrthographicLH(1280, 720, nearZ, farZ); // 必要に応じて幅高さ調整
+		//XMMATRIX lightViewProj = lightView * lightProj;
+		//cb.lightViewProj = lightViewProj;
 		///シャドウマップ関連処理
 
 
@@ -623,96 +623,6 @@ void FbxParts::RayCast(RayCastData * data)
 }
 
 
-/*
-// シャドウマップ用描画（定数バッファにライトViewProj行列を送るだけ）
-void FbxParts::DrawShadowMap(Transform& transform, const XMMATRIX& lightViewProj)
-{
-	// 必要ならSHADER_SHADOWに切り替え
-	// 頂点バッファ、インデックスバッファ等は今まで通り
-	// 定数バッファには「ワールド行列」と「lightViewProj」だけ送る
-	// ピクセルシェーダは無し or 空
-
-	// ...省略（今までのDraw()の流用でOK、ただしカメラ行列→lightViewProj）
-	//今から描画する頂点情報をシェーダに伝える
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
-
-	//使用するコンスタントバッファをシェーダに伝える
-	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
-	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);
-
-
-	//シェーダーのコンスタントバッファーに各種データを渡す
-	for (DWORD i = 0; i < materialCount_; i++)
-	{
-		// インデックスバッファーをセット
-		UINT    stride = sizeof(int);
-		UINT    offset = 0;
-		Direct3D::pContext_->IASetIndexBuffer(ppIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
-
-
-		// パラメータの受け渡し
-		D3D11_MAPPED_SUBRESOURCE pdata;
-		CONSTANT_BUFFER cb;
-		//cb.worldVewProj = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());						// リソースへ送る値をセット
-		cb.world = XMMatrixTranspose(transform.GetWorldMatrix());
-		//cb.normalTrans = XMMatrixTranspose(transform.matRotate_ * XMMatrixInverse(nullptr, transform.matScale_));
-		//cb.ambient = pMaterial_[i].ambient;
-		//cb.diffuse = pMaterial_[i].diffuse;
-		//cb.speculer = pMaterial_[i].specular;
-		//cb.shininess = pMaterial_[i].shininess;
-		//cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
-		//cb.lightDirection = XMFLOAT4(0, -1, 0, 0);		//光の方向
-		//cb.isTexture = pMaterial_[i].pTexture != nullptr;
-
-
-		///シャドウマップ関連処理
-		XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1); // オブジェクトの真上
-		XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
-		XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
-		float nearZ = 0.1f;
-		float farZ = 1000.0f;
-		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-		XMMATRIX lightProj = XMMatrixOrthographicLH(1280, 720, nearZ, farZ); // 必要に応じて幅高さ調整
-		XMMATRIX lightViewProj = lightView * lightProj;
-		cb.lightViewProj = XMMatrixTranspose(lightViewProj);
-		///シャドウマップ関連処理
-
-
-		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのリソースアクセスを一時止める
-		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));		// リソースへ値を送る
-
-
-
-		// テクスチャをシェーダーに設定
-
-		if (cb.isTexture)
-		{
-			ID3D11SamplerState* pSampler = pMaterial_[i].pTexture->GetSampler();
-			Direct3D::pContext_->PSSetSamplers(0, 1, &pSampler);
-
-			ID3D11ShaderResourceView* pSRV = pMaterial_[i].pTexture->GetSRV();
-			Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
-		}
-		Direct3D::pContext_->Unmap(pConstantBuffer_, 0);									// GPUからのリソースアクセスを再開
-
-		//ポリゴンメッシュを描画する
-		Direct3D::pContext_->DrawIndexed(pMaterial_[i].polygonCount * 3, 0, 0);
-	}
-
-
-
-	//// 例:
-	//cb.world = XMMatrixTranspose(transform.GetWorldMatrix());
-	//cb.lightViewProj = XMMatrixTranspose(lightViewProj);
-	//// → 定数バッファに書き込み
-
-	//pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
-	//// インデックスバッファやバーテックスバッファもセットして
-	//pContext_->DrawIndexed(...);
-}
-*/
 
 void FbxParts::DrawShadowMap(const DirectX::XMMATRIX& lightViewProj)
 {
