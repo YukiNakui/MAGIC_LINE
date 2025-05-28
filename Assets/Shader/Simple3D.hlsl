@@ -5,7 +5,7 @@ Texture2D		g_texture: register(t0);	//テクスチャー
 SamplerState	g_sampler : register(s0);	//サンプラー
 
 Texture2D g_shadowMap : register(t1); // 追加
-SamplerState g_shadowSampler : register(s1); // 追加
+SamplerComparisonState g_shadowSampler : register(s1); // 追加
 
 //───────────────────────────────────────
  // コンスタントバッファ
@@ -23,6 +23,8 @@ cbuffer global
 	float4		g_vecCameraPosition;// 視点（カメラの位置）
 	float		g_shuniness;		// ハイライトの強さ（テカリ具合）
 	bool		g_isTexture;		// テクスチャ貼ってあるかどうか
+    
+    float2 padding; // 追加：パディング（16バイト境界に合わせるため）
     float4x4 g_matLightViewProj; // 追加
 };
 
@@ -117,10 +119,9 @@ float4 PS(VS_OUT inData) : SV_Target
     return diffuse * shade + diffuse * ambient + speculer;
 	#else
 	
-    // シャドウマップ座標計算
+    // Shadow判定
     float3 shadowCoord = inData.shadowPos.xyz / inData.shadowPos.w;
     shadowCoord = shadowCoord * 0.5f + 0.5f;
-
     float shadow = 1.0f;
     if (shadowCoord.x < 0 || shadowCoord.x > 1 ||
         shadowCoord.y < 0 || shadowCoord.y > 1 ||
@@ -130,22 +131,18 @@ float4 PS(VS_OUT inData) : SV_Target
     }
     else
     {
-        float shadowDepth = g_shadowMap.Sample(g_shadowSampler, shadowCoord.xy).r;
-        float currentDepth = saturate(shadowCoord.z);
         float bias = 0.005f;
-        shadow = (currentDepth > shadowDepth + bias) ? 0.4f : 1.0f;
+        shadow = g_shadowMap.SampleCmpLevelZero(g_shadowSampler, shadowCoord.xy, shadowCoord.z - bias);
     }
 
-    // 通常のライティング計算
+    // 通常のライティング
     float4 lightDir = normalize(g_vecLightDir);
     inData.normal = normalize(inData.normal);
     float shade = saturate(dot(inData.normal, -lightDir));
 
-    float4 diffuse;
-    if (g_isTexture)
-        diffuse = g_texture.Sample(g_sampler, inData.uv);
-    else
-        diffuse = g_vecDiffuse;
+    float4 diffuse = g_isTexture
+        ? g_texture.Sample(g_sampler, inData.uv)
+        : g_vecDiffuse;
     diffuse.a = 1.0f;
 
     float4 ambient = float4(0.6f, 0.6f, 0.6f, 1.0f);
@@ -159,5 +156,10 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 color = shadow * (diffuse * shade + diffuse * ambient) + speculer;
     color.a = 1.0f;
     return color;
+    
+    //return float4(inData.shadowPos.x, 0, 0, 1); // X成分
+    //return float4(0, inData.shadowPos.y, 0, 1); // Y成分
+    //return float4(0, 0, inData.shadowPos.z, 1); // Z成分
+    //return float4(inData.shadowPos.w, inData.shadowPos.w, inData.shadowPos.w, 1); // W成分
     #endif
 }

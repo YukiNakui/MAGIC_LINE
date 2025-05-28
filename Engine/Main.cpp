@@ -136,16 +136,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 				// 1. ライト行列
-				XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1);
+				XMVECTOR lightPos = XMVectorSet(0, 1000, 0, 1);
 				XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);
 				XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);
 				XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-				XMMATRIX lightProj = XMMatrixOrthographicLH(1280, 720, 0.1f, 1000.0f);
-				XMMATRIX lightViewProj = lightView * lightProj;
+				XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 1000.0f);
+				XMMATRIX lightViewProj = lightProj * lightView;
+
 
 				// 2. シャドウマップ生成
 				Direct3D::BeginShadowMapDraw();
-				pRootObject->DrawShadowMapSub(lightViewProj);
+				pRootObject->DrawShadowMapSub(XMMatrixTranspose(lightViewProj));
 				Direct3D::EndShadowMapDraw(screenWidth, screenHeight);
 
 				// 3. 本描画

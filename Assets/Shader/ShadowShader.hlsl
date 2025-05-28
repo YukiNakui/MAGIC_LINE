@@ -20,5 +20,6 @@ VS_OUT VS(VS_IN input)
 }
 float4 PS(VS_OUT input) : SV_Target
 {
-    return float4(1, 1, 1, 1); // 実際は使われない
+    float depth = input.pos.z / input.pos.w; // ライト視点クリップ空間での深度値
+    return float4(depth, depth, depth, 1);
 }

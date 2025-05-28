@@ -414,6 +414,15 @@ void FbxParts::IntConstantBuffer()
 	cb.MiscFlags = 0;
 	cb.StructureByteStride = 0;
 	Direct3D::pDevice_->CreateBuffer(&cb, NULL, &pConstantBuffer_);
+
+
+	// シャドウ用
+	D3D11_BUFFER_DESC scb = {};
+	scb.ByteWidth = sizeof(SHADOW_CB);
+	scb.Usage = D3D11_USAGE_DYNAMIC;
+	scb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	scb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	Direct3D::pDevice_->CreateBuffer(&scb, NULL, &pShadowConstantBuffer_);
 }
 
 //描画
@@ -454,17 +463,16 @@ void FbxParts::Draw(Transform& transform)
 
 
 		///シャドウマップ関連処理
-		//XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1); // オブジェクトの真上
-		//XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
-		//XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
-		//float nearZ = 0.1f;
-		//float farZ = 1000.0f;
-		//XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-		//XMMATRIX lightProj = XMMatrixOrthographicLH(1280, 720, nearZ, farZ); // 必要に応じて幅高さ調整
-		//XMMATRIX lightViewProj = lightView * lightProj;
-		//cb.lightViewProj = lightViewProj;
+		XMVECTOR lightPos = XMVectorSet(0, 1000, 0, 1); // オブジェクトの真上
+		XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
+		XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
+		float nearZ = 0.1f;
+		float farZ = 1000.0f;
+		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
+		XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 1000.0f);
+		XMMATRIX lightViewProj = lightProj * lightView;
+		cb.lightViewProj = XMMatrixTranspose(lightViewProj);
 		///シャドウマップ関連処理
-
 
 		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのリソースアクセスを一時止める
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));		// リソースへ値を送る
@@ -633,31 +641,28 @@ void FbxParts::DrawShadowMap(const DirectX::XMMATRIX& lightViewProj)
 // こちらが「本来やりたいこと」の実装
 void FbxParts::DrawShadowMapImpl(Transform& transform, const DirectX::XMMATRIX& lightViewProj)
 {
-	// 1. シャドウマップ専用シェーダーに切り替える（例: shadowshader.hlsl）
-	Direct3D::SetShader(Direct3D::SHADER_SHADOW); // ※関数名は環境による。必ずここで切り替える
+	Direct3D::SetShader(Direct3D::SHADER_SHADOW);
 
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 
-	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
+	// ループの外で一度だけでOK
+	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pShadowConstantBuffer_);
 
 	for (DWORD i = 0; i < materialCount_; i++)
 	{
 		Direct3D::pContext_->IASetIndexBuffer(ppIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
 
 		D3D11_MAPPED_SUBRESOURCE pdata;
-		// シャドウ用構造体（shadowshader.hlslのcbufferと合わせる）
-		struct SHADOW_CB {
-			XMMATRIX world;
-			XMMATRIX lightViewProj;
-		} cb;
-		cb.world = XMMatrixTranspose(transform.GetWorldMatrix());
-		cb.lightViewProj = XMMatrixTranspose(lightViewProj);
+		SHADOW_CB cb; // ←クラスで定義済みのやつを使う
+		cb.g_matWorld = XMMatrixTranspose(transform.GetWorldMatrix());
+		cb.g_matLightViewProj = XMMatrixTranspose(lightViewProj);
 
-		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
+		Direct3D::pContext_->Map(pShadowConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
-		Direct3D::pContext_->Unmap(pConstantBuffer_, 0);
+		Direct3D::pContext_->Unmap(pShadowConstantBuffer_, 0);
+		// VSSetConstantBuffers(0, 1, &pShadowConstantBuffer_); ←ここは不要
 
 		// ピクセルシェーダは不要なら外す
 		// Direct3D::pContext_->PSSetShader(nullptr, nullptr, 0); // 必要なら

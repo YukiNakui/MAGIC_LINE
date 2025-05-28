@@ -43,6 +43,7 @@ class FbxParts : public GameObject//シャドウマップ用にgameobjectを継承させてみて
 		FLOAT	 shininess;		//ハイライトの強さ（MayaのCosinePower）
 		BOOL	 isTexture;		//テクスチャの有無
 
+		float    padding[2];// パディング（構造体のサイズを16の倍数にするため）
 		XMMATRIX lightViewProj;//ライトのビュー行列とプロジェクション行列の合成（シャドウマップ用）
 	};
 
@@ -100,6 +101,15 @@ class FbxParts : public GameObject//シャドウマップ用にgameobjectを継承させてみて
 	//【定数バッファ】
 	//シェーダー（Simple3D.hlsl）のグローバル変数に値を渡すためのもの
 	ID3D11Buffer *pConstantBuffer_;
+
+
+
+	//【シャドウマップ用】
+	struct SHADOW_CB {
+		XMMATRIX g_matWorld;
+		XMMATRIX g_matLightViewProj;
+	};
+	ID3D11Buffer* pShadowConstantBuffer_; // シャドウマップ用
 
 
 	// ボーン制御情報
