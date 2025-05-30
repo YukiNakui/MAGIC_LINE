@@ -135,18 +135,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 
-				// 1. ライト行列
-				XMVECTOR lightPos = XMVectorSet(0, 1000, 0, 1);
+				// 1. ライト行列　今のところどんな値を入れても結果が同じになってしまっている（理由不明）
+				XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1);
 				XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);
 				XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);
 				XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-				XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 1000.0f);
+				XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 100.0f);
 				XMMATRIX lightViewProj = lightProj * lightView;
-
-
+				//pRootObject->SetLightViewProj(XMMatrixTranspose(lightViewProj));
+				
+				//どうやらオブジェクトの回転とかそうゆうのが読み取れてない（カプセルを出すと初期方向のまま出る）
 				// 2. シャドウマップ生成
 				Direct3D::BeginShadowMapDraw();
-				pRootObject->DrawShadowMapSub(XMMatrixTranspose(lightViewProj));
+				pRootObject->DrawShadowMap(XMMatrixTranspose(lightViewProj));
 				Direct3D::EndShadowMapDraw(screenWidth, screenHeight);
 
 				// 3. 本描画

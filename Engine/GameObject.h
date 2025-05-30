@@ -240,6 +240,7 @@ public:
 
 
 	// 追加: シャドウマップ用の描画関数
+	virtual void SetLightViewProj(const XMMATRIX&) {}
 	virtual void DrawShadowMap(const XMMATRIX& lightViewProj) {}
 	void DrawShadowMapSub(const XMMATRIX& lightViewProj)
 	{

@@ -157,6 +157,7 @@ float4 PS(VS_OUT inData) : SV_Target
     color.a = 1.0f;
     return color;
     
+    
     //return float4(inData.shadowPos.x, 0, 0, 1); // X¬•ª
     //return float4(0, inData.shadowPos.y, 0, 1); // Y¬•ª
     //return float4(0, 0, inData.shadowPos.z, 1); // Z¬•ª

@@ -23,5 +23,10 @@ public:
 
 	//開放
 	void Release() override;
+
+
+// シャドウマップ用の描画関数
+public:
+	void SetLightViewProj(const DirectX::XMMATRIX& mat) override;
 };
 

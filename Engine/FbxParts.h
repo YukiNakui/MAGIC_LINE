@@ -110,7 +110,7 @@ class FbxParts : public GameObject//シャドウマップ用にgameobjectを継承させてみて
 		XMMATRIX g_matLightViewProj;
 	};
 	ID3D11Buffer* pShadowConstantBuffer_; // シャドウマップ用
-
+	XMMATRIX currentLightViewProj_;
 
 	// ボーン制御情報
 	FbxSkin*		pSkinInfo_;		// スキンメッシュ情報（スキンメッシュアニメーションのデータ本体）
@@ -176,8 +176,9 @@ public:
 	void Draw() override {}
 	void Release() override {}
 	// GameObjectからのオーバーライド
-	void DrawShadowMap(const DirectX::XMMATRIX& lightViewProj) override;
+	void DrawShadowMap(const XMMATRIX& lightViewProj) override;
 	// ↓内部で使う実体
-	void DrawShadowMapImpl(Transform& transform, const DirectX::XMMATRIX& lightViewProj);
+	void DrawShadowMapImpl(Transform& transform, const XMMATRIX& lightViewProj);
+	void SetLightViewProj(const XMMATRIX& mat) override { currentLightViewProj_ = mat; }
 };
 

@@ -28,3 +28,10 @@ void RootObject::Draw()
 void RootObject::Release()
 {
 }
+
+
+void RootObject::SetLightViewProj(const DirectX::XMMATRIX& mat) {
+    for (auto child : *GetChildList()) {
+        child->SetLightViewProj(mat);
+    }
+}

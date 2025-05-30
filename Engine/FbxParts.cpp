@@ -462,16 +462,16 @@ void FbxParts::Draw(Transform& transform)
 		cb.isTexture = pMaterial_[i].pTexture != nullptr;
 
 
-		///シャドウマップ関連処理
-		XMVECTOR lightPos = XMVectorSet(0, 1000, 0, 1); // オブジェクトの真上
-		XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
-		XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
-		float nearZ = 0.1f;
-		float farZ = 1000.0f;
-		XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-		XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 1000.0f);
-		XMMATRIX lightViewProj = lightProj * lightView;
-		cb.lightViewProj = XMMatrixTranspose(lightViewProj);
+		//シャドウマップ関連処理
+		//XMVECTOR lightPos = XMVectorSet(0, 1000, 0, 1); // オブジェクトの真上
+		//XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
+		//XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
+		//float nearZ = 0.1f;
+		//float farZ = 1000.0f;
+		//XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
+		//XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 1000.0f);
+		//XMMATRIX lightViewProj = lightProj * lightView;
+		//cb.lightViewProj = XMMatrixTranspose(currentLightViewProj_);
 		///シャドウマップ関連処理
 
 		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのリソースアクセスを一時止める
@@ -632,14 +632,14 @@ void FbxParts::RayCast(RayCastData * data)
 
 
 
-void FbxParts::DrawShadowMap(const DirectX::XMMATRIX& lightViewProj)
+void FbxParts::DrawShadowMap(const XMMATRIX& lightViewProj)
 {
 	// GameObjectのtransform_を使って実体関数を呼ぶ
 	DrawShadowMapImpl(this->transform_, lightViewProj);
 }
 
 // こちらが「本来やりたいこと」の実装
-void FbxParts::DrawShadowMapImpl(Transform& transform, const DirectX::XMMATRIX& lightViewProj)
+void FbxParts::DrawShadowMapImpl(Transform& transform, const XMMATRIX& lightViewProj)
 {
 	Direct3D::SetShader(Direct3D::SHADER_SHADOW);
 
