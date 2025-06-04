@@ -26,7 +26,7 @@ public:
 
 
 // シャドウマップ用の描画関数
-public:
-	void SetLightViewProj(const DirectX::XMMATRIX& mat) override;
+//public:
+//	void SetLightViewProj(const DirectX::XMMATRIX& mat) override;
 };
 

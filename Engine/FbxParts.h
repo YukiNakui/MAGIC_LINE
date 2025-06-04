@@ -5,7 +5,7 @@
 #include "Texture.h"
 #include "Transform.h"
 
-#include "GameObject.h"//シャドウマップ用にinclude
+//#include "GameObject.h"//シャドウマップ用にinclude
 
 using namespace DirectX;
 
@@ -16,8 +16,8 @@ struct RayCastData;
 //FBXの１つのパーツを扱うクラス
 //-----------------------------------------------------------
 
-//class FbxParts
-class FbxParts : public GameObject//シャドウマップ用にgameobjectを継承させてみてる　本来はしてない
+class FbxParts
+//class FbxParts : public GameObject//シャドウマップ用にgameobjectを継承させてみてる　本来はしてない
 {
 	// 一つの頂点情報を格納する構造体
 	struct VERTEX
@@ -170,15 +170,16 @@ public:
 
 
 
-
-	void Initialize() override {}
-	void Update() override {}
-	void Draw() override {}
-	void Release() override {}
-	// GameObjectからのオーバーライド
-	void DrawShadowMap(const XMMATRIX& lightViewProj) override;
-	// ↓内部で使う実体
+	//FbxParts(GameObject* parent);
+	/*void Initialize() override {};
+	void Update() override {};
+	void Draw() override {};
+	void Release() override {};*/
+	//// GameObjectからのオーバーライド
+	//void DrawShadowMap(const XMMATRIX& lightViewProj) override;
+	//void DrawShadowMap(const XMMATRIX& lightViewProj);
+	//// ↓内部で使う実体
 	void DrawShadowMapImpl(Transform& transform, const XMMATRIX& lightViewProj);
-	void SetLightViewProj(const XMMATRIX& mat) override { currentLightViewProj_ = mat; }
+	//void SetLightViewProj(const XMMATRIX& mat) override { currentLightViewProj_ = mat; }
 };
 

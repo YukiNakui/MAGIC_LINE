@@ -37,6 +37,7 @@ struct VS_OUT
 	float4 normal : TEXCOORD2;		//–@ü
 	float2 uv	  : TEXCOORD0;		//UVÀ•W
 	float4 eye	  : TEXCOORD1;		//‹ü
+    
     float4 shadowPos : TEXCOORD3; // ’Ç‰Á
 };
 

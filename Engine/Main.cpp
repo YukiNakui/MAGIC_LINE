@@ -141,13 +141,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);
 				XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
 				XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 100.0f);
-				XMMATRIX lightViewProj = lightProj * lightView;
+				XMMATRIX lightViewProj = lightView * lightProj;
 				//pRootObject->SetLightViewProj(XMMatrixTranspose(lightViewProj));
 				
 				//どうやらオブジェクトの回転とかそうゆうのが読み取れてない（カプセルを出すと初期方向のまま出る）
+				// shadowshader.hlslのほうでオブジェクトの行列的なのを考慮していないからかも
 				// 2. シャドウマップ生成
 				Direct3D::BeginShadowMapDraw();
-				pRootObject->DrawShadowMap(XMMatrixTranspose(lightViewProj));
+				//pRootObject->DrawShadowMapSub(XMMatrixTranspose(lightViewProj));
 				Direct3D::EndShadowMapDraw(screenWidth, screenHeight);
 
 				// 3. 本描画

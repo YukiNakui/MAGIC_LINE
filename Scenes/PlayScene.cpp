@@ -7,6 +7,7 @@
 #include"../Objects/Line.h"
 #include"../Engine/VFX.h"
 #include"../UI/CountdownNumber.h"
+#include"../Engine/FbxParts.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)
@@ -102,6 +103,8 @@ void PlayScene::Initialize()
 			pMiniMap_->SetRenderOrder(10);
 		}
 	}
+
+	//Instantiate<FbxParts>(this);
 }
 
 void PlayScene::Update()

@@ -470,7 +470,7 @@ void FbxParts::Draw(Transform& transform)
 		//float farZ = 1000.0f;
 		//XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
 		//XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 1000.0f);
-		//XMMATRIX lightViewProj = lightProj * lightView;
+		//XMMATRIX lightViewProj = lightView * lightProj;
 		//cb.lightViewProj = XMMatrixTranspose(currentLightViewProj_);
 		///シャドウマップ関連処理
 
@@ -576,6 +576,18 @@ void FbxParts::DrawMeshAnime(Transform& transform, FbxTime time, FbxScene * scen
 	//}
 
 	Draw(transform);
+
+
+
+	//XMVECTOR lightPos = XMVectorSet(0, 1000, 0, 1); // オブジェクトの真上
+	//XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
+	//XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
+	//float nearZ = 0.1f;
+	//float farZ = 1000.0f;
+	//XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
+	//XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 1000.0f);
+	//XMMATRIX lightViewProj = lightProj * lightView;
+	//DrawShadowMapImpl(transform,XMMatrixTranspose(lightViewProj));
 }
 
 bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3 * position)
@@ -630,13 +642,34 @@ void FbxParts::RayCast(RayCastData * data)
 	}
 }
 
-
-
-void FbxParts::DrawShadowMap(const XMMATRIX& lightViewProj)
-{
-	// GameObjectのtransform_を使って実体関数を呼ぶ
-	DrawShadowMapImpl(this->transform_, lightViewProj);
-}
+//FbxParts::FbxParts(GameObject* parent)
+//	:GameObject(parent,"FbxParts")
+//{
+//}
+//
+//void FbxParts::Initialize()
+//{
+//}
+//
+//void FbxParts::Update()
+//{
+//}
+//
+//void FbxParts::Draw()
+//{
+//}
+//
+//void FbxParts::Release()
+//{
+//}
+//
+//
+//
+//void FbxParts::DrawShadowMap(const XMMATRIX& lightViewProj)
+//{
+//	// GameObjectのtransform_を使って実体関数を呼ぶ
+//	DrawShadowMapImpl(this->transform_, lightViewProj);
+//}
 
 // こちらが「本来やりたいこと」の実装
 void FbxParts::DrawShadowMapImpl(Transform& transform, const XMMATRIX& lightViewProj)
@@ -662,7 +695,6 @@ void FbxParts::DrawShadowMapImpl(Transform& transform, const XMMATRIX& lightView
 		Direct3D::pContext_->Map(pShadowConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
 		Direct3D::pContext_->Unmap(pShadowConstantBuffer_, 0);
-		// VSSetConstantBuffers(0, 1, &pShadowConstantBuffer_); ←ここは不要
 
 		// ピクセルシェーダは不要なら外す
 		// Direct3D::pContext_->PSSetShader(nullptr, nullptr, 0); // 必要なら
