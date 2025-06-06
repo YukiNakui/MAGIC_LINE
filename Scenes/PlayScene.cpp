@@ -7,7 +7,6 @@
 #include"../Objects/Line.h"
 #include"../Engine/VFX.h"
 #include"../UI/CountdownNumber.h"
-#include"../Engine/FbxParts.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), hModel_(-1)
@@ -43,9 +42,9 @@ void PlayScene::Initialize()
 			pBall->SetRenderOrder(0);
 		}
 		else if (objectName == "Wall") {
-			/*Wall* pWall = Instantiate<Wall>(this);
+			Wall* pWall = Instantiate<Wall>(this);
 			pWall->SetTransformFloat3(position, rotation, scale);
-			pWall->SetRenderOrder(0);*/
+			pWall->SetRenderOrder(0);
 		}
     }
 
@@ -103,8 +102,6 @@ void PlayScene::Initialize()
 			pMiniMap_->SetRenderOrder(10);
 		}
 	}
-
-	//Instantiate<FbxParts>(this);
 }
 
 void PlayScene::Update()

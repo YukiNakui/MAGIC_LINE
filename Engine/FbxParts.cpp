@@ -576,18 +576,6 @@ void FbxParts::DrawMeshAnime(Transform& transform, FbxTime time, FbxScene * scen
 	//}
 
 	Draw(transform);
-
-
-
-	//XMVECTOR lightPos = XMVectorSet(0, 1000, 0, 1); // オブジェクトの真上
-	//XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);  // Yマイナス方向
-	//XMVECTOR upVec = XMVectorSet(0, 0, 1, 0);      // 上方向ベクトル（Z+）
-	//float nearZ = 0.1f;
-	//float farZ = 1000.0f;
-	//XMMATRIX lightView = XMMatrixLookAtLH(lightPos, lightPos + lightDir, upVec);
-	//XMMATRIX lightProj = XMMatrixOrthographicLH(5000, 5000, 0.1f, 1000.0f);
-	//XMMATRIX lightViewProj = lightProj * lightView;
-	//DrawShadowMapImpl(transform,XMMatrixTranspose(lightViewProj));
 }
 
 bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3 * position)
