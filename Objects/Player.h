@@ -32,6 +32,11 @@ public:
     void Draw() override;
     void Release() override;
 
+
+    // シャドウマップ描画
+    void DrawShadowMap(const XMMATRIX& lightViewProj) override;
+
+
     //プレイヤーの状態を取得
     State GetPlayerState() { return state_; }
 

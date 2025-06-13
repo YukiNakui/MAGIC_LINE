@@ -100,4 +100,7 @@ namespace Model
 	//引数：data	必要なものをまとめたデータ
 	void RayCast(int handle, RayCastData *data);
 
+
+	// シャドウマップ用描画
+	void DrawShadow(int handle, const XMMATRIX& lightViewProj);
 };

@@ -132,7 +132,7 @@ float4 PS(VS_OUT inData) : SV_Target
     }
     else
     {
-        float bias = 0.005f;
+        float bias = 0.0005f;
         shadow = g_shadowMap.SampleCmpLevelZero(g_shadowSampler, shadowCoord.xy, shadowCoord.z - bias);
     }
 

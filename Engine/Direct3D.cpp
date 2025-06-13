@@ -629,7 +629,7 @@ namespace Direct3D
 		// ライト用ビューポート
 		pContext_->RSSetViewports(1, &shadowViewport_);
 		// シャドウマップ用シェーダをセット
-		SetShader(SHADER_SHADOW); // 必要なら追加
+		//SetShader(SHADER_SHADOW); // 必要なら追加
 	}
 
 	void EndShadowMapDraw(int screenWidth, int screenHeight)

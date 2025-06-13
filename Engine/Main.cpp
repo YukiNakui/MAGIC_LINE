@@ -148,7 +148,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				// shadowshader.hlslのほうでオブジェクトの行列的なのを考慮していないからかも
 				// 2. シャドウマップ生成
 				Direct3D::BeginShadowMapDraw();
-				//pRootObject->DrawShadowMapSub(XMMatrixTranspose(lightViewProj));
+				// ↓↓↓ ここでルートから再帰的にシャドウマップ用描画を呼ぶ！ ↓↓↓
+				pRootObject->DrawShadowMapSub(XMMatrixTranspose(lightViewProj));
 				Direct3D::EndShadowMapDraw(screenWidth, screenHeight);
 
 				// 3. 本描画

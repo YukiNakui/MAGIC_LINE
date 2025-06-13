@@ -185,3 +185,11 @@ void Ball::OnCollision(GameObject* pTarget)
 		pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
 	}
 }
+
+void Ball::DrawShadowMap(const XMMATRIX& lightViewProj)
+{
+    // モデルにワールド変換をセット
+    Model::SetTransform(hModel_, transform_);
+    // シャドウマップ用描画
+    Model::DrawShadow(hModel_, lightViewProj);
+}

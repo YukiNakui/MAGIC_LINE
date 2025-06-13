@@ -87,5 +87,8 @@ public:
 	//引数：data	必要なものをまとめたデータ
 	void RayCast(RayCastData *data);
 
+
+	// シャドウマップ用描画
+	void DrawShadowMap(Transform& transform, const DirectX::XMMATRIX& lightViewProj);
 };
 

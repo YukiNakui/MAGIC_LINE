@@ -51,3 +51,11 @@ void Line::Draw()
 void Line::Release()
 {
 }
+
+void Line::DrawShadowMap(const XMMATRIX& lightViewProj)
+{
+	// モデルにワールド変換をセット
+	Model::SetTransform(hModel_, transform_);
+	// シャドウマップ用描画
+	Model::DrawShadow(hModel_, lightViewProj);
+}

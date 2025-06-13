@@ -12,6 +12,12 @@ public:
 	void Draw() override;
 	void Release() override;
 	int GetModelHandle() { return hModel_; }
+
+
+
+
+    // シャドウマップ描画
+    void DrawShadowMap(const XMMATRIX& lightViewProj) override;
 private:
     float radius_;    //ラインの半径
     XMFLOAT3 start_;  //ラインの始点

@@ -12,6 +12,11 @@ public:
 	void Draw() override;
 	void Release() override;
 
+
+	// シャドウマップ描画
+	void DrawShadowMap(const XMMATRIX& lightViewProj) override;
+
+
 	int GetModelHandle() { return hModel_; }
 };
 

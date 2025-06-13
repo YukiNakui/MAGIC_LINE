@@ -36,3 +36,11 @@ void Stage::Draw()
 void Stage::Release()
 {
 }
+
+void Stage::DrawShadowMap(const XMMATRIX& lightViewProj)
+{
+	// モデルにワールド変換をセット
+	Model::SetTransform(hModel_, transform_);
+	// シャドウマップ用描画
+	Model::DrawShadow(hModel_, lightViewProj);
+}

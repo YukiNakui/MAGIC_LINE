@@ -15,6 +15,12 @@ public:
 	void Release() override;
 	void OnCollision(GameObject* pTarget) override;
 
+
+    // シャドウマップ描画
+    void DrawShadowMap(const XMMATRIX& lightViewProj) override;
+
+
+
     //ボールの移動開始処理
     void BallMoveStart() {
         canMove_ = true; //ボールの移動を許可

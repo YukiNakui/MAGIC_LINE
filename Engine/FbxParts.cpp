@@ -678,7 +678,7 @@ void FbxParts::DrawShadowMapImpl(Transform& transform, const XMMATRIX& lightView
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		SHADOW_CB cb; // ←クラスで定義済みのやつを使う
 		cb.g_matWorld = XMMatrixTranspose(transform.GetWorldMatrix());
-		cb.g_matLightViewProj = XMMatrixTranspose(lightViewProj);
+		cb.g_matLightViewProj = lightViewProj;
 
 		Direct3D::pContext_->Map(pShadowConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));

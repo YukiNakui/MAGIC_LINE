@@ -192,4 +192,12 @@ namespace Model
 
 			_datas[handle]->pFbx->RayCast(data); 
 	}
+
+	//シャドウマップ描画
+	void DrawShadow(int handle, const XMMATRIX& lightViewProj)
+	{
+		if (handle < 0 || handle >= _datas.size() || _datas[handle] == nullptr) return;
+		if (_datas[handle]->pFbx)
+			_datas[handle]->pFbx->DrawShadowMap(_datas[handle]->transform, lightViewProj);
+	}
 }

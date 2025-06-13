@@ -10,5 +10,10 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+
+
+
+	// シャドウマップ描画
+	void DrawShadowMap(const XMMATRIX& lightViewProj) override;
 };
 

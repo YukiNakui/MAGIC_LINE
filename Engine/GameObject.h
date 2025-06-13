@@ -240,19 +240,19 @@ public:
 
 
 	// 追加: シャドウマップ用の描画関数
-	//virtual void SetLightViewProj(const XMMATRIX&) {}
-	//virtual void DrawShadowMap(const XMMATRIX& lightViewProj) {}
-	//void DrawShadowMapSub(const XMMATRIX& lightViewProj)
-	//{
-	//	// 自分自身のシャドウマップ描画
-	//	DrawShadowMap(lightViewProj);
+	virtual void SetLightViewProj(const XMMATRIX&) {}
+	
+	// シャドウマップ描画（追加！）
+	virtual void DrawShadowMap(const DirectX::XMMATRIX& lightViewProj) {}
 
-	//	// 子供にも再帰
-	//	for (auto it = childList_.begin(); it != childList_.end(); it++)
-	//	{
-	//		(*it)->DrawShadowMapSub(lightViewProj);
-	//	}
-	//}
+	void DrawShadowMapSub(const DirectX::XMMATRIX& lightViewProj)
+	{
+		DrawShadowMap(lightViewProj);
+		for (auto it = childList_.begin(); it != childList_.end(); ++it)
+		{
+			(*it)->DrawShadowMapSub(lightViewProj);
+		}
+	}
 
 
 private:

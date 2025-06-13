@@ -154,3 +154,12 @@ void Fbx::RayCast(RayCastData * data)
 		parts_[i]->RayCast(data);
 	}
 }
+
+void Fbx::DrawShadowMap(Transform& transform, const DirectX::XMMATRIX& lightViewProj)
+{
+	for (int k = 0; k < parts_.size(); k++)
+	{
+		// アニメーション対応ならここでtime計算
+		parts_[k]->DrawShadowMapImpl(transform, lightViewProj);
+	}
+}
