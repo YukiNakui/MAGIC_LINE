@@ -134,7 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 
-
+#if 0
 				// 1. ライト行列　今のところどんな値を入れても結果が同じになってしまっている（理由不明）
 				XMVECTOR lightPos = XMVectorSet(0, 100, 0, 1);
 				XMVECTOR lightDir = XMVectorSet(0, -1, 0, 0);
@@ -159,21 +159,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				pRootObject->DrawSub();
 				VFX::Draw();
 				Direct3D::EndDraw();
-
+#else
 				
-				////このフレームの描画開始
-				//Direct3D::BeginDraw();
+				//このフレームの描画開始
+				Direct3D::BeginDraw();
 
-				////全オブジェクトを描画
-				////ルートオブジェクトのDrawを呼んだあと、自動的に子、孫のUpdateが呼ばれる
-				//pRootObject->DrawSub();
+				//全オブジェクトを描画
+				//ルートオブジェクトのDrawを呼んだあと、自動的に子、孫のUpdateが呼ばれる
+				pRootObject->DrawSub();
 
-				////エフェクトの描画
-				//VFX::Draw();
+				//エフェクトの描画
+				VFX::Draw();
 
-				////描画終了
-				//Direct3D::EndDraw();
-
+				//描画終了
+				Direct3D::EndDraw();
+#endif
 
 
 				

@@ -165,6 +165,7 @@
     <ClCompile Include="Scenes\GameOverScene.cpp" />
     <ClCompile Include="Scenes\PlayScene.cpp" />
     <ClCompile Include="Scenes\TitleScene.cpp" />
+    <ClCompile Include="StageSelectScene.cpp" />
     <ClCompile Include="UI\Arrow.cpp" />
     <ClCompile Include="UI\Compass.cpp" />
     <ClCompile Include="UI\CountdownNumber.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Scenes\GameOverScene.h" />
     <ClInclude Include="Scenes\PlayScene.h" />
     <ClInclude Include="Scenes\TitleScene.h" />
+    <ClInclude Include="StageSelectScene.h" />
     <ClInclude Include="UI\Arrow.h" />
     <ClInclude Include="UI\Compass.h" />
     <ClInclude Include="UI\CountdownNumber.h" />
