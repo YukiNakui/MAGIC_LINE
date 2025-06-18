@@ -294,3 +294,15 @@ T* Instantiate(GameObject* pParent)
 	return pNewObject;
 }
 
+// オーバーロード版
+template <class T, class... Args>
+T* InstantiateEx(GameObject* pParent, Args&&... args)
+{
+	T* pNewObject = new T(pParent, std::forward<Args>(args)...);
+	if (pParent != nullptr)
+	{
+		pParent->PushBackChild(pNewObject);
+	}
+	pNewObject->Initialize();
+	return pNewObject;
+}

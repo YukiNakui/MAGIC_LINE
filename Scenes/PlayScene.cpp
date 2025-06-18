@@ -8,15 +8,19 @@
 #include"../Engine/VFX.h"
 #include"../UI/CountdownNumber.h"
 
-PlayScene::PlayScene(GameObject* parent)
-	: GameObject(parent, "PlayScene"), hModel_(-1)
+PlayScene::PlayScene(GameObject* parent, const std::string& fileName)
+	: GameObject(parent, "PlayScene"), hModel_(-1),stageFileName_(fileName)
 {
 }
 
 void PlayScene::Initialize()
 {
 	//ステージデータを読み込む
-	CsvReader* csvStage = new CsvReader("CSV/StageData/stage01.csv");
+	//CsvReader* csvStage = new CsvReader("CSV/StageData/stage01.csv");
+	// セットされたファイル名がなければデフォルト
+	//std::string fileToLoad = stageFileName_.empty() ? "CSV/StageData/stage01.csv" : stageFileName_;
+	//CsvReader* csvStage = new CsvReader(fileToLoad.c_str());
+	CsvReader* csvStage = new CsvReader(stageFileName_.c_str());
 	int lines = csvStage->GetLines();
 
 	//ステージデータに基づいてオブジェクトを生成

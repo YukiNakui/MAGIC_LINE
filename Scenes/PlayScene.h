@@ -14,7 +14,7 @@ class PlayScene : public GameObject
 {
 	int hModel_;
 public:
-	PlayScene(GameObject* parent);
+	PlayScene(GameObject* parent, const std::string& fileName);
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
@@ -33,5 +33,8 @@ private:
     Arrow* pArrow_;                 //矢印UI
     HeightMeter* pHeightMeter_;     //高度計UI
     MiniMap* pMiniMap_;             //ミニマップ
+
+    //ステージファイル関連
+    std::string stageFileName_;
 };
 

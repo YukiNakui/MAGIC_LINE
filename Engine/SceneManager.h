@@ -7,6 +7,7 @@ enum SCENE_ID
 {
 	SCENE_ID_TITLE = 0,
 	SCENE_ID_EXPLANATION,
+	SCENE_ID_STAGESELECT,
 	SCENE_ID_PLAY,
 	SCENE_ID_CLEAR,
 	SCENE_ID_GAMEOVER
@@ -17,6 +18,7 @@ enum SCENE_ID
 //-----------------------------------------------------------
 class SceneManager : public GameObject
 {
+	std::string nextStageFileName_;
 public:
 
 	//コンストラクタ
@@ -31,6 +33,8 @@ public:
 	//シーン切り替え（実際に切り替わるのはこの次のフレーム）
 	//引数：next	次のシーンのID
 	void ChangeScene(SCENE_ID next);
+
+	void ChangeToPlaySceneWithFile(const std::string& fileName);
 
 private:
 	SCENE_ID currentSceneID_;	//現在のシーン
