@@ -1,4 +1,4 @@
-ステージファイル名,ステージ番号,お題画像ファイル名,ステージ画像ファイル名
-Stage01,1,a,a
-Stage02,2,a,a
-Stage03,3,a,a
+ステージファイル名,お題画像ファイル名,ステージ画像ファイル名
+Stage01,Theme_Don'tDrop,Stage01
+Stage02,Theme_Catch,Stage02
+Stage03,Theme_Fall,Stage03
