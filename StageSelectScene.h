@@ -13,16 +13,17 @@ class StageSelectScene :
 
 	//ステージ情報をまとめた構造体
 	struct StageInfo {
-		std::string fileName; // ステージのCSVファイル名
-		int hThemePict; // ステージのテーマ画像ハンドル
-		int hStagePict; // ステージの画像ハンドル
-		Transform stageImgTrs; // ステージ画像の表示位置
-		Transform themeImgTrs; // お題画像の表示位置
-		bool isSelected; // ステージが選択されているかどうか
+		std::string fileName_; // ステージのCSVファイル名
+		int hThemePict_; // ステージのテーマ画像ハンドル
+		int hStagePict_; // ステージの画像ハンドル
+		Transform stageImgTrs_; // ステージ画像の表示位置
+		Transform themeImgTrs_; // お題画像の表示位置
+		bool isSelected_; // ステージが選択されているかどうか
 	};
 	
 	int currentStageIndex_; // 現在選択中のステージインデックス
 	std::vector<StageInfo> stageInfos_; // ステージ情報のリスト
+	bool isExplUISelected_; // 操作・ルール説明UIが選択されているか
 
 	Transform stageSelectPictTrs_; // ステージ選択画面の画像のトランスフォーム
 	Transform stageFrameTrs_; // ステージフレームのトランスフォーム
