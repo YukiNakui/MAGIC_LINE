@@ -160,6 +160,7 @@
     <ClCompile Include="Objects\Player.cpp" />
     <ClCompile Include="Objects\Stage.cpp" />
     <ClCompile Include="Objects\Wall.cpp" />
+    <ClCompile Include="PlayerAndLine.cpp" />
     <ClCompile Include="Scenes\ClearScene.cpp" />
     <ClCompile Include="Scenes\ExplanationScene.cpp" />
     <ClCompile Include="Scenes\GameOverScene.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Objects\Player.h" />
     <ClInclude Include="Objects\Stage.h" />
     <ClInclude Include="Objects\Wall.h" />
+    <ClInclude Include="PlayerAndLine.h" />
     <ClInclude Include="Scenes\ClearScene.h" />
     <ClInclude Include="Scenes\ExplanationScene.h" />
     <ClInclude Include="Scenes\GameOverScene.h" />

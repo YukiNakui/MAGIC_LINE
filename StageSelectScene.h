@@ -1,6 +1,8 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include <vector>
+#include"Functions/CDTimer.h"
+#include"Functions/CameraOrbit.h"
 
 class StageSelectScene :
 	public GameObject
@@ -10,6 +12,11 @@ class StageSelectScene :
 	int hStageFrameYellowPict_; //ステージフレーム画像(黄色)のハンドル
 	int hExplUIGrayPict_; //操作・ルール説明画像(灰色)のハンドル
 	int hExplUIYellowPict_; //操作・ルール説明画像(黄色)のハンドル
+	int hWhiteScreenPict_; //白い画面のハンドル
+
+	Transform stageSelectPictTrs_; // ステージ選択画面の画像のトランスフォーム
+	Transform stageFrameTrs_; // ステージフレームのトランスフォーム
+	Transform explUITrs_; // 操作・ルール説明UIのトランスフォーム
 
 	//ステージ情報をまとめた構造体
 	struct StageInfo {
@@ -25,9 +32,9 @@ class StageSelectScene :
 	std::vector<StageInfo> stageInfos_; // ステージ情報のリスト
 	bool isExplUISelected_; // 操作・ルール説明UIが選択されているか
 
-	Transform stageSelectPictTrs_; // ステージ選択画面の画像のトランスフォーム
-	Transform stageFrameTrs_; // ステージフレームのトランスフォーム
-	Transform explUITrs_; // 操作・ルール説明UIのトランスフォーム
+	CDTimer* cdTimer_;         //タイマーオブジェクト
+	float deltaTime_;          //フレーム間の経過時間
+	CameraOrbit* pCameraOrbit_;                    //カメラの軌道制御オブジェクト
 public:
 	StageSelectScene(GameObject* parent);
 	//初期化
