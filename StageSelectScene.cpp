@@ -8,6 +8,7 @@
 #include"Objects/Stage.h"
 #include"Objects/Ball.h"
 #include"Objects/Wall.h"
+#include"Engine/Audio.h"
 
 namespace {
 	float STAGE_IMAGE_WIDTH = 0.5f; // ステージ画像の幅
@@ -17,7 +18,7 @@ namespace {
 	float STAGE_IMAGE_Y_OFFSET = 0.0f; // ステージ画像のY方向オフセット位置
 	float THEME_IMAGE_Y_OFFSET = 0.4f; // お題画像のY方向オフセット位置
 	float CAMERA_ORBIT_RADIUS = 100.0f;       //カメラの軌道半径
-	float CAMERA_ORBIT_SPEED = 1.0f;          //カメラの軌道速度
+	float CAMERA_ORBIT_SPEED = 0.7f;          //カメラの軌道速度
 	float CAMERA_ORBIT_HEIGHT = 25.0f;        //カメラの軌道高さ
 }
 
@@ -90,10 +91,13 @@ void StageSelectScene::Initialize()
 		int stageIndex = i - 1;
 		//ステージファイル名を取得
 		std::string stageFileName = csvStageInfo->GetString(i, 0);
+		//ステージが存在しない場合の処理
 		if (stageFileName == "StageNothing") {
 			stageInfos_[stageIndex].fileName_ = "null";
 		}
-		stageInfos_[stageIndex].fileName_ = "CSV/StageData/" + stageFileName + ".csv";
+		else {
+			stageInfos_[stageIndex].fileName_ = "CSV/StageData/" + stageFileName + ".csv";
+		}
 		//ステージのテーマ画像とステージ画像をロード
 		stageInfos_[stageIndex].hThemePict_ = Image::Load("UI/Theme/" + csvStageInfo->GetString(i, 1) + ".png");
 		assert(stageInfos_[stageIndex].hThemePict_ >= 0);
@@ -138,6 +142,20 @@ void StageSelectScene::Update()
 				currentStageIndex_++;
 				stageInfos_[currentStageIndex_].isSelected_ = true; // 次のステージを選択状態にする
 			}
+			//選択されているステージ画像が画面外に出ないように調整（画面の右端の座標は1.0f）
+			if (stageInfos_[currentStageIndex_].stageImgTrs_.position_.x >= 1.0f - STAGE_IMAGE_WIDTH/2.0f) {
+				//選択されている画像が画面外の時、全てのステージ画像を左にずらす
+				for (auto& stageInfo : stageInfos_) {
+					if (currentStageIndex_ >= stageInfos_.size() - 1) {
+						stageInfo.stageImgTrs_.position_.x -= STAGE_IMAGE_WIDTH - STAGE_IMAGE_SPACING;
+						stageInfo.themeImgTrs_.position_.x -= STAGE_IMAGE_WIDTH - STAGE_IMAGE_SPACING;
+					}
+					else {
+						stageInfo.stageImgTrs_.position_.x -= STAGE_IMAGE_WIDTH + STAGE_IMAGE_SPACING;
+						stageInfo.themeImgTrs_.position_.x -= STAGE_IMAGE_WIDTH + STAGE_IMAGE_SPACING;
+					}
+				}
+			}
 		}
 	}
 	else if (Input::IsKeyDown(DIK_LEFT)) {
@@ -147,6 +165,20 @@ void StageSelectScene::Update()
 				stageInfos_[currentStageIndex_].isSelected_ = false; // 現在のステージを非選択にする
 				currentStageIndex_--;
 				stageInfos_[currentStageIndex_].isSelected_ = true; // 前のステージを選択状態にする
+			}
+			//選択されているステージ画像が画面外に出ないように調整（画面の左端の座標は-1.0f）
+			if (stageInfos_[currentStageIndex_].stageImgTrs_.position_.x <= -1.0f + STAGE_IMAGE_WIDTH / 2.0f) {
+				//選択されている画像が画面外の時、全てのステージ画像を右にずらす
+				for (auto& stageInfo : stageInfos_) {
+					if (currentStageIndex_ <= 0) {
+						stageInfo.stageImgTrs_.position_.x += STAGE_IMAGE_WIDTH - STAGE_IMAGE_SPACING;
+						stageInfo.themeImgTrs_.position_.x += STAGE_IMAGE_WIDTH - STAGE_IMAGE_SPACING;
+					}
+					else {
+						stageInfo.stageImgTrs_.position_.x += STAGE_IMAGE_WIDTH + STAGE_IMAGE_SPACING;
+						stageInfo.themeImgTrs_.position_.x += STAGE_IMAGE_WIDTH + STAGE_IMAGE_SPACING;
+					}
+				}
 			}
 		}
 	}
@@ -169,9 +201,15 @@ void StageSelectScene::Update()
 		}
 		else {
 			// ステージ選択決定時
-			std::string selectedStageFile = stageInfos_[currentStageIndex_].fileName_; // 選んだファイル名
-			SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-			pSceneManager->ChangeToPlaySceneWithFile(selectedStageFile);
+			if (stageInfos_[currentStageIndex_].fileName_ == "null") {
+				// 選択されたステージが存在しない場合は何もしない
+				return;
+			}
+			else {
+				std::string selectedStageFile = stageInfos_[currentStageIndex_].fileName_; // 選んだファイル名
+				SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+				pSceneManager->ChangeToPlaySceneWithFile(selectedStageFile);
+			}
 		}
 	}
 }
