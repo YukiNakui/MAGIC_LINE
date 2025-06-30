@@ -1,6 +1,5 @@
 ステージファイル名,お題画像ファイル名,ステージ画像ファイル名
-Stage01,Theme_Don'tDrop,Stage01
-Stage02,Theme_Catch,Stage02
-Stage03,Theme_Fall,Stage03
-StageNothing,Theme_Don'tDrop,NonStage
-StageNothing,Theme_Don'tDrop,NonStage
+Stage01,Theme_Tutorial_1,Stage01
+Stage02,Theme_Tutorial_2,Stage02
+Stage03,Theme_Don'tDrop,Stage03
+StageNothing,Theme_Gokitai,NonStage

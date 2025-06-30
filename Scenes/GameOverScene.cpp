@@ -33,7 +33,7 @@ void GameOverScene::Update()
 	if (cdTimer_ != nullptr) {
 		if (cdTimer_->IsTimeOver()) {
 			SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-			pSceneManager->ChangeScene(SCENE_ID_TITLE);//シーン変更
+			pSceneManager->ChangeScene(SCENE_ID_STAGESELECT);//シーン変更
 		}
 	}
 }
