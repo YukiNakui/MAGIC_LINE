@@ -8,7 +8,8 @@
 FbxParts::FbxParts():
 	ppIndexBuffer_(nullptr), pMaterial_(nullptr), 
 	pVertexBuffer_(nullptr), pConstantBuffer_(nullptr),
-	pVertexData_(nullptr), ppIndexData_(nullptr)
+	pVertexData_(nullptr), ppIndexData_(nullptr),
+	pShadowConstantBuffer_(nullptr), pTranslucentConstantBuffer_(nullptr)
 {
 }
 
@@ -44,6 +45,8 @@ FbxParts::~FbxParts()
 
 	SAFE_RELEASE(pVertexBuffer_);
 	SAFE_RELEASE(pConstantBuffer_);
+	SAFE_RELEASE(pShadowConstantBuffer_);
+	SAFE_RELEASE(pTranslucentConstantBuffer_);
 }
 
 //FBXファイルから情報をロードして諸々準備する
@@ -415,6 +418,15 @@ void FbxParts::IntConstantBuffer()
 	cb.StructureByteStride = 0;
 	Direct3D::pDevice_->CreateBuffer(&cb, NULL, &pConstantBuffer_);
 
+	// 半透明モデル用
+	D3D11_BUFFER_DESC tcb;
+	tcb.ByteWidth = sizeof(Translucent_CB);
+	tcb.Usage = D3D11_USAGE_DYNAMIC;
+	tcb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	tcb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	tcb.MiscFlags = 0;
+	tcb.StructureByteStride = 0;
+	Direct3D::pDevice_->CreateBuffer(&tcb, NULL, &pTranslucentConstantBuffer_);
 
 	// シャドウ用
 	D3D11_BUFFER_DESC scb = {};
@@ -629,6 +641,8 @@ void FbxParts::RayCast(RayCastData * data)
 		}
 	}
 }
+
+
 
 //FbxParts::FbxParts(GameObject* parent)
 //	:GameObject(parent,"FbxParts")

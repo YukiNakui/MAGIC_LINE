@@ -79,7 +79,7 @@ class FbxParts
 
 	//各データの個数
 	DWORD vertexCount_;		//頂点数
-	DWORD polygonCount_;		//ポリゴ数
+	DWORD polygonCount_;		//ポリゴン数
 	DWORD indexCount_;		//インデックス数
 	DWORD materialCount_;		//マテリアルの個数
 	DWORD polygonVertexCount_;//ポリゴン頂点インデックス数 
@@ -103,6 +103,22 @@ class FbxParts
 	ID3D11Buffer *pConstantBuffer_;
 
 
+	//TranslucentShader.hlslのグローバル変数と対応させる
+	struct Translucent_CB
+	{
+		XMMATRIX worldVewProj;	//ワールド、ビュー、プロジェクション行列の合成（頂点変換に使用）
+		XMMATRIX normalTrans;	//回転行列と拡大行列の逆行列を合成したもの（法線の変形に使用）
+		XMMATRIX world;			//ワールド行列
+		XMFLOAT4 lightDirection;//ライトの向き
+		XMFLOAT4 diffuse;		//ディフューズカラー。マテリアルの色。（テクスチャ貼ってるときは使わない）
+		XMFLOAT4 ambient;		//アンビエント
+		XMFLOAT4 speculer;		//スペキュラー（Lambertの場合は0）
+		XMFLOAT4 cameraPosition;//カメラの位置（ハイライトの計算に必要）
+		FLOAT	 shininess;		//ハイライトの強さ（MayaのCosinePower）
+		BOOL	 isTexture;		//テクスチャの有無
+		FLOAT	 diffuseAlpha;  //ディフューズのアルファ値（透明度）
+	};
+	ID3D11Buffer* pTranslucentConstantBuffer_; //半透明モデル用
 
 	//【シャドウマップ用】
 	struct SHADOW_CB {
@@ -111,6 +127,8 @@ class FbxParts
 	};
 	ID3D11Buffer* pShadowConstantBuffer_; // シャドウマップ用
 	XMMATRIX currentLightViewProj_;
+
+
 
 	// ボーン制御情報
 	FbxSkin*		pSkinInfo_;		// スキンメッシュ情報（スキンメッシュアニメーションのデータ本体）
@@ -167,8 +185,6 @@ public:
 	//レイキャスト（レイを飛ばして当たり判定）
 	//引数：data	必要なものをまとめたデータ
 	void RayCast(RayCastData *data);
-
-
 
 	//FbxParts(GameObject* parent);
 	/*void Initialize() override {};
