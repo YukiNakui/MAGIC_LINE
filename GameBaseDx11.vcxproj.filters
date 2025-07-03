@@ -184,6 +184,8 @@
     </ClCompile>
     <ClCompile Include="StageSelectScene.cpp" />
     <ClCompile Include="PlayerAndLine.cpp" />
+    <ClCompile Include="ScriptExecuter.cpp" />
+    <ClCompile Include="ImageDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -332,6 +334,8 @@
     </ClInclude>
     <ClInclude Include="StageSelectScene.h" />
     <ClInclude Include="PlayerAndLine.h" />
+    <ClInclude Include="ScriptExecuter.h" />
+    <ClInclude Include="ImageDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

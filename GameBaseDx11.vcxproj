@@ -155,6 +155,7 @@
     <ClCompile Include="Functions\CDTimer.cpp" />
     <ClCompile Include="Functions\CountdownBase.cpp" />
     <ClCompile Include="Functions\Effect.cpp" />
+    <ClCompile Include="ImageDrawer.cpp" />
     <ClCompile Include="Objects\Ball.cpp" />
     <ClCompile Include="Objects\Line.cpp" />
     <ClCompile Include="Objects\Player.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Scenes\GameOverScene.cpp" />
     <ClCompile Include="Scenes\PlayScene.cpp" />
     <ClCompile Include="Scenes\TitleScene.cpp" />
+    <ClCompile Include="ScriptExecuter.cpp" />
     <ClCompile Include="StageSelectScene.cpp" />
     <ClCompile Include="UI\Arrow.cpp" />
     <ClCompile Include="UI\Compass.cpp" />
@@ -207,6 +209,7 @@
     <ClInclude Include="Functions\CDTimer.h" />
     <ClInclude Include="Functions\CountdownBase.h" />
     <ClInclude Include="Functions\Effect.h" />
+    <ClInclude Include="ImageDrawer.h" />
     <ClInclude Include="Objects\Ball.h" />
     <ClInclude Include="Objects\Line.h" />
     <ClInclude Include="Objects\Player.h" />
@@ -218,6 +221,7 @@
     <ClInclude Include="Scenes\GameOverScene.h" />
     <ClInclude Include="Scenes\PlayScene.h" />
     <ClInclude Include="Scenes\TitleScene.h" />
+    <ClInclude Include="ScriptExecuter.h" />
     <ClInclude Include="StageSelectScene.h" />
     <ClInclude Include="UI\Arrow.h" />
     <ClInclude Include="UI\Compass.h" />
