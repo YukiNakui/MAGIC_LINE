@@ -16,7 +16,7 @@ public:
     void Update() override;
     void Draw() override;
     void Release() override;
-
+    void LoadThemeImage(std::string fileName);
 	//移動が完了したかを判定
     bool IsMoveFinished() const { return hasMoved_; }
 private:
@@ -38,6 +38,7 @@ private:
     StartCountdownManager* pStartCountdownNumber_; //カウントダウン管理オブジェクト
     CameraOrbit* pCameraOrbit_;                    //カメラの軌道制御オブジェクト
 
+	std::string themeImageFileName_; //テーマ画像のファイル名
 public:
     //テーマ表示のTransformの種類
     enum ThemeDisplayType {

@@ -34,6 +34,8 @@ private:
     HeightMeter* pHeightMeter_;     //高度計UI
     MiniMap* pMiniMap_;             //ミニマップ
 
+	bool isTutorial_; //チュートリアルステージかどうか
+
     //ステージファイル関連
     std::string stageFileName_;
 };

@@ -13,6 +13,8 @@ public:
 	~ScriptExecuter();
 	void Initialize() override;
 	void Update() override;
+	void Draw() override {}
+	void Release() override {}
 	void LoadFile(std::string fileName);
 private:
 	CsvReader* script_;

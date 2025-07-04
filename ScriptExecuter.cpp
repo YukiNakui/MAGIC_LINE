@@ -2,7 +2,7 @@
 
 ScriptExecuter::ScriptExecuter(GameObject* parent)
 	:GameObject(parent,"ScriptExecuter"),
-	script_(nullptr), executeLine_(0),cdTimer_(nullptr),waitTimer_(0.0f)
+	script_(nullptr)
 {
 }
 
@@ -17,7 +17,7 @@ ScriptExecuter::~ScriptExecuter()
 void ScriptExecuter::Initialize()
 {
 	cdTimer_ = Instantiate<CDTimer>(this);
-	executeLine_ = 1;//1行目はヘッダなので次の行から実行する
+	waitTimer_ = 0.0f;
 }
 
 void ScriptExecuter::Update()
@@ -68,7 +68,7 @@ void ScriptExecuter::Update()
 
 void ScriptExecuter::LoadFile(std::string fileName)
 {
-	script_ = new CsvReader(fileName);
+	script_ = new CsvReader("CSV/TutorialScript/" + fileName + ".csv");
 	assert(script_ != nullptr && script_->GetLines() > 0);//nullじゃなくて最低1行以上書かれている
-	executeLine_ = 0;
+	executeLine_ = 1;//1行目はヘッダなので次の行から実行する
 }

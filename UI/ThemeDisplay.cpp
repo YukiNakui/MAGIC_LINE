@@ -103,3 +103,14 @@ void ThemeDisplay::Draw()
 void ThemeDisplay::Release()
 {
 }
+
+void ThemeDisplay::LoadThemeImage(std::string fileName)
+{
+	themeImageFileName_ = fileName;
+	hPict_ = Image::Load("UI/Theme/" + fileName + ".png");
+	if (hPict_ < 0) {
+		std::string errorMsg = "Failed to load theme image: " + fileName;
+		MessageBox(NULL, errorMsg.c_str(), "Theme Image Load Error", MB_OK);
+		assert(false);
+	}
+}

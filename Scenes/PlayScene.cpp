@@ -7,9 +7,10 @@
 #include"../Objects/Line.h"
 #include"../Engine/VFX.h"
 #include"../UI/CountdownNumber.h"
+#include"../ScriptExecuter.h"
 
 PlayScene::PlayScene(GameObject* parent, const std::string& fileName)
-	: GameObject(parent, "PlayScene"), hModel_(-1),stageFileName_(fileName)
+	: GameObject(parent, "PlayScene"), hModel_(-1),stageFileName_(fileName),isTutorial_(false)
 {
 }
 
@@ -22,6 +23,8 @@ void PlayScene::Initialize()
 	//CsvReader* csvStage = new CsvReader(fileToLoad.c_str());
 	CsvReader* csvStage = new CsvReader(stageFileName_.c_str());
 	int lines = csvStage->GetLines();
+	std::string turorialFileName;
+	std::string themeImageFileName;
 
 	//ステージデータに基づいてオブジェクトを生成
     for (int y = 1; y < lines; y++) {
@@ -49,6 +52,13 @@ void PlayScene::Initialize()
 			Wall* pWall = Instantiate<Wall>(this);
 			pWall->SetTransformFloat3(position, rotation, scale);
 			pWall->SetRenderOrder(0);
+		}
+		else if (objectName == "Tutorial") {//チュートリアルスクリプトファイル読み込み
+			isTutorial_ = true;
+			turorialFileName = csvStage->GetString(y, 10);
+		}
+		else if (objectName == "Theme") {
+			themeImageFileName = csvStage->GetString(y, 10);
 		}
     }
 
@@ -94,8 +104,11 @@ void PlayScene::Initialize()
 			pHeightMeter_->SetRenderOrder(10);
 		}
 		else if (uiName == "ThemeDisplay") {
-			if (pThemeDisplay_ == nullptr)
+			if (pThemeDisplay_ == nullptr) {
 				pThemeDisplay_ = Instantiate<ThemeDisplay>(this);
+				if (!themeImageFileName.empty())
+					pThemeDisplay_->LoadThemeImage(themeImageFileName);
+			}
 			pThemeDisplay_->SetThemeDisplayTransform((ThemeDisplay::ThemeDisplayType)kind, position, rotation, scale);
 			pThemeDisplay_->SetRenderOrder(10);
 		}
@@ -104,6 +117,15 @@ void PlayScene::Initialize()
 				pMiniMap_ = Instantiate<MiniMap>(this);
 			pMiniMap_->SetMiniMapUITransform((MiniMap::MiniMapUIType)kind, position, rotation, scale);
 			pMiniMap_->SetRenderOrder(10);
+		}
+	}
+
+	if (isTutorial_) {
+		//チュートリアルスクリプトを読み込む
+		ScriptExecuter* pScriptExecuter = Instantiate<ScriptExecuter>(this);
+		if (pScriptExecuter != nullptr) {
+			pScriptExecuter->LoadFile(turorialFileName);
+			pScriptExecuter->SetRenderOrder(10);
 		}
 	}
 }
