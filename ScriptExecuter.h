@@ -22,5 +22,7 @@ private:
 	std::unordered_map<int, ImageDrawer*> images;
 	CDTimer* cdTimer_;
 	float waitTimer_; //‘Ò‹@ŽžŠÔ
+
+	bool isWait_; //‘Ò‹@’†‚©‚Ç‚¤‚©
 };
 
