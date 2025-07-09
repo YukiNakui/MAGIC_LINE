@@ -29,10 +29,15 @@ void ImageDrawer::Update()
 	//	rate = pow(rate, 1.0f); rateにいろいろすると加速や減速ができるpos.x = (targetPos.x - startPos.x) * rate + startPos.x;
 	pos.x = (targetPos.x - startPos.x) * rate + startPos.x;
 	pos.y = (targetPos.y - startPos.y) * rate + startPos.y;
+
+	transform_.position_ = pos; //Transformに位置をセット
+	transform_.scale_ = imageScale; //Transformにスケールをセット
 }
 
 void ImageDrawer::Draw()
 {
+	Image::SetTransform(hImage, transform_);
+	Image::Draw(hImage);
 }
 
 void ImageDrawer::LoadFile(std::string filename, int line)
@@ -48,7 +53,7 @@ void ImageDrawer::LoadFile(std::string filename, int line)
 	assert(hImage > 0);
 }
 
-void ImageDrawer::SetPosition(int x, int y)
+void ImageDrawer::SetPosition(float x, float y)
 {
 	pos.x = x;
 	pos.y = y;
@@ -63,4 +68,12 @@ void ImageDrawer::Move(int x, int y, float time)
 	moveTime = time;
 	startPos = pos;
 	currentTime = 0;
+}
+
+void ImageDrawer::MoveFinish()
+{
+	pos.x = targetPos.x;
+	pos.y = targetPos.y;
+	pos.z = 0;
+	currentTime = moveTime; //強制的に移動完了
 }

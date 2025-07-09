@@ -28,16 +28,23 @@ void ScriptExecuter::Update()
 			waitTimer_ -= cdTimer_->GetDeltaTime();//経過時間を引く
 		return;
 	}
-	if (executeLine_ >= script_->GetLines())
-		return;//スクリプトの終端に達したら何もしない
-	std::string command = script_->GetString(executeLine_, 0);
-	if (command == "END")
-		return;
 
 	if (Input::IsKeyDown(DIK_RETURN)) {
+		if (command == "MOVE") {
+			ImageDrawer* pImage = images[script_->GetInt(executeLine_, 1)];
+			pImage->MoveFinish(); //強制的に最終地点に移動させる
+		}
 		executeLine_ += 1; //Enterキーで次の行へ
 	}
 
+	if (executeLine_ >= script_->GetLines())
+		return;//スクリプトの終端に達したら何もしない
+	command = script_->GetString(executeLine_, 0);
+	if (command == "END")
+		return;
+
+
+	
 
 	if (command == "IMAGE") {
 		int id = script_->GetInt(executeLine_, 2);
@@ -47,18 +54,28 @@ void ScriptExecuter::Update()
 		}
 		ImageDrawer* pImage = Instantiate<ImageDrawer>(GetParent());//ScriptExecuteと同じ階層にする
 		images[id] = pImage;
-		pImage->LoadFile(script_->GetString(executeLine_, 1), executeLine_);
-		pImage->SetPosition(script_->GetInt(executeLine_, 3), script_->GetInt(executeLine_, 4));
+		pImage->LoadFile("UI/Tutorial/"+script_->GetString(executeLine_, 1)+".png", executeLine_);
+		pImage->SetPosition(script_->GetFloat(executeLine_, 3), script_->GetFloat(executeLine_, 4));
 	}
 	else if (command == "MOVE") {
 		//絵をロードしていなかったら?
-		if (images.count(script_->GetInt(executeLine_, 1)) == 0) {
+		if (images.count(script_->GetInt(executeLine_, 2)) == 0) {
 			std::string str = std::to_string(executeLine_ + 1) + "行目の";
-			str += script_->GetString(executeLine_, 2) + "はありません";
+			str += script_->GetString(executeLine_, 1) + "はありません";
 			MessageBox(NULL, str.c_str(), "MOVEできません", MB_OK);
 		}
-		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 1)];
-		pImage->Move(script_->GetInt(executeLine_, 3), script_->GetInt(executeLine_, 4), script_->GetFloat(executeLine_, 5));
+		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
+		pImage->Move(script_->GetFloat(executeLine_, 3), script_->GetFloat(executeLine_, 4), script_->GetFloat(executeLine_, 7));
+	}
+	else if (command == "DELETE") {
+		//絵をロードしていなかったら?
+		if (images.count(script_->GetInt(executeLine_, 2)) == 0) {
+			std::string str = std::to_string(executeLine_ + 1) + "行目の";
+			str += script_->GetString(executeLine_, 1) + "はありません";
+			MessageBox(NULL, str.c_str(), "DELETEできません", MB_OK);
+		}
+		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
+		pImage->KillMe(); //絵を削除
 	}
 	else {
 		//まだ作ってないコマンド
