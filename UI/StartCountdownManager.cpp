@@ -1,6 +1,7 @@
 #include "StartCountdownManager.h"
 #include "../Engine/Audio.h"
 #include <cassert>
+#include"../ScriptExecuter.h"
 
 StartCountdownManager::StartCountdownManager(GameObject* parent)
     : GameObject(parent, "StartCountdownManager"), countdownNumber_(nullptr), startDisplay_(nullptr),
@@ -14,12 +15,24 @@ StartCountdownManager::~StartCountdownManager()
 
 void StartCountdownManager::Initialize()
 {
-	if (countdownNumber_ == nullptr)
+    ScriptExecuter* pScriptExecuter = (ScriptExecuter*)FindObject("ScriptExecuter");
+	if (countdownNumber_ == nullptr && pScriptExecuter == nullptr)
 		countdownNumber_ = Instantiate<CountdownNumber>(this);
 }
 
 void StartCountdownManager::Update()
 {
+    ScriptExecuter* pScriptExecuter = (ScriptExecuter*)FindObject("ScriptExecuter");
+    if (pScriptExecuter != nullptr && !pScriptExecuter->IsEnd())//チュートリアルが終わっていない場合は何もしない
+        return;
+    else {
+		if (countdownNumber_ == nullptr) {
+			//カウントダウンがまだ生成されていない場合は生成
+			countdownNumber_ = Instantiate<CountdownNumber>(this);
+		}
+    }
+
+
     if (isCounting_) {
         //カウントダウン中の処理
         if (countdownNumber_->IsFinished()) {

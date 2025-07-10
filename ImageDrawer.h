@@ -16,7 +16,7 @@ public:
 	void LoadFile(std::string filename, int line);
 	void SetPosition(float x, float y);
 	void SetScale(float x, float y) { imageScale = XMFLOAT3(x, y, 0); }
-	void Move(int x, int y, float time);
+	void Move(float x, float y, float time);
 	void MoveFinish();//強制的に最終地点に移動させる
 	bool IsMoveFinished() const { return currentTime >= moveTime; }
 private:

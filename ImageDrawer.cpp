@@ -20,8 +20,10 @@ void ImageDrawer::Initialize()
 
 void ImageDrawer::Update()
 {
-	if (currentTime >= moveTime)
+	if (currentTime >= moveTime) {
+		MoveFinish(); //移動完了しているならば強制的に最終地点に移動させる
 		return;
+	}
 	currentTime += cdTimer_->GetDeltaTime();
 	if (currentTime > moveTime)
 		currentTime = moveTime;
@@ -60,7 +62,7 @@ void ImageDrawer::SetPosition(float x, float y)
 	pos.z = 0;
 }
 
-void ImageDrawer::Move(int x, int y, float time)
+void ImageDrawer::Move(float x, float y, float time)
 {
 	targetPos.x = x;
 	targetPos.y = y;
@@ -76,4 +78,5 @@ void ImageDrawer::MoveFinish()
 	pos.y = targetPos.y;
 	pos.z = 0;
 	currentTime = moveTime; //強制的に移動完了
+	transform_.position_ = pos;
 }

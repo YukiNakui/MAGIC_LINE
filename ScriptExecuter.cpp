@@ -1,5 +1,6 @@
 #include "ScriptExecuter.h"
 #include"Engine/Input.h"
+#include"UI/ThemeDisplay.h"
 
 ScriptExecuter::ScriptExecuter(GameObject* parent)
 	:GameObject(parent,"ScriptExecuter"),
@@ -19,10 +20,15 @@ void ScriptExecuter::Initialize()
 {
 	cdTimer_ = Instantiate<CDTimer>(this);
 	waitTimer_ = 0.0f;
+	isEnd_ = false;
 }
 
 void ScriptExecuter::Update()
 {
+	ThemeDisplay* pThemeDisplay = (ThemeDisplay*)FindObject("ThemeDisplay");
+	if (pThemeDisplay != nullptr && !pThemeDisplay->IsMoveFinished())//お題表示が完了していないなら
+		return;
+
 	if (waitTimer_ > 0) {//待機中ならば
 		if (cdTimer_ != nullptr)
 			waitTimer_ -= cdTimer_->GetDeltaTime();//経過時間を引く
@@ -31,7 +37,7 @@ void ScriptExecuter::Update()
 
 	if (Input::IsKeyDown(DIK_RETURN)) {
 		if (command == "MOVE") {
-			ImageDrawer* pImage = images[script_->GetInt(executeLine_, 1)];
+			ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
 			pImage->MoveFinish(); //強制的に最終地点に移動させる
 		}
 		executeLine_ += 1; //Enterキーで次の行へ
@@ -40,10 +46,13 @@ void ScriptExecuter::Update()
 	if (executeLine_ >= script_->GetLines())
 		return;//スクリプトの終端に達したら何もしない
 	command = script_->GetString(executeLine_, 0);
-	if (command == "END")
+	if (command == "END") {
+		isEnd_ = true;
 		return;
+	}
 
-
+	//エンターを押して次に進むようにしているせいで黒背景だけ出して待機状態になったりしてしまう
+	//STOPコマンドを追加して、
 	
 
 	if (command == "IMAGE") {
