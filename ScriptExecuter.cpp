@@ -21,6 +21,7 @@ void ScriptExecuter::Initialize()
 	cdTimer_ = Instantiate<CDTimer>(this);
 	waitTimer_ = 0.0f;
 	isEnd_ = false;
+	isWait_ = false;
 }
 
 void ScriptExecuter::Update()
@@ -52,7 +53,7 @@ void ScriptExecuter::Update()
 	}
 
 	//エンターを押して次に進むようにしているせいで黒背景だけ出して待機状態になったりしてしまう
-	//STOPコマンドを追加して、
+	//STOPコマンドを追加して、STOPの間はエンターが押されるまで次に進まないようにする
 	
 
 	if (command == "IMAGE") {
@@ -65,6 +66,9 @@ void ScriptExecuter::Update()
 		images[id] = pImage;
 		pImage->LoadFile("UI/Tutorial/"+script_->GetString(executeLine_, 1)+".png", executeLine_);
 		pImage->SetPosition(script_->GetFloat(executeLine_, 3), script_->GetFloat(executeLine_, 4));
+		pImage->SetScale(script_->GetFloat(executeLine_, 5), script_->GetFloat(executeLine_, 6));
+		pImage->SetAlpha(script_->GetInt(executeLine_, 7));
+		executeLine_ += 1; //次の行へ
 	}
 	else if (command == "MOVE") {
 		//絵をロードしていなかったら?
@@ -74,7 +78,9 @@ void ScriptExecuter::Update()
 			MessageBox(NULL, str.c_str(), "MOVEできません", MB_OK);
 		}
 		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
-		pImage->Move(script_->GetFloat(executeLine_, 3), script_->GetFloat(executeLine_, 4), script_->GetFloat(executeLine_, 7));
+		pImage->Move(script_->GetFloat(executeLine_, 3), script_->GetFloat(executeLine_, 4), script_->GetFloat(executeLine_, 8));
+		if(pImage->IsMoveFinished())
+			executeLine_ += 1; //次の行へ
 	}
 	else if (command == "DELETE") {
 		//絵をロードしていなかったら?
@@ -85,6 +91,10 @@ void ScriptExecuter::Update()
 		}
 		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
 		pImage->KillMe(); //絵を削除
+		executeLine_ += 1; //次の行へ
+	}
+	else if (command == "STOP") {
+		isWait_ = true; //待機状態にする
 	}
 	else {
 		//まだ作ってないコマンド

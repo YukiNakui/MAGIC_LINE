@@ -62,6 +62,11 @@ void ImageDrawer::SetPosition(float x, float y)
 	pos.z = 0;
 }
 
+void ImageDrawer::SetAlpha(int alpha)
+{
+	Image::SetAlpha(hImage, alpha);
+}
+
 void ImageDrawer::Move(float x, float y, float time)
 {
 	targetPos.x = x;
