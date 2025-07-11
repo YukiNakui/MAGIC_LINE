@@ -222,10 +222,10 @@ public:
 
 	void AddChild(GameObject* child) { childList_.push_back(child); }
 
-	//子オブジェクトの描画順をソート
+	//子オブジェクトの描画順をソート（描画順が大きいものから描画される）
 	void SortChildrenByRenderOrder() {
 		childList_.sort([](GameObject* a, GameObject* b) {
-			return a->GetRenderOrder() < b->GetRenderOrder();
+			return a->GetRenderOrder() > b->GetRenderOrder();
 			});
 	}
 

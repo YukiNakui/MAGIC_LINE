@@ -38,6 +38,7 @@ void ThemeDisplay::Initialize()
 
 	//カメラの軌道制御オブジェクトの初期化
     pCameraOrbit_ = Instantiate<CameraOrbit>(this);
+    pCameraOrbit_->SetRenderOrder(-100);
     pCameraOrbit_->SetOrbit({ 0.0f, CAMERA_ORBIT_HEIGHT, 0.0f }, CAMERA_ORBIT_RADIUS, CAMERA_ORBIT_SPEED);
 }
 

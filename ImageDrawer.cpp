@@ -60,6 +60,18 @@ void ImageDrawer::SetPosition(float x, float y)
 	pos.x = x;
 	pos.y = y;
 	pos.z = 0;
+	targetPos.x = x;
+	targetPos.y = y;
+	targetPos.z = 0;
+	transform_.position_ = pos; //Transformに位置をセット
+}
+
+void ImageDrawer::SetScale(float x, float y)
+{
+	imageScale.x = x;
+	imageScale.y = y;
+	imageScale.z = 0;
+	transform_.scale_ = imageScale; //Transformにスケールをセット
 }
 
 void ImageDrawer::SetAlpha(int alpha)

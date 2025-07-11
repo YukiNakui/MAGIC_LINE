@@ -316,8 +316,8 @@ void GameObject::UpdateSub()
 
 void GameObject::DrawSub()
 {
+	SortChildrenByRenderOrder();
 	Draw();
-
 
 	//ƒŠƒŠ[ƒX‚Ííœ
 #ifdef _DEBUG

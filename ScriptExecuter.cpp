@@ -52,9 +52,6 @@ void ScriptExecuter::Update()
 		return;
 	}
 
-	//エンターを押して次に進むようにしているせいで黒背景だけ出して待機状態になったりしてしまう
-	//STOPコマンドを追加して、STOPの間はエンターが押されるまで次に進まないようにする
-	
 
 	if (command == "IMAGE") {
 		int id = script_->GetInt(executeLine_, 2);
@@ -73,9 +70,7 @@ void ScriptExecuter::Update()
 	else if (command == "MOVE") {
 		//絵をロードしていなかったら?
 		if (images.count(script_->GetInt(executeLine_, 2)) == 0) {
-			std::string str = std::to_string(executeLine_ + 1) + "行目の";
-			str += script_->GetString(executeLine_, 1) + "はありません";
-			MessageBox(NULL, str.c_str(), "MOVEできません", MB_OK);
+			MessageBox(NULL, "コマンド実行不可", "MOVEできません", MB_OK);
 		}
 		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
 		pImage->Move(script_->GetFloat(executeLine_, 3), script_->GetFloat(executeLine_, 4), script_->GetFloat(executeLine_, 8));
@@ -85,12 +80,19 @@ void ScriptExecuter::Update()
 	else if (command == "DELETE") {
 		//絵をロードしていなかったら?
 		if (images.count(script_->GetInt(executeLine_, 2)) == 0) {
-			std::string str = std::to_string(executeLine_ + 1) + "行目の";
-			str += script_->GetString(executeLine_, 1) + "はありません";
-			MessageBox(NULL, str.c_str(), "DELETEできません", MB_OK);
+			MessageBox(NULL, "コマンド実行不可", "DELETEできません", MB_OK);
 		}
 		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
 		pImage->KillMe(); //絵を削除
+		executeLine_ += 1; //次の行へ
+	}
+	else if (command == "SET ORDER") {
+		//絵をロードしていなかったら?
+		if (images.count(script_->GetInt(executeLine_, 2)) == 0) {
+			MessageBox(NULL, "コマンド実行不可", "SET ORDERできません", MB_OK);
+		}
+		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
+		pImage->SetRenderOrder(script_->GetInt(executeLine_, 9));
 		executeLine_ += 1; //次の行へ
 	}
 	else if (command == "STOP") {

@@ -15,7 +15,7 @@ public:
 	void Release() override {}
 	void LoadFile(std::string filename, int line);
 	void SetPosition(float x, float y);
-	void SetScale(float x, float y) { imageScale = XMFLOAT3(x, y, 0); }
+	void SetScale(float x, float y);
 	void SetAlpha(int alpha);
 	void Move(float x, float y, float time);
 	void MoveFinish();//強制的に最終地点に移動させる

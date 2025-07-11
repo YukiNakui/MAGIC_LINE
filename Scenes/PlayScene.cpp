@@ -110,7 +110,7 @@ void PlayScene::Initialize()
 					pThemeDisplay_->LoadThemeImage(themeImageFileName);
 			}
 			pThemeDisplay_->SetThemeDisplayTransform((ThemeDisplay::ThemeDisplayType)kind, position, rotation, scale);
-			pThemeDisplay_->SetRenderOrder(10);
+			pThemeDisplay_->SetRenderOrder(0);
 		}
 		else if (uiName == "MiniMap") {
 			if (pMiniMap_ == nullptr)
@@ -125,7 +125,7 @@ void PlayScene::Initialize()
 		ScriptExecuter* pScriptExecuter = Instantiate<ScriptExecuter>(this);
 		if (pScriptExecuter != nullptr) {
 			pScriptExecuter->LoadFile(turorialFileName);
-			pScriptExecuter->SetRenderOrder(10);
+			pScriptExecuter->SetRenderOrder(12);
 		}
 	}
 }

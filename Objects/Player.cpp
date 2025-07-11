@@ -244,12 +244,19 @@ void Player::ResultUpdate()
 {
 	//カメラは指定された位置を中心にして、ステージ全体が見えるくらい離れてY軸回転
 	Ball* pBall = (Ball*)FindObject("Ball");
-	if (pBall == nullptr) return;
-	pBall->BallMoveStart();
+	if (pBall != nullptr)
+		pBall->BallMoveStart();
+	else {
+		if (cdTimer_->IsTimeOver()) { //ボールが存在しない場合は一定時間経過でクリアシーンへ
+			SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+			pSceneManager->ChangeScene(SCENE_ID_CLEAR);
+		}
+	}
 
 	//CameraOrbitの初期化と周回開始
 	if (pCameraOrbit_ == nullptr) {
 		pCameraOrbit_ = Instantiate<CameraOrbit>(this);
+		pCameraOrbit_->SetRenderOrder(-100);
 		pCameraOrbit_->SetOrbit(CAM_ORBIT_POS, CAM_ORBIT_RADIUS, CAM_ORBIT_SPEED);
 	}
 
@@ -375,6 +382,7 @@ void Player::HandleEndOfMovement()
 
 	//状態を結果表示に変更
 	state_ = sResult;
+	cdTimer_->SetInitTime(5.0f);  //タイマーをリセット
 }
 
 void Player::UpdateEffects(const XMMATRIX& rotX, const XMMATRIX& rotY)
