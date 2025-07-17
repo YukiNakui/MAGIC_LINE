@@ -79,13 +79,15 @@ void ImageDrawer::SetAlpha(int alpha)
 	Image::SetAlpha(hImage, alpha);
 }
 
-void ImageDrawer::Move(float x, float y, float time)
+void ImageDrawer::Transform(float posX, float posY, float scaleX, float scaleY, float time)
 {
-	targetPos.x = x;
-	targetPos.y = y;
+	targetPos.x = posX;
+	targetPos.y = posY;
 	targetPos.z = 0;
 	moveTime = time;
 	startPos = pos;
+
+	SetScale(scaleX, scaleY); //スケールをセット
 	currentTime = 0;
 }
 

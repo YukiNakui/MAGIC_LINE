@@ -17,7 +17,7 @@ public:
 	void SetPosition(float x, float y);
 	void SetScale(float x, float y);
 	void SetAlpha(int alpha);
-	void Move(float x, float y, float time);
+	void Transform(float posX, float posY, float scaleX, float scaleY, float time);
 	void MoveFinish();//強制的に最終地点に移動させる
 	bool IsMoveFinished() const { return currentTime >= moveTime; }
 private:

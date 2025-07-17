@@ -67,13 +67,13 @@ void ScriptExecuter::Update()
 		pImage->SetAlpha(script_->GetInt(executeLine_, 7));
 		executeLine_ += 1; //次の行へ
 	}
-	else if (command == "MOVE") {
+	else if (command == "TRANSFORM") {
 		//絵をロードしていなかったら?
 		if (images.count(script_->GetInt(executeLine_, 2)) == 0) {
 			MessageBox(NULL, "コマンド実行不可", "MOVEできません", MB_OK);
 		}
 		ImageDrawer* pImage = images[script_->GetInt(executeLine_, 2)];
-		pImage->Move(script_->GetFloat(executeLine_, 3), script_->GetFloat(executeLine_, 4), script_->GetFloat(executeLine_, 8));
+		pImage->Transform(script_->GetFloat(executeLine_, 3), script_->GetFloat(executeLine_, 4), script_->GetFloat(executeLine_, 5), script_->GetFloat(executeLine_, 6), script_->GetFloat(executeLine_, 8));
 		if(pImage->IsMoveFinished())
 			executeLine_ += 1; //次の行へ
 	}
