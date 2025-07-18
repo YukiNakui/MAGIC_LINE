@@ -1,6 +1,6 @@
 #pragma once
-#include"Engine/GameObject.h"
-#include"Functions/CDTimer.h"
+#include"../Engine/GameObject.h"
+#include"../Functions/CDTimer.h"
 
 class ImageDrawer
 	:public GameObject 

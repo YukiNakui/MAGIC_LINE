@@ -182,10 +182,19 @@
     <ClCompile Include="Scenes\ExplanationScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="StageSelectScene.cpp" />
-    <ClCompile Include="PlayerAndLine.cpp" />
-    <ClCompile Include="ScriptExecuter.cpp" />
-    <ClCompile Include="ImageDrawer.cpp" />
+    <ClCompile Include="Functions\ImageDrawer.cpp">
+      <Filter>Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions\ScriptExecuter.cpp">
+      <Filter>Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\PlayerAndLine.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\StageSelectScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Torus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -332,10 +341,19 @@
     <ClInclude Include="Scenes\ExplanationScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="StageSelectScene.h" />
-    <ClInclude Include="PlayerAndLine.h" />
-    <ClInclude Include="ScriptExecuter.h" />
-    <ClInclude Include="ImageDrawer.h" />
+    <ClInclude Include="Functions\ImageDrawer.h">
+      <Filter>Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions\ScriptExecuter.h">
+      <Filter>Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\PlayerAndLine.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\StageSelectScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Torus.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

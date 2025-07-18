@@ -2,7 +2,7 @@
 
 #include "../Scenes/TitleScene.h"
 #include "../Scenes/ExplanationScene.h"
-#include"../StageSelectScene.h"
+#include"../Scenes/StageSelectScene.h"
 #include "../Scenes/PlayScene.h"
 #include"../Scenes/ClearScene.h"
 #include"../Scenes/GameOverScene.h"

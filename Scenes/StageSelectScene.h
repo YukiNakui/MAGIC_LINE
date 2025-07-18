@@ -1,8 +1,8 @@
 #pragma once
-#include "Engine/GameObject.h"
+#include "../Engine/GameObject.h"
 #include <vector>
-#include"Functions/CDTimer.h"
-#include"Functions/CameraOrbit.h"
+#include"../Functions/CDTimer.h"
+#include"../Functions/CameraOrbit.h"
 
 class StageSelectScene :
 	public GameObject

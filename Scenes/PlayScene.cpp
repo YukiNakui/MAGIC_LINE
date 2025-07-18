@@ -5,9 +5,10 @@
 #include"../Engine/CsvReader.h"
 #include"../Objects/Wall.h"
 #include"../Objects/Line.h"
+#include"../Torus.h"
 #include"../Engine/VFX.h"
 #include"../UI/CountdownNumber.h"
-#include"../ScriptExecuter.h"
+#include"../Functions/ScriptExecuter.h"
 
 PlayScene::PlayScene(GameObject* parent, const std::string& fileName)
 	: GameObject(parent, "PlayScene"), hModel_(-1),stageFileName_(fileName),isTutorial_(false)
@@ -52,6 +53,11 @@ void PlayScene::Initialize()
 			Wall* pWall = Instantiate<Wall>(this);
 			pWall->SetTransformFloat3(position, rotation, scale);
 			pWall->SetRenderOrder(0);
+		}
+		else if (objectName == "Torus") {
+			Torus* pTorus = Instantiate<Torus>(this);
+			pTorus->SetTransformFloat3(position, rotation, scale);
+			pTorus->SetRenderOrder(0);
 		}
 		else if (objectName == "Tutorial") {//チュートリアルスクリプトファイル読み込み
 			isTutorial_ = true;

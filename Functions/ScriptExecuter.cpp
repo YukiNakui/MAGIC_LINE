@@ -1,6 +1,6 @@
 #include "ScriptExecuter.h"
-#include"Engine/Input.h"
-#include"UI/ThemeDisplay.h"
+#include"../Engine/Input.h"
+#include"../UI/ThemeDisplay.h"
 
 ScriptExecuter::ScriptExecuter(GameObject* parent)
 	:GameObject(parent,"ScriptExecuter"),

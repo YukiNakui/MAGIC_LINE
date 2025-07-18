@@ -1,5 +1,5 @@
 #include "ImageDrawer.h"
-#include"Engine/Image.h"
+#include"../Engine/Image.h"
 
 ImageDrawer::ImageDrawer(GameObject* parent)
 	: GameObject(parent, "ImageDrawer"),

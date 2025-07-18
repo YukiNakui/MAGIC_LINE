@@ -1,9 +1,9 @@
 #pragma once
-#include "Engine/GameObject.h"
-#include"Engine/CsvReader.h"
+#include "../Engine/GameObject.h"
+#include"../Engine/CsvReader.h"
 #include"ImageDrawer.h"
 #include<unordered_map>
-#include "Functions/CDTimer.h"
+#include "../Functions/CDTimer.h"
 
 class ScriptExecuter :
     public GameObject
