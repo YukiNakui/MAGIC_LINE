@@ -12,9 +12,13 @@ public:
 	void Draw() override;
 	void Release() override;
 	
+	float GetMainRadius() const { return mainRadius_; }
+	float GetTubeRadius() const { return tubeRadius_; }
+	const XMFLOAT3& GetAxis() const { return torusAxis_; }
 	bool CheckHitTorusToSphere(const Transform& sphereTrans, float sphereRadius);
 private:
-	float holeRadius_; // トーラスの穴の半径
+	float mainRadius_; // トーラスの中心からチューブの中心までの距離
 	float tubeRadius_; // トーラスのチューブの半径
+	XMFLOAT3 torusAxis_; // トーラスの軸方向
 };
 

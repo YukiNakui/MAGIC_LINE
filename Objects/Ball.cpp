@@ -4,6 +4,7 @@
 #include"../Engine/SceneManager.h"
 #include"../Engine/Input.h"
 #include"Line.h"
+#include"../Torus.h"
 #include<list>
 #include<algorithm>
 
@@ -62,6 +63,44 @@ void Ball::Update()
 
         //カプセルとの衝突判定
         HandleCapsuleCollisions();
+
+		//トーラスとの衝突判定
+        Torus* pTorus = (Torus*)FindObject("Torus");
+        if (pTorus != nullptr) {
+            if (pTorus->CheckHitTorusToSphere(transform_, BallConstants::COLLISION_RADIUS)) {
+                // 1. 球の中心からトーラス中心へのベクトル
+                XMFLOAT3 centerToSphere = {
+                    transform_.position_.x - pTorus->GetPosition().x,
+                    transform_.position_.y - pTorus->GetPosition().y,
+                    transform_.position_.z - pTorus->GetPosition().z
+                };
+                XMVECTOR v = XMLoadFloat3(&centerToSphere);
+                XMVECTOR axis = XMVector3Normalize(XMLoadFloat3(&pTorus->GetAxis()));
+                float dot = XMVectorGetX(XMVector3Dot(v, axis));
+                XMVECTOR v_proj = XMVectorSubtract(v, XMVectorScale(axis, dot));
+                // 回転面上での最近接点
+                XMVECTOR nearestOnCircle = XMVectorScale(XMVector3Normalize(v_proj), pTorus->GetMainRadius());
+                XMFLOAT3 torusPos = pTorus->GetPosition();
+                XMVECTOR tubeCenter = XMVectorAdd(XMLoadFloat3(&torusPos), nearestOnCircle);
+
+                // 球を管表面まで押し戻す
+                XMVECTOR sphereToTube = XMVectorSubtract(ballPos_, tubeCenter);
+                XMVECTOR normal = XMVector3Normalize(sphereToTube);
+                XMVECTOR newPos = XMVectorAdd(tubeCenter, XMVectorScale(normal, pTorus->GetTubeRadius() + BallConstants::COLLISION_RADIUS));
+                XMStoreFloat3(&transform_.position_, newPos);
+                ballPos_ = newPos;
+
+                // 速度ベクトルを反射（管表面の法線で反射＋減速）
+                float speed = XMVectorGetX(XMVector3Length(ballVelocity_));
+                XMVECTOR reflected = XMVectorSubtract(ballVelocity_, XMVectorScale(normal, 2.0f * XMVector3Dot(ballVelocity_, normal).m128_f32[0]));
+                ballVelocity_ = XMVectorScale(reflected, BallConstants::BOUNCE_FACTOR);
+
+                // 低速判定
+                CheckLowSpeedState();
+            }
+        }
+
+
 
         //最低高度以下になったら、ゲームオーバー
         if (transform_.position_.y <= BallConstants::MIN_HEIGHT) {
