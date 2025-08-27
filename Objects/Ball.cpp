@@ -68,6 +68,8 @@ void Ball::Update()
         Torus* pTorus = (Torus*)FindObject("Torus");
         if (pTorus != nullptr) {
             if (pTorus->CheckHitTorusToSphere(transform_, BallConstants::COLLISION_RADIUS)) {
+				//ballPos_ = prevBallPos_; // 衝突前の位置に戻す
+
                 // 1. 球の中心からトーラス中心へのベクトル
                 XMFLOAT3 centerToSphere = {
                     transform_.position_.x - pTorus->GetPosition().x,

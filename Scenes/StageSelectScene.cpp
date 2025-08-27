@@ -27,7 +27,8 @@ StageSelectScene::StageSelectScene(GameObject* parent)
 	hStageSelectPict_(-1),
 	currentStageIndex_(0), isExplUISelected_(false),
 	hStageFrameGrayPict_(-1), hStageFrameYellowPict_(-1),
-	hExplUIGrayPict_(-1), hExplUIYellowPict_(-1)
+	hExplUIGrayPict_(-1), hExplUIYellowPict_(-1),hWhiteScreenPict_(-1),
+	hSelectSound_(-1), hMissSelectSound_(-1), hMoveSelectSound_(-1)
 {
 }
 
@@ -47,6 +48,14 @@ void StageSelectScene::Initialize()
 	hWhiteScreenPict_ = Image::Load("UI/WhiteScreen.png");
 	assert(hWhiteScreenPict_ >= 0);
 	Image::SetAlpha(hWhiteScreenPict_, 128);
+
+	//サウンドをロード
+	hSelectSound_ = Audio::Load("Sounds/SoundEffect/SelectSound.wav");
+	assert(hSelectSound_ >= 0);
+	hMissSelectSound_ = Audio::Load("Sounds/SoundEffect/MissSelectSound.wav");
+	assert(hMissSelectSound_ >= 0);
+	hMoveSelectSound_ = Audio::Load("Sounds/SoundEffect/MoveSelectSound.wav");
+	assert(hMoveSelectSound_ >= 0);
 
 	stageSelectPictTrs_.position_ = { 0.0f, 0.7f, 0.0f }; // ステージ選択画面の画像の位置
 	stageSelectPictTrs_.scale_ = { 0.5f, 0.5f, 0.0f }; // ステージ選択画面の画像のスケール
@@ -117,8 +126,8 @@ void StageSelectScene::Initialize()
 	isExplUISelected_ = false; // 操作・ルール説明UIは初期は選択されていない
 
 	//タイマーの初期化
-	cdTimer_ = Instantiate<CDTimer>(this);
-	cdTimer_->SetInitTime(60);
+	orbitTimer_ = Instantiate<CDTimer>(this);
+	orbitTimer_->SetInitTime(60);
 	//カメラの軌道制御オブジェクトの初期化
 	pCameraOrbit_ = Instantiate<CameraOrbit>(this);
 	pCameraOrbit_->SetOrbit({ 0.0f, CAMERA_ORBIT_HEIGHT, 0.0f }, CAMERA_ORBIT_RADIUS, CAMERA_ORBIT_SPEED);
@@ -126,11 +135,11 @@ void StageSelectScene::Initialize()
 
 void StageSelectScene::Update()
 {
-	if (cdTimer_ == nullptr) return; // タイマーが初期化されていない場合は何もしない
-	if (cdTimer_->IsTimeOver()) {
-		cdTimer_->ResetTimer();
+	if (orbitTimer_ == nullptr) return; // タイマーが初期化されていない場合は何もしない
+	if (orbitTimer_->IsTimeOver()) {
+		orbitTimer_->ResetTimer();
 	}
-	deltaTime_ = cdTimer_->GetDeltaTime();
+	deltaTime_ = orbitTimer_->GetDeltaTime();
 	if (pCameraOrbit_ != nullptr)
 		pCameraOrbit_->Update(deltaTime_);
 
@@ -141,6 +150,8 @@ void StageSelectScene::Update()
 				stageInfos_[currentStageIndex_].isSelected_ = false; // 現在のステージを非選択にする
 				currentStageIndex_++;
 				stageInfos_[currentStageIndex_].isSelected_ = true; // 次のステージを選択状態にする
+
+				Audio::Play(hMoveSelectSound_);//SE再生
 			}
 			//選択されているステージ画像が画面外に出ないように調整（画面の右端の座標は1.0f）
 			if (stageInfos_[currentStageIndex_].stageImgTrs_.position_.x >= 1.0f - STAGE_IMAGE_WIDTH/2.0f) {
@@ -165,6 +176,8 @@ void StageSelectScene::Update()
 				stageInfos_[currentStageIndex_].isSelected_ = false; // 現在のステージを非選択にする
 				currentStageIndex_--;
 				stageInfos_[currentStageIndex_].isSelected_ = true; // 前のステージを選択状態にする
+
+				Audio::Play(hMoveSelectSound_);//SE再生
 			}
 			//選択されているステージ画像が画面外に出ないように調整（画面の左端の座標は-1.0f）
 			if (stageInfos_[currentStageIndex_].stageImgTrs_.position_.x <= -1.0f + STAGE_IMAGE_WIDTH / 2.0f) {
@@ -186,23 +199,34 @@ void StageSelectScene::Update()
 		// 上キーが押されたら操作・ルール説明UIを非選択
 		isExplUISelected_ = false;
 		stageInfos_[currentStageIndex_].isSelected_ = true;
+
+		Audio::Play(hMoveSelectSound_);//SE再生
 	}
 	else if (Input::IsKeyDown(DIK_DOWN)) {
 		// 下キーが押されたら操作・ルール説明UIを選択
 		isExplUISelected_ = true;
 		stageInfos_[currentStageIndex_].isSelected_ = false;
+
+		Audio::Play(hMoveSelectSound_);//SE再生
 	}
 	
+	// Enterキーが押されたら選択確定
 	if (Input::IsKeyDown(DIK_RETURN)) {
-		if (isExplUISelected_) {
-			// 操作・ルール説明UIが選択されている場合
-			SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-			pSceneManager->ChangeScene(SCENE_ID_EXPLANATION); // 説明シーンに遷移
+		if (isExplUISelected_ || (stageInfos_[currentStageIndex_].fileName_ != "null")) {
+			Audio::Play(hSelectSound_);//SE再生
+			cdTimer_ = Instantiate<CDTimer>(this);
+			cdTimer_->SetInitTime(1.0f);
 		}
 		else {
-			// ステージ選択決定時
-			if (stageInfos_[currentStageIndex_].fileName_ == "null") {
-				// 選択されたステージが存在しない場合は何もしない
+			Audio::Play(hMissSelectSound_);//SE再生
+		}
+	}
+	if (cdTimer_ != nullptr) {
+		if (cdTimer_->IsTimeOver()) {
+			if (isExplUISelected_) {
+				// 操作・ルール説明UIが選択されている場合
+				SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+				pSceneManager->ChangeScene(SCENE_ID_EXPLANATION); // 説明シーンに遷移
 				return;
 			}
 			else {

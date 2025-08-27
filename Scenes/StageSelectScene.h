@@ -14,6 +14,10 @@ class StageSelectScene :
 	int hExplUIYellowPict_; //操作・ルール説明画像(黄色)のハンドル
 	int hWhiteScreenPict_; //白い画面のハンドル
 
+	int hSelectSound_; //ステージ選択音のハンドル
+	int hMissSelectSound_; //選択不可音のハンドル
+	int hMoveSelectSound_; //選択移動音のハンドル
+
 	Transform stageSelectPictTrs_; // ステージ選択画面の画像のトランスフォーム
 	Transform stageFrameTrs_; // ステージフレームのトランスフォーム
 	Transform explUITrs_; // 操作・ルール説明UIのトランスフォーム
@@ -32,6 +36,7 @@ class StageSelectScene :
 	std::vector<StageInfo> stageInfos_; // ステージ情報のリスト
 	bool isExplUISelected_; // 操作・ルール説明UIが選択されているか
 
+	CDTimer* orbitTimer_;	   //カメラ軌道制御用タイマー
 	CDTimer* cdTimer_;         //タイマーオブジェクト
 	float deltaTime_;          //フレーム間の経過時間
 	CameraOrbit* pCameraOrbit_;                    //カメラの軌道制御オブジェクト

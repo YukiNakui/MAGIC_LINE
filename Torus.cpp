@@ -12,9 +12,9 @@ void Torus::Initialize()
 	hModel_ = Model::Load("Models/Objects/Ring.fbx");
 	assert(hModel_ >= 0);
 
-	mainRadius_ = 3.0f; // トーラスの中心からチューブの中心までの距離
-	tubeRadius_ = 1.0f; // トーラスのチューブの半径
-	torusAxis_ = { 0.0f, 1.0f, 0.0f }; // トーラスの軸方向（Y軸方向）
+	mainRadius_ = 1.0f; // トーラスの中心からチューブの中心までの距離(ドーナツの穴の大きさ＋チューブの半径)
+	tubeRadius_ = 0.1f; // トーラスのチューブの半径(ドーナツの太さ)
+	torusAxis_ = { 0.0f, 1.0f, 0.0f }; // トーラスの軸方向(穴の空いている向き)
 }
 
 void Torus::Update()
@@ -51,10 +51,15 @@ bool Torus::CheckHitTorusToSphere(const Transform& sphereTrans, float sphereRadi
     float d = XMVectorGetX(XMVector3Length(v_proj)); // 回転面上での距離
 
     if (d == 0.0f) {
-        // 球が軸上に位置する場合、最近接点は任意
-        // 円周上のどこか（このケースではfalse推奨）
+        // 球が軸上に位置する場合
+        //float holeRadius = mainRadius_ - tubeRadius_;
+        //if (sphereRadius < holeRadius) {
+        //    return false; // 穴より球が小さい→当たらずに通り抜ける
+        //}
         return false;
-    }
+    }//なぜかボールが軸上に位置するときにボールがトーラスに当たる位置まで瞬間移動して硬直する(しかもy軸上のときに起こる)
+	//軸上にある時にfalseになるようにしないと瞬間移動するみたい、でもfalseになるようにするとトーラスの穴を通り抜ける
+
 
     // 回転円上の最近接点（トーラス管中心）
     XMVECTOR nearestOnCircle = XMVectorScale(XMVector3Normalize(v_proj), mainRadius_);
