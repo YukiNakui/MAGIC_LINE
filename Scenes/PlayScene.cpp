@@ -47,6 +47,7 @@ void PlayScene::Initialize()
         else if (objectName == "Ball") {
             Ball* pBall = Instantiate<Ball>(this);
 			pBall->SetTransformFloat3(position, rotation, scale);
+			pBall->SetColider(scale);
 			pBall->SetRenderOrder(0);
 		}
 		else if (objectName == "Wall") {
@@ -57,6 +58,7 @@ void PlayScene::Initialize()
 		else if (objectName == "Torus") {
 			Torus* pTorus = Instantiate<Torus>(this);
 			pTorus->SetTransformFloat3(position, rotation, scale);
+			pTorus->SetCollider(rotation, scale);
 			pTorus->SetRenderOrder(0);
 		}
 		else if (objectName == "Tutorial") {//チュートリアルスクリプトファイル読み込み

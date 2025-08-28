@@ -14,7 +14,7 @@ public:
 	void Draw() override;
 	void Release() override;
 	void OnCollision(GameObject* pTarget) override;
-
+    void SetColider(XMFLOAT3 scale);
 
     // シャドウマップ描画
     void DrawShadowMap(const XMMATRIX& lightViewProj) override;
@@ -37,6 +37,7 @@ private:
     XMVECTOR prevBallPos_; //前回のボールの位置
     XMVECTOR ballVelocity_;//ボールの速度
 
+	float radius_;         //ボールの半径
     float gravity_;        //ボールに作用する重力
     bool canMove_;         //ボールが移動可能かどうかのフラグ
 

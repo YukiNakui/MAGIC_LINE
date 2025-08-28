@@ -11,7 +11,6 @@
 //ボール関連の定数
 namespace BallConstants {
     constexpr float GRAVITY = 9.8f;             //重力
-    constexpr float COLLISION_RADIUS = 5.0f;   //ボールとカプセルの衝突半径
     constexpr float MIN_SPEED = 1.5f;          //ボールの最低速度
     constexpr float BOUNCE_FACTOR = 0.8f;      //反発係数
     constexpr float LOW_SPEED_THRESHOLD = 3.0f; //低速と判定する速度
@@ -20,7 +19,7 @@ namespace BallConstants {
 }
 
 Ball::Ball(GameObject* parent)
-    : GameObject(parent, "Ball"),hModel_(-1),cdTimer_(nullptr),
+	: GameObject(parent, "Ball"), hModel_(-1), cdTimer_(nullptr), radius_(1.0f),
     gravity_(BallConstants::GRAVITY),moveVec_{ 0, 0, 0, 0 },canMove_(false)
 {
 }
@@ -33,10 +32,6 @@ void Ball::Initialize()
 
     //タイマーの初期化
     cdTimer_ = Instantiate<CDTimer>(this);
-
-    //衝突判定用のコライダーを設定
-    SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), BallConstants::COLLISION_RADIUS);
-    AddCollider(collision);
 }
 
 void Ball::Update()
@@ -67,10 +62,11 @@ void Ball::Update()
 		//トーラスとの衝突判定
         Torus* pTorus = (Torus*)FindObject("Torus");
         if (pTorus != nullptr) {
-            if (pTorus->CheckHitTorusToSphere(transform_, BallConstants::COLLISION_RADIUS)) {
-				//ballPos_ = prevBallPos_; // 衝突前の位置に戻す
-
-                // 1. 球の中心からトーラス中心へのベクトル
+            Torus::TorusHitType hitType = pTorus->CheckHitTorusToSphere(transform_, radius_);
+            switch (hitType) {
+            case Torus::TorusHitType::TubeCollision: {
+                // 管表面との衝突処理
+                // 位置補正 & 速度反射
                 XMFLOAT3 centerToSphere = {
                     transform_.position_.x - pTorus->GetPosition().x,
                     transform_.position_.y - pTorus->GetPosition().y,
@@ -80,25 +76,57 @@ void Ball::Update()
                 XMVECTOR axis = XMVector3Normalize(XMLoadFloat3(&pTorus->GetAxis()));
                 float dot = XMVectorGetX(XMVector3Dot(v, axis));
                 XMVECTOR v_proj = XMVectorSubtract(v, XMVectorScale(axis, dot));
-                // 回転面上での最近接点
                 XMVECTOR nearestOnCircle = XMVectorScale(XMVector3Normalize(v_proj), pTorus->GetMainRadius());
                 XMFLOAT3 torusPos = pTorus->GetPosition();
                 XMVECTOR tubeCenter = XMVectorAdd(XMLoadFloat3(&torusPos), nearestOnCircle);
 
-                // 球を管表面まで押し戻す
                 XMVECTOR sphereToTube = XMVectorSubtract(ballPos_, tubeCenter);
                 XMVECTOR normal = XMVector3Normalize(sphereToTube);
-                XMVECTOR newPos = XMVectorAdd(tubeCenter, XMVectorScale(normal, pTorus->GetTubeRadius() + BallConstants::COLLISION_RADIUS));
+                XMVECTOR newPos = XMVectorAdd(tubeCenter, XMVectorScale(normal, pTorus->GetTubeRadius() + radius_));
                 XMStoreFloat3(&transform_.position_, newPos);
                 ballPos_ = newPos;
 
-                // 速度ベクトルを反射（管表面の法線で反射＋減速）
                 float speed = XMVectorGetX(XMVector3Length(ballVelocity_));
                 XMVECTOR reflected = XMVectorSubtract(ballVelocity_, XMVectorScale(normal, 2.0f * XMVector3Dot(ballVelocity_, normal).m128_f32[0]));
                 ballVelocity_ = XMVectorScale(reflected, BallConstants::BOUNCE_FACTOR);
 
-                // 低速判定
-                CheckLowSpeedState();
+                break;
+            }
+            case Torus::TorusHitType::CapCollision: {
+                // 穴の「蓋」にぶつかった場合
+                // トーラス軸方向の法線
+                XMVECTOR axis = XMVector3Normalize(XMLoadFloat3(&pTorus->GetAxis()));
+
+                // ボールの中心座標
+                XMVECTOR ballCenter = ballPos_;
+
+                // トーラスの中心座標
+				XMFLOAT3 torusCenterPos = pTorus->GetPosition();
+                XMVECTOR torusCenter = XMLoadFloat3(&torusCenterPos);
+
+                // ボールの中心からトーラスの中心へのベクトル
+                XMVECTOR centerToBall = XMVectorSubtract(ballCenter, torusCenter);
+
+                // 軸上なので、軸方向に法線をとる
+                float axisDot = XMVectorGetX(XMVector3Dot(centerToBall, axis));
+                // 正負で上下どちらかの「板」に当たる
+                XMVECTOR capNormal = (axisDot >= 0.0f) ? axis : XMVectorNegate(axis);
+
+                // 位置補正：穴の開いていない板上に押し戻す
+                XMVECTOR newPos = XMVectorAdd(torusCenter, XMVectorScale(capNormal, pTorus->GetMainRadius() - pTorus->GetTubeRadius() - radius_));
+                XMStoreFloat3(&transform_.position_, newPos);
+                ballPos_ = newPos;
+
+                // 反射処理
+                float speed = XMVectorGetX(XMVector3Length(ballVelocity_));
+                XMVECTOR reflected = XMVectorSubtract(ballVelocity_, XMVectorScale(capNormal, 2.0f * XMVector3Dot(ballVelocity_, capNormal).m128_f32[0]));
+                ballVelocity_ = XMVectorScale(reflected, BallConstants::BOUNCE_FACTOR);
+
+                break;
+            }
+            case Torus::TorusHitType::None:
+                // 通り抜ける（何もしない）
+                break;
             }
         }
 
@@ -145,7 +173,7 @@ void Ball::HandleCapsuleCollisions()
             float distLength = XMVectorGetX(XMVector3Length(distance));
 
             //衝突判定
-            if (distLength <= BallConstants::COLLISION_RADIUS)
+            if (distLength <= radius_)
                 HandleCollisionWithCapsule(distance, closestPointOnCapsule, capsuleDir, distLength);
         }
     }
@@ -164,8 +192,8 @@ void Ball::HandleCollisionWithCapsule(XMVECTOR distance, XMVECTOR closestPoint, 
         normal = XMVector3Normalize(capsuleAxis);
 
     //衝突深度を補正
-    float penetrationDepth = BallConstants::COLLISION_RADIUS - distLength;
-    ballPos_ = XMVectorAdd(closestPoint, XMVectorScale(normal, BallConstants::COLLISION_RADIUS + BallConstants::PENETRATION_CORRECTION));
+    float penetrationDepth = radius_ - distLength;
+    ballPos_ = XMVectorAdd(closestPoint, XMVectorScale(normal, radius_ + BallConstants::PENETRATION_CORRECTION));
 
     //反射ベクトルを計算
     XMVECTOR reflectedVelocity = XMVectorSubtract(ballVelocity_, XMVectorScale(normal, 2.0f * XMVector3Dot(ballVelocity_, normal).m128_f32[0]));
@@ -225,6 +253,15 @@ void Ball::OnCollision(GameObject* pTarget)
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
 	}
+}
+
+void Ball::SetColider(XMFLOAT3 scale)
+{
+	radius_ = scale.x;
+
+    //衝突判定用のコライダーを設定
+    SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), radius_);
+    AddCollider(collision);
 }
 
 void Ball::DrawShadowMap(const XMMATRIX& lightViewProj)
