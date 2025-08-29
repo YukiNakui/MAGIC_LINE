@@ -59,77 +59,11 @@ void Ball::Update()
         //カプセルとの衝突判定
         HandleCapsuleCollisions();
 
-		//トーラスとの衝突判定
-        Torus* pTorus = (Torus*)FindObject("Torus");
-        if (pTorus != nullptr) {
-            Torus::TorusHitType hitType = pTorus->CheckHitTorusToSphere(transform_, radius_);
-            switch (hitType) {
-            case Torus::TorusHitType::TubeCollision: {
-                // 管表面との衝突処理
-                // 位置補正 & 速度反射
-                XMFLOAT3 centerToSphere = {
-                    transform_.position_.x - pTorus->GetPosition().x,
-                    transform_.position_.y - pTorus->GetPosition().y,
-                    transform_.position_.z - pTorus->GetPosition().z
-                };
-                XMVECTOR v = XMLoadFloat3(&centerToSphere);
-                XMVECTOR axis = XMVector3Normalize(XMLoadFloat3(&pTorus->GetAxis()));
-                float dot = XMVectorGetX(XMVector3Dot(v, axis));
-                XMVECTOR v_proj = XMVectorSubtract(v, XMVectorScale(axis, dot));
-                XMVECTOR nearestOnCircle = XMVectorScale(XMVector3Normalize(v_proj), pTorus->GetMainRadius());
-                XMFLOAT3 torusPos = pTorus->GetPosition();
-                XMVECTOR tubeCenter = XMVectorAdd(XMLoadFloat3(&torusPos), nearestOnCircle);
-
-                XMVECTOR sphereToTube = XMVectorSubtract(ballPos_, tubeCenter);
-                XMVECTOR normal = XMVector3Normalize(sphereToTube);
-                XMVECTOR newPos = XMVectorAdd(tubeCenter, XMVectorScale(normal, pTorus->GetTubeRadius() + radius_));
-                XMStoreFloat3(&transform_.position_, newPos);
-                ballPos_ = newPos;
-
-                float speed = XMVectorGetX(XMVector3Length(ballVelocity_));
-                XMVECTOR reflected = XMVectorSubtract(ballVelocity_, XMVectorScale(normal, 2.0f * XMVector3Dot(ballVelocity_, normal).m128_f32[0]));
-                ballVelocity_ = XMVectorScale(reflected, BallConstants::BOUNCE_FACTOR);
-
-                break;
-            }
-            case Torus::TorusHitType::CapCollision: {
-                // 穴の「蓋」にぶつかった場合
-                // トーラス軸方向の法線
-                XMVECTOR axis = XMVector3Normalize(XMLoadFloat3(&pTorus->GetAxis()));
-
-                // ボールの中心座標
-                XMVECTOR ballCenter = ballPos_;
-
-                // トーラスの中心座標
-				XMFLOAT3 torusCenterPos = pTorus->GetPosition();
-                XMVECTOR torusCenter = XMLoadFloat3(&torusCenterPos);
-
-                // ボールの中心からトーラスの中心へのベクトル
-                XMVECTOR centerToBall = XMVectorSubtract(ballCenter, torusCenter);
-
-                // 軸上なので、軸方向に法線をとる
-                float axisDot = XMVectorGetX(XMVector3Dot(centerToBall, axis));
-                // 正負で上下どちらかの「板」に当たる
-                XMVECTOR capNormal = (axisDot >= 0.0f) ? axis : XMVectorNegate(axis);
-
-                // 位置補正：穴の開いていない板上に押し戻す
-                XMVECTOR newPos = XMVectorAdd(torusCenter, XMVectorScale(capNormal, pTorus->GetMainRadius() - pTorus->GetTubeRadius() - radius_));
-                XMStoreFloat3(&transform_.position_, newPos);
-                ballPos_ = newPos;
-
-                // 反射処理
-                float speed = XMVectorGetX(XMVector3Length(ballVelocity_));
-                XMVECTOR reflected = XMVectorSubtract(ballVelocity_, XMVectorScale(capNormal, 2.0f * XMVector3Dot(ballVelocity_, capNormal).m128_f32[0]));
-                ballVelocity_ = XMVectorScale(reflected, BallConstants::BOUNCE_FACTOR);
-
-                break;
-            }
-            case Torus::TorusHitType::None:
-                // 通り抜ける（何もしない）
-                break;
-            }
+        pTorus_ = (Torus*)FindObject("Torus");
+        if (pTorus_ != nullptr) {
+            //トーラスとの衝突判定
+            HandleCollisionWithTorus(pTorus_);
         }
-
 
 
         //最低高度以下になったら、ゲームオーバー
@@ -175,6 +109,38 @@ void Ball::HandleCapsuleCollisions()
             //衝突判定
             if (distLength <= radius_)
                 HandleCollisionWithCapsule(distance, closestPointOnCapsule, capsuleDir, distLength);
+        }
+    }
+}
+
+void Ball::HandleCollisionWithTorus(Torus* torus)
+{
+    if (torus != nullptr) {
+        if (torus->CheckHitTorusToSphere(transform_, radius_)) {
+            // 管表面との衝突処理
+            // 位置補正 & 速度反射
+            XMFLOAT3 centerToSphere = {
+                transform_.position_.x - torus->GetPosition().x,
+                transform_.position_.y - torus->GetPosition().y,
+                transform_.position_.z - torus->GetPosition().z
+            };
+            XMVECTOR v = XMLoadFloat3(&centerToSphere);
+            XMVECTOR axis = XMVector3Normalize(XMLoadFloat3(&torus->GetAxis()));
+            float dot = XMVectorGetX(XMVector3Dot(v, axis));
+            XMVECTOR v_proj = XMVectorSubtract(v, XMVectorScale(axis, dot));
+            XMVECTOR nearestOnCircle = XMVectorScale(XMVector3Normalize(v_proj), torus->GetMainRadius());
+            XMFLOAT3 torusPos = torus->GetPosition();
+            XMVECTOR tubeCenter = XMVectorAdd(XMLoadFloat3(&torusPos), nearestOnCircle);
+
+            XMVECTOR sphereToTube = XMVectorSubtract(ballPos_, tubeCenter);
+            XMVECTOR normal = XMVector3Normalize(sphereToTube);
+            XMVECTOR newPos = XMVectorAdd(tubeCenter, XMVectorScale(normal, torus->GetTubeRadius() + radius_));
+            XMStoreFloat3(&transform_.position_, newPos);
+            ballPos_ = newPos;
+
+            float speed = XMVectorGetX(XMVector3Length(ballVelocity_));
+            XMVECTOR reflected = XMVectorSubtract(ballVelocity_, XMVectorScale(normal, 2.0f * XMVector3Dot(ballVelocity_, normal).m128_f32[0]));
+            ballVelocity_ = XMVectorScale(reflected, BallConstants::BOUNCE_FACTOR);
         }
     }
 }

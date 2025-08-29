@@ -47,7 +47,7 @@ void Torus::SetCollider(XMFLOAT3 rotation, XMFLOAT3 scale)
 	XMStoreFloat3(&torusAxis_, axis);
 }
 
-Torus::TorusHitType Torus::CheckHitTorusToSphere(const Transform& sphereTrans, float sphereRadius)
+bool Torus::CheckHitTorusToSphere(const Transform& sphereTrans, float sphereRadius)
 {
     XMFLOAT3 centerToSphere = {
        sphereTrans.position_.x - transform_.position_.x,
@@ -62,30 +62,15 @@ Torus::TorusHitType Torus::CheckHitTorusToSphere(const Transform& sphereTrans, f
     float holeRadius = mainRadius_ - tubeRadius_;
 
     // 管表面との衝突判定（軸上以外でも常に優先）
-    XMVECTOR nearestOnCircle = XMVectorScale(
-        d > 1e-6f ? XMVector3Normalize(v_proj) : XMVectorZero(), mainRadius_);
+    XMVECTOR nearestOnCircle = XMVectorScale(XMVector3Normalize(v_proj), mainRadius_);
     XMVECTOR tubeCenter = XMVectorAdd(XMLoadFloat3(&transform_.position_), nearestOnCircle);
     XMVECTOR sphereToTube = XMVectorSubtract(XMLoadFloat3(&sphereTrans.position_), tubeCenter);
     float distToTubeCenter = XMVectorGetX(XMVector3Length(sphereToTube));
     if (distToTubeCenter <= (tubeRadius_ + sphereRadius)) {
-        return TorusHitType::TubeCollision;
+        return true;
     }
 
-    // 軸上判定（管に当たっていない場合のみ）
-    //if (d < 1e-6f) {
-        // 「穴より大きい」だけでなく「蓋に接しているか」も判定
-        // 蓋の位置は torus の中心から mainRadius の距離
-        float centerToBallLen = XMVectorGetX(XMVector3Length(v));
-        float capSurfaceDist = fabs(centerToBallLen - mainRadius_);
-        if (sphereRadius >= holeRadius && capSurfaceDist <= sphereRadius) {
-            return TorusHitType::CapCollision; // 蓋に接触
-        }
-        else {
-            return TorusHitType::None; // 穴通過
-        }
-    //}現在ボールが穴の大きさより小さいのに通り抜けずに当たってしまうバグがある
-
-    return TorusHitType::None;
+    return false;
 }
 
 

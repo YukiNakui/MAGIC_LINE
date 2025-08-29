@@ -2,6 +2,7 @@
 #include "../Engine/GameObject.h"
 #include"../Functions/CDTimer.h"
 #include"../UI/CountdownNumber.h"
+#include"../Torus.h"
 
 class Ball :
     public GameObject
@@ -30,6 +31,7 @@ public:
 
 private:
     CDTimer* cdTimer_; //タイマー
+	Torus* pTorus_;  //トーラスオブジェクト
 
     //ボールの物理挙動を管理するベクトル
     XMVECTOR moveVec_;     //ボールの進行方向ベクトル
@@ -44,7 +46,10 @@ private:
     CountdownNumber* pCountDownNumber_; //カウントダウンの数字表示オブジェクト
 
 	void HandleCapsuleCollisions();//カプセルとの衝突処理
+	void HandleCollisionWithTorus(Torus* torus);//トーラスとの衝突処理
 	void HandleCollisionWithCapsule(XMVECTOR distance, XMVECTOR closestPoint, XMVECTOR capsuleDir, float distLength);
 	void CheckLowSpeedState();//低速状態のチェック
+    //トーラスの中を通り抜けたかをチェック
+	bool CheckPassedThroughTorus(Torus* torus);
 };
 
