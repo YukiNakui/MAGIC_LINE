@@ -48,8 +48,17 @@ private:
 	void HandleCapsuleCollisions();//カプセルとの衝突処理
 	void HandleCollisionWithTorus(Torus* torus);//トーラスとの衝突処理
 	void HandleCollisionWithCapsule(XMVECTOR distance, XMVECTOR closestPoint, XMVECTOR capsuleDir, float distLength);
+
+	//クリア条件の列挙型
+	enum ClearCondition {
+		LOW_SPEED,              //低速状態
+		PASSED_THROUGH_TORUS    //トーラスの中を通り抜けた
+	};
+	ClearCondition clearCondition_; //クリア条件
+	void CheckClearConditions(); //クリア条件のチェック
+
 	void CheckLowSpeedState();//低速状態のチェック
     //トーラスの中を通り抜けたかをチェック
-	bool CheckPassedThroughTorus(Torus* torus);
+	void CheckPassedThroughTorus(Torus* torus);
 };
 

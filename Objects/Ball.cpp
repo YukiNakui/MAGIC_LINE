@@ -14,7 +14,7 @@ namespace BallConstants {
     constexpr float MIN_SPEED = 1.5f;          //ボールの最低速度
     constexpr float BOUNCE_FACTOR = 0.8f;      //反発係数
     constexpr float LOW_SPEED_THRESHOLD = 3.0f; //低速と判定する速度
-    constexpr float PENETRATION_CORRECTION = 0.2f; //衝突時の補正値
+    constexpr float PENETRATION_CORRECTION = 0.5f; //衝突時の補正値
     constexpr float MIN_HEIGHT = -10.0f;
 }
 
@@ -173,7 +173,21 @@ void Ball::HandleCollisionWithCapsule(XMVECTOR distance, XMVECTOR closestPoint, 
     ballVelocity_ = reflectedVelocity;
 
     //低速状態のチェック
-    CheckLowSpeedState();
+    //CheckLowSpeedState();
+}
+
+void Ball::CheckClearConditions()
+{
+    switch(clearCondition_) {
+    case LOW_SPEED:
+		CheckLowSpeedState();
+		break;
+	case PASSED_THROUGH_TORUS:
+		CheckPassedThroughTorus(pTorus_);
+		break;
+	default:
+		break;
+    }
 }
 
 void Ball::CheckLowSpeedState()
@@ -201,6 +215,36 @@ void Ball::CheckLowSpeedState()
             pCountDownNumber_->ResetCountdown();
         }
     }
+}
+
+void Ball::CheckPassedThroughTorus(Torus* torus)
+{
+    // トーラス中心・軸
+    XMFLOAT3 torusCenter = torus->GetPosition();
+    XMVECTOR axis = XMVector3Normalize(XMLoadFloat3(&torus->GetAxis()));
+
+    // 前回・今回の中心からトーラス中心へのベクトル
+    XMVECTOR prevVec = XMVectorSubtract(prevPos, XMLoadFloat3(&torusCenter));
+    XMVECTOR currVec = XMVectorSubtract(currPos, XMLoadFloat3(&torusCenter));
+
+    // 軸方向への投影
+    float prevDot = XMVectorGetX(XMVector3Dot(prevVec, axis));
+    float currDot = XMVectorGetX(XMVector3Dot(currVec, axis));
+    XMVECTOR prevProj = XMVectorSubtract(prevVec, XMVectorScale(axis, prevDot));
+    XMVECTOR currProj = XMVectorSubtract(currVec, XMVectorScale(axis, currDot));
+
+    // 回転面からの距離
+    float prevD = XMVectorGetX(XMVector3Length(prevProj));
+    float currD = XMVectorGetX(XMVector3Length(currProj));
+
+    // 穴判定（軸上近傍かつ距離が穴の範囲）
+    float holeRadius = torus.GetMainRadius() - torus.GetTubeRadius();
+
+    bool prevInHole = (prevD < 1e-6f) && (fabs(XMVectorGetX(XMVector3Length(prevVec)) - torus.GetMainRadius()) <= (holeRadius - ballRadius));
+    bool currInHole = (currD < 1e-6f) && (fabs(XMVectorGetX(XMVector3Length(currVec)) - torus.GetMainRadius()) <= (holeRadius - ballRadius));
+
+    // 通り抜け判定（前回穴外・今回穴内、またはその逆）
+    return prevInHole != currInHole;
 }
 
 void Ball::Draw()
