@@ -224,9 +224,9 @@ void Ball::CheckPassedThroughTorus(Torus* torus)
     XMVECTOR axis = XMVector3Normalize(XMLoadFloat3(&torus->GetAxis()));
 
     // 前回・今回の中心からトーラス中心へのベクトル
-    XMVECTOR prevVec = XMVectorSubtract(prevPos, XMLoadFloat3(&torusCenter));
-    XMVECTOR currVec = XMVectorSubtract(currPos, XMLoadFloat3(&torusCenter));
-
+    XMVECTOR prevVec = XMVectorSubtract(prevBallPos_, XMLoadFloat3(&torusCenter));
+    XMVECTOR currVec = XMVectorSubtract(ballPos_, XMLoadFloat3(&torusCenter));
+    
     // 軸方向への投影
     float prevDot = XMVectorGetX(XMVector3Dot(prevVec, axis));
     float currDot = XMVectorGetX(XMVector3Dot(currVec, axis));
@@ -238,13 +238,16 @@ void Ball::CheckPassedThroughTorus(Torus* torus)
     float currD = XMVectorGetX(XMVector3Length(currProj));
 
     // 穴判定（軸上近傍かつ距離が穴の範囲）
-    float holeRadius = torus.GetMainRadius() - torus.GetTubeRadius();
+    float holeRadius = torus->GetMainRadius() - torus->GetTubeRadius();
 
-    bool prevInHole = (prevD < 1e-6f) && (fabs(XMVectorGetX(XMVector3Length(prevVec)) - torus.GetMainRadius()) <= (holeRadius - ballRadius));
-    bool currInHole = (currD < 1e-6f) && (fabs(XMVectorGetX(XMVector3Length(currVec)) - torus.GetMainRadius()) <= (holeRadius - ballRadius));
+    bool prevInHole = (prevD < 1e-6f) && (fabs(XMVectorGetX(XMVector3Length(prevVec)) - torus->GetMainRadius()) <= (holeRadius - radius_));
+    bool currInHole = (currD < 1e-6f) && (fabs(XMVectorGetX(XMVector3Length(currVec)) - torus->GetMainRadius()) <= (holeRadius - radius_));
 
     // 通り抜け判定（前回穴外・今回穴内、またはその逆）
-    return prevInHole != currInHole;
+    if (prevInHole != currInHole) {
+		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+		pSceneManager->ChangeScene(SCENE_ID_CLEAR);
+    }
 }
 
 void Ball::Draw()
